@@ -67,9 +67,8 @@ targets:
         optional: true
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.widget
-      GENERATE_INFOPLIST_FILE: YES
-      INFOPLIST_KEY_NSExtension:
-        NSExtensionPointIdentifier: com.apple.widgetkit-extension
+      INFOPLIST_FILE: Widget/Info.plist
+      GENERATE_INFOPLIST_FILE: NO
     dependencies:
       - package: GRDB
     entitlements:
@@ -88,6 +87,7 @@ targets:
       - target: Prenomme
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.tests
+      GENERATE_INFOPLIST_FILE: YES
 
   PrenommeUITests:
     type: bundle.ui-testing
@@ -99,3 +99,4 @@ targets:
       - target: Prenomme
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.uitests
+      GENERATE_INFOPLIST_FILE: YES
