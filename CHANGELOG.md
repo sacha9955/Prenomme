@@ -2,6 +2,26 @@
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-04-24 — Jour 3 : Navigation, Détail & Origines
+
+### Added
+- **OnboardingView** (`Views/Onboarding/OnboardingView.swift`) — 3 écrans PageTabView (bienvenue, fonctionnalités, nom de famille) ; gate `@AppStorage("hasSeenOnboarding")` dans `PrenommeApp` ; nom de famille sauvegardé dans `UserSettings` SwiftData
+- **NameFilter** (`Services/NameFilter.swift`) — struct unifiée `Equatable` : genre, origines multi-select, syllabes (5 = "5+"), initiale, searchQuery, sortByPopularity
+- **NameDatabase extensions** — `filtered(_ filter: NameFilter)` (SQL paramétré), `countByOrigin() -> [String: Int]`
+- **FilterSheet** (`Views/Browse/FilterSheet.swift`) — bottom sheet : genre (segmented), origines (chips horizontal), syllabes, initiale, tri
+- **BrowseView** (`Views/Browse/BrowseView.swift`) — `NavigationStack` + `.searchable` + filtre actif (icône filled) → `NameDetailView`
+- **PronunciationService** (`Services/PronunciationService.swift`) — `@Observable` + `AVSpeechSynthesizer` + `SynthProxy` délégué
+- **NameDetailView** (`Views/Browse/NameDetailView.swift`) — hero circulaire, signification, popularité FR/US, TTS, favori haptic, `ShareLink`, sections phonétique + similaires pro-gatées ; `FlowLayout` custom `Layout`
+- **OriginService** (`Services/OriginService.swift`) — `@Observable` singleton, `OriginMeta` (27 origines, 2 couleurs pastel chacune, description, count), `countByOrigin()` mis en cache
+- **OriginDetailView** (`Views/Browse/OriginDetailView.swift`) — header dégradé, filtre genre, liste paginée → `NameDetailView`
+- **HomeView** redesigné — carte "Prénom du jour", section tendances horizontale, section "Parcourir par origine" (cartes 140×100pt)
+- **FavoritesView enrichie** — swipe-to-delete, sort picker (date/alphabétique), compteur X/15, état vide CTA, export PDF pro-gaté
+- **ContentView** — 4ème onglet "Explorer" (`BrowseView`)
+
+### Tests (34 passés, 0 échecs)
+- `OriginServiceTests` — 6 cas : non-vide, count > 0, 2 couleurs, description, unicité, cohérence avec DB
+- UI tests mis à jour : `--skip-onboarding` launch arg + assertion nav bar "Prénomme"
+
 ## [0.2.0] — 2026-04-24 — Jour 2 : Freemium, Paywall & App Icon
 
 ### Added
