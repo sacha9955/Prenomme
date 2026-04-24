@@ -1,0 +1,33 @@
+{
+  "identifier" : "D9B3A1E4-5F72-4C8B-9D01-234E56789ABC",
+  "nonConsumableIAP" : [
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : true,
+      "internalID" : "prenomme_pro_lifetime_001",
+      "localizations" : [
+        {
+          "description" : "Accès illimité à toutes les fonctionnalités de Prénomme : favoris illimités, swipes illimités, widget Pro et plus encore.",
+          "displayName" : "Prénomme Pro — À vie",
+          "locale" : "fr_FR"
+        },
+        {
+          "description" : "Unlimited access to all Prénomme features: unlimited favorites, unlimited swipes, Pro widget and more.",
+          "displayName" : "Prénomme Pro — Lifetime",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "prenomme.pro.lifetime",
+      "referenceName" : "Pro Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitErrors" : []
+  },
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

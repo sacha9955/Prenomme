@@ -1,0 +1,127 @@
+import Foundation
+import GRDB
+
+// MARK: — GRDB row mapping
+
+extension FirstName: FetchableRecord {
+    init(row: Row) throws {
+        id            = row["id"]
+        name          = row["name"]
+        let genderRaw: String = row["gender"] ?? "unisex"
+        gender        = Gender(rawValue: genderRaw) ?? .unisex
+        origin        = row["origin"] ?? ""
+        originLocale  = row["origin_locale"]
+        meaning       = row["meaning"] ?? ""
+        syllables     = row["syllables"] ?? 1
+        popularityRankFR = row["popularity_rank_fr"]
+        popularityRankUS = row["popularity_rank_us"]
+        let themesJSON: String? = row["themes"]
+        themes        = Self.parseThemes(themesJSON)
+        phonetic      = row["phonetic"]
+    }
+
+    private static func parseThemes(_ json: String?) -> [String] {
+        guard let json, let data = json.data(using: .utf8) else { return [] }
+        return (try? JSONDecoder().decode([String].self, from: data)) ?? []
+    }
+}
+
+// MARK: — NameDatabase singleton
+
+final class NameDatabase: @unchecked Sendable {
+    static let shared = NameDatabase()
+
+    private let db: DatabaseQueue
+
+    private init() {
+        // Day 1 MVP: SQLite not yet generated — use hardcoded catalog
+        // Once names.sqlite is in the bundle, the DatabaseQueue init will succeed
+        if let url = Bundle.main.url(forResource: "names", withExtension: "sqlite"),
+           let queue = try? DatabaseQueue(path: url.path, configuration: Self.readOnlyConfig()) {
+            db = queue
+        } else {
+            // Fallback: in-memory DB seeded with hardcoded names
+            let queue = try! DatabaseQueue()
+            try! queue.write { db in
+                try db.execute(sql: HardcodedNames.createTableSQL)
+                for name in HardcodedNames.all {
+                    try db.execute(
+                        sql: HardcodedNames.insertSQL,
+                        arguments: StatementArguments(name.insertArguments)
+                    )
+                }
+            }
+            db = queue
+        }
+    }
+
+    private static func readOnlyConfig() -> Configuration {
+        var config = Configuration()
+        config.readonly = true
+        return config
+    }
+
+    // MARK: — Queries
+
+    func all(gender: Gender? = nil, origin: String? = nil) throws -> [FirstName] {
+        try db.read { db in
+            var sql = "SELECT * FROM names WHERE 1=1"
+            var args: [DatabaseValueConvertible] = []
+            if let gender {
+                sql += " AND gender = ?"
+                args.append(gender.rawValue)
+            }
+            if let origin {
+                sql += " AND origin = ?"
+                args.append(origin)
+            }
+            sql += " ORDER BY popularity_rank_fr ASC NULLS LAST, name ASC"
+            return try FirstName.fetchAll(db, sql: sql, arguments: StatementArguments(args))
+        }
+    }
+
+    func search(_ query: String) throws -> [FirstName] {
+        try db.read { db in
+            try FirstName.fetchAll(db,
+                sql: "SELECT * FROM names WHERE name LIKE ? ORDER BY popularity_rank_fr ASC NULLS LAST LIMIT 100",
+                arguments: ["%\(query)%"])
+        }
+    }
+
+    func byId(_ id: Int) throws -> FirstName? {
+        try db.read { db in
+            try FirstName.fetchOne(db, sql: "SELECT * FROM names WHERE id = ?", arguments: [id])
+        }
+    }
+
+    func random(gender: Gender? = nil) throws -> FirstName? {
+        try db.read { db in
+            var sql = "SELECT * FROM names"
+            var args: [DatabaseValueConvertible] = []
+            if let gender {
+                sql += " WHERE gender = ?"
+                args.append(gender.rawValue)
+            }
+            sql += " ORDER BY RANDOM() LIMIT 1"
+            return try FirstName.fetchOne(db, sql: sql, arguments: StatementArguments(args))
+        }
+    }
+
+    func nameForDate(_ date: Date) throws -> FirstName? {
+        try db.read { db in
+            let count = try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM names") ?? 1
+            let daysSinceReference = Int(date.timeIntervalSinceReferenceDate / 86400)
+            let index = ((daysSinceReference % count) + count) % count
+            return try FirstName.fetchOne(db,
+                sql: "SELECT * FROM names LIMIT 1 OFFSET ?",
+                arguments: [index])
+        }
+    }
+
+    var allOrigins: [String] {
+        (try? db.read { db in
+            let rows = try Row.fetchAll(db, sql: "SELECT DISTINCT origin FROM names WHERE origin IS NOT NULL ORDER BY origin")
+            return rows.compactMap { $0["origin"] as String? }
+        }) ?? []
+    }
+}
