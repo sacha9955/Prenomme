@@ -124,4 +124,59 @@ final class NameDatabase: @unchecked Sendable {
             return rows.compactMap { $0["origin"] as String? }
         }) ?? []
     }
+
+    func filtered(_ filter: NameFilter) throws -> [FirstName] {
+        try db.read { db in
+            var sql = "SELECT * FROM names WHERE 1=1"
+            var args: [DatabaseValueConvertible] = []
+
+            if let gender = filter.gender {
+                sql += " AND gender = ?"
+                args.append(gender.rawValue)
+            }
+            if !filter.origins.isEmpty {
+                let placeholders = filter.origins.map { _ in "?" }.joined(separator: ", ")
+                sql += " AND origin IN (\(placeholders))"
+                args.append(contentsOf: filter.origins)
+            }
+            if let syllables = filter.syllables {
+                if syllables >= 5 {
+                    sql += " AND syllables >= ?"
+                    args.append(syllables)
+                } else {
+                    sql += " AND syllables = ?"
+                    args.append(syllables)
+                }
+            }
+            if let letter = filter.initialLetter {
+                sql += " AND name LIKE ?"
+                args.append("\(letter)%")
+            }
+            if !filter.searchQuery.isEmpty {
+                sql += " AND name LIKE ?"
+                args.append("%\(filter.searchQuery)%")
+            }
+
+            if filter.sortByPopularity {
+                sql += " ORDER BY popularity_rank_fr ASC NULLS LAST, name ASC"
+            } else {
+                sql += " ORDER BY name ASC"
+            }
+
+            return try FirstName.fetchAll(db, sql: sql, arguments: StatementArguments(args))
+        }
+    }
+
+    func countByOrigin() -> [String: Int] {
+        (try? db.read { db in
+            let rows = try Row.fetchAll(db, sql: "SELECT origin, COUNT(*) as cnt FROM names WHERE origin IS NOT NULL GROUP BY origin")
+            var result: [String: Int] = [:]
+            for row in rows {
+                if let origin = row["origin"] as String?, let count = row["cnt"] as Int? {
+                    result[origin] = count
+                }
+            }
+            return result
+        }) ?? [:]
+    }
 }
