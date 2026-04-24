@@ -7,6 +7,8 @@ final class PrenommeUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
+        // Skip onboarding so we land directly on the TabView
+        app.launchArguments = ["--skip-onboarding"]
         app.launch()
     }
 
@@ -16,8 +18,9 @@ final class PrenommeUITests: XCTestCase {
 
     func testDiscoverTabShowsNames() {
         app.tabBars.buttons["Découvrir"].tap()
-        let list = app.collectionViews.firstMatch
-        XCTAssertTrue(list.waitForExistence(timeout: 3))
+        // HomeView uses a NavigationStack with title "Prénomme"
+        let title = app.navigationBars["Prénomme"].firstMatch
+        XCTAssertTrue(title.waitForExistence(timeout: 5))
     }
 
     func testFavoritesTabShowsEmptyState() {

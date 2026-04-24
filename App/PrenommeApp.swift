@@ -35,10 +35,19 @@ struct PrenommeApp: App {
         }
     }
 
+    @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .modelContainer(container)
+            Group {
+                let skipOnboarding = CommandLine.arguments.contains("--skip-onboarding")
+                if hasSeenOnboarding || skipOnboarding {
+                    ContentView()
+                } else {
+                    OnboardingView()
+                }
+            }
+            .modelContainer(container)
                 .task { await checkICloudToast() }
                 .overlay(alignment: .top) {
                     if showICloudToast {
@@ -51,6 +60,7 @@ struct PrenommeApp: App {
                     }
                 }
                 .animation(.spring(duration: 0.4), value: showICloudToast)
+                .animation(.easeInOut(duration: 0.35), value: hasSeenOnboarding)
         }
     }
 
