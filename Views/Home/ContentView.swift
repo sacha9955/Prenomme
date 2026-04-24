@@ -7,6 +7,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Découvrir", systemImage: "sparkles")
                 }
+            BrowseView()
+                .tabItem {
+                    Label("Explorer", systemImage: "magnifyingglass")
+                }
             FavoritesView()
                 .tabItem {
                     Label("Favoris", systemImage: "heart")
