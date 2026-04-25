@@ -8,6 +8,8 @@ struct FavoritesView: View {
     @State private var sortOrder: FavoriteSort = .dateAdded
     @State private var showPaywall = false
     @State private var showComparator = false
+    @State private var isGeneratingPDF = false
+    @State private var pdfURL: IdentifiableURL?
 
     private let purchase = PurchaseManager.shared
     private var favoriteService: FavoriteService { FavoriteService(context: context) }
@@ -70,6 +72,33 @@ struct FavoritesView: View {
             .sheet(isPresented: $showComparator) {
                 ComparatorView(names: Array(sorted.compactMap { namesById[$0.nameId] }.prefix(4)))
             }
+            .sheet(item: $pdfURL) { wrapped in
+                ShareLink(
+                    item: wrapped.url,
+                    preview: SharePreview(
+                        "Ma sélection de prénoms",
+                        image: Image(systemName: "doc.richtext")
+                    )
+                )
+                .presentationDetents([.medium])
+            }
+            .overlay {
+                if isGeneratingPDF {
+                    ZStack {
+                        Color.black.opacity(0.3).ignoresSafeArea()
+                        VStack(spacing: 12) {
+                            ProgressView()
+                                .tint(.white)
+                            Text("Génération du PDF…")
+                                .font(.subheadline)
+                                .foregroundStyle(.white)
+                        }
+                        .padding(24)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    }
+                }
+            }
             .task {
                 await loadNames()
             }
@@ -90,7 +119,9 @@ struct FavoritesView: View {
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
-                            favoriteService.remove(nameId: fav.nameId)
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+                                favoriteService.remove(nameId: fav.nameId)
+                            }
                         } label: {
                             Label("Retirer", systemImage: "heart.slash")
                         }
@@ -99,6 +130,7 @@ struct FavoritesView: View {
             }
             pdfExportRow
         }
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: sorted.map(\.id))
     }
 
     @ViewBuilder
@@ -151,8 +183,27 @@ struct FavoritesView: View {
     }
 
     private func exportPDF() {
-        // PDF generation: placeholder — full implementation would use UIGraphicsPDFRenderer
+        let names = sorted.compactMap { namesById[$0.nameId] }
+        guard !names.isEmpty else { return }
+        isGeneratingPDF = true
+        Task.detached(priority: .userInitiated) {
+            let data = PDFExporter.shared.generate(names: names)
+            let url = FileManager.default.temporaryDirectory
+                .appendingPathComponent("prenoms-\(Int(Date().timeIntervalSince1970)).pdf")
+            try? data.write(to: url)
+            await MainActor.run {
+                isGeneratingPDF = false
+                pdfURL = IdentifiableURL(url: url)
+            }
+        }
     }
+}
+
+// MARK: — Helpers
+
+struct IdentifiableURL: Identifiable {
+    let id = UUID()
+    let url: URL
 }
 
 // MARK: — Sort
