@@ -62,8 +62,14 @@ struct BrowseView: View {
         }
     }
 
+    private static let freeSearchLimit = 50
+
     private func loadNames() async {
-        names = (try? NameDatabase.shared.filtered(filter)) ?? []
+        var results = (try? NameDatabase.shared.filtered(filter)) ?? []
+        if !purchase.isPro && results.count > Self.freeSearchLimit {
+            results = Array(results.prefix(Self.freeSearchLimit))
+        }
+        names = results
     }
 }
 

@@ -2,7 +2,7 @@ import Foundation
 
 struct SwipeCounter {
 
-    static let freeLimit = 30
+    static let freeLimit = 20
 
     private static let dateKey  = "swipes_date"
     private static let countKey = "swipes_count"

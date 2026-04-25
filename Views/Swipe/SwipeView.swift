@@ -40,7 +40,7 @@ struct SwipeView: View {
                 Button("Découvrir Pro") { showPaywall = true }
                 Button("Plus tard", role: .cancel) {}
             } message: {
-                Text("Vous avez utilisé vos 30 swipes gratuits aujourd'hui. Revenez demain ou passez à Pro pour des swipes illimités.")
+                Text("Vous avez utilisé vos 20 swipes gratuits aujourd'hui. Revenez demain ou passez à Pro pour des swipes illimités.")
             }
             .task(id: genderFilter) { await loadDeck() }
         }

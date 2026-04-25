@@ -1,10 +1,10 @@
 import SwiftData
 import Foundation
 
-/// Encapsulates favorite add/remove logic with the free-tier 15-favorite limit.
+/// Encapsulates favorite add/remove logic with the free-tier 10-favorite limit.
 struct FavoriteService {
 
-    static let freeLimit = 15
+    static let freeLimit = 10
 
     let context: ModelContext
 
