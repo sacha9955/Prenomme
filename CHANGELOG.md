@@ -2,6 +2,30 @@
 
 ## [Unreleased]
 
+## [0.6.0] — 2026-04-25 — Jour 6 : Widget Pro, Export PDF & Liens profonds
+
+### Added
+- **ProNameWidget** (`Widget/ProNameWidget.swift`) — widget `AppIntentConfiguration` (iOS 17+), 3 tailles (small/medium/large) ; paramètres : `GenderFilter` (all/female/male/unisex), `DisplayMode` (nameOnly/nameAndOrigin/full), `origins` multi-select (27 origines via `OriginAppEntity`) ; déterminisme `day % pool.count` + reload `.after(midnight)` ; overlay Pro sage translucide pour non-abonnés
+- **NameWidgetIntent** (`Widget/NameWidgetIntent.swift`) — `GenderFilter` / `DisplayMode` (`AppEnum`) + `OriginAppEntity` / `OriginEntityQuery` (`AppEntity` / `EntityQuery`)
+- **NavigationRouter** (`App/NavigationRouter.swift`) — singleton `@Observable` ; `pendingNameId: Int?` + `showPaywall: Bool` pour le routage des liens profonds
+- **PDFExporter** (`Services/PDFExporter.swift`) — A4 (595×842 pt), marges 56 pt, header/footer, pagination (3 prénoms page 1, 4 suivantes) ; bloc d'intro crème / bordure sage ; fiches avec strip gauche sage, capsule genre, rangs FR/US, séparateur
+- **Liens profonds** `prenomme://name/{id}` et `prenomme://paywall` — traités dans `PrenommeApp.onOpenURL` → `NavigationRouter` → sélection d'onglet + navigation programmatique dans `BrowseView`
+- **Pull-to-refresh** sur `BrowseView`
+
+### Changed
+- **PurchaseManager** — `isPro` persisté dans App Group `group.com.sacha9955.prenomme` ; `WidgetCenter.shared.reloadAllTimelines()` appelé à chaque changement d'entitlement
+- **NameOfDayWidget** — restreint à `.systemSmall` (évite l'ambiguïté avec le widget Pro)
+- **FavoritesView** — `exportPDF()` branché : `Task.detached` → `PDFExporter` → `ShareLink` ; overlay `ProgressView` + `.ultraThinMaterial` pendant la génération
+- **ContentView** — sélection d'onglet piloée par `NavigationRouter.pendingNameId` ; paywall global via `router.showPaywall`
+- **NameDetailView** — animation `.symbolEffect(.bounce)` + `withAnimation(.spring)` sur le cœur
+- **FavoritesView** — `.animation(.spring)` sur la liste + `withAnimation(.spring)` sur la suppression swipe
+- **HomeView** — haptic `.soft` sur les cartes d'origine
+- **BrowseView** — `.symbolEffect(.bounce)` + `.contentTransition(.symbolEffect(.replace))` sur l'icône de filtre
+
+### Tests (12 nouveaux)
+- `PDFExporterTests` — 12 cas : en-tête `%PDF`, PDF non-vide sur liste vide, pagination 0/1/3/4/7/12/50 prénoms, intégrité de l'ordre, rangs et genres
+- `WidgetTests` — 11 cas : déterminisme `nameForDate`, filtre genre feminin/masculin, filtre origine (réduction du pool, fallback pool complet), politique timeline midnight
+
 ## [0.5.0] — 2026-04-25 — Jour 5 : Analyse phonétique & Suggestions
 
 ### Added
