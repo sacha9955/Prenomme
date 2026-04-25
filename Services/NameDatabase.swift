@@ -34,26 +34,38 @@ final class NameDatabase: @unchecked Sendable {
     private let db: DatabaseQueue
 
     private init() {
-        // Day 1 MVP: SQLite not yet generated — use hardcoded catalog
-        // Once names.sqlite is in the bundle, the DatabaseQueue init will succeed
-        if let url = Bundle.main.url(forResource: "names", withExtension: "sqlite"),
-           let queue = try? DatabaseQueue(path: url.path, configuration: Self.readOnlyConfig()) {
+        // Search bundle of the class first (works in tests), then main bundle.
+        let bundle = Bundle(for: NameDatabase.self)
+        let url = bundle.url(forResource: "names", withExtension: "sqlite")
+            ?? Bundle.main.url(forResource: "names", withExtension: "sqlite")
+
+        if let url, let queue = try? DatabaseQueue(path: url.path, configuration: Self.readOnlyConfig()) {
             db = queue
         } else {
-            // Fallback: in-memory DB seeded with hardcoded names
+            // Fallback: empty in-memory DB for CI / early development.
             let queue = try! DatabaseQueue()
             try! queue.write { db in
-                try db.execute(sql: HardcodedNames.createTableSQL)
-                for name in HardcodedNames.all {
-                    try db.execute(
-                        sql: HardcodedNames.insertSQL,
-                        arguments: StatementArguments(name.insertArguments)
-                    )
-                }
+                try db.execute(sql: Self.createTableSQL)
             }
             db = queue
         }
     }
+
+    private static let createTableSQL = """
+        CREATE TABLE IF NOT EXISTS names (
+            id                  INTEGER PRIMARY KEY,
+            name                TEXT NOT NULL,
+            gender              TEXT CHECK(gender IN ('male','female','unisex')),
+            origin              TEXT,
+            origin_locale       TEXT,
+            meaning             TEXT,
+            syllables           INTEGER,
+            popularity_rank_fr  INTEGER,
+            popularity_rank_us  INTEGER,
+            themes              TEXT,
+            phonetic            TEXT
+        );
+        """
 
     private static func readOnlyConfig() -> Configuration {
         var config = Configuration()
