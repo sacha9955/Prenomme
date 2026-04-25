@@ -388,6 +388,7 @@
 			buildPhases = (
 				62984314BAB2AC9AE8051B3A /* Sources */,
 				BE893A1E99186BD038B4D98F /* Frameworks */,
+				D9B311F209612AB7F5230074 /* Copy names.sqlite into widget bundle */,
 			);
 			buildRules = (
 			);
@@ -408,6 +409,7 @@
 				1A841B0CDB4BC63A3BF45E2A /* Sources */,
 				9141AA9EB02E7C8DF4E687F6 /* Frameworks */,
 				1E764464600160E2F8EAE691 /* Embed Foundation Extensions */,
+				26DEDBC9786A65E6DE66415F /* Copy names.sqlite into bundle */,
 			);
 			buildRules = (
 			);
@@ -483,6 +485,49 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		26DEDBC9786A65E6DE66415F /* Copy names.sqlite into bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Resources/names.sqlite",
+			);
+			name = "Copy names.sqlite into bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"${SRCROOT}/Resources/names.sqlite\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite\"\n";
+		};
+		D9B311F209612AB7F5230074 /* Copy names.sqlite into widget bundle */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Resources/names.sqlite",
+			);
+			name = "Copy names.sqlite into widget bundle";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"${SRCROOT}/Resources/names.sqlite\" \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1A841B0CDB4BC63A3BF45E2A /* Sources */ = {

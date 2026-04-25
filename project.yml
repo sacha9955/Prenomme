@@ -30,8 +30,14 @@ targets:
       - path: Services
     resources:
       - path: Resources/Assets.xcassets
-      - path: Resources/names.sqlite
-        optional: true
+    postBuildScripts:
+      - name: Copy names.sqlite into bundle
+        script: |
+          cp "${SRCROOT}/Resources/names.sqlite" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite"
+        inputFiles:
+          - ${SRCROOT}/Resources/names.sqlite
+        outputFiles:
+          - ${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite
     entitlements:
       path: Prenomme.entitlements
       properties:
@@ -62,9 +68,14 @@ targets:
       - path: Widget
       - path: Models
       - path: Services
-    resources:
-      - path: Resources/names.sqlite
-        optional: true
+    postBuildScripts:
+      - name: Copy names.sqlite into widget bundle
+        script: |
+          cp "${SRCROOT}/Resources/names.sqlite" "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite"
+        inputFiles:
+          - ${SRCROOT}/Resources/names.sqlite
+        outputFiles:
+          - ${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/names.sqlite
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.widget
       INFOPLIST_FILE: Widget/Info.plist
