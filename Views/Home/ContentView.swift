@@ -15,6 +15,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Favoris", systemImage: "heart")
                 }
+            CompatibilityView()
+                .tabItem {
+                    Label("Compatibilité", systemImage: "waveform.path.ecg")
+                }
             SettingsView()
                 .tabItem {
                     Label("Réglages", systemImage: "gearshape")
