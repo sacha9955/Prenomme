@@ -72,6 +72,7 @@
 		31F9F114A200497D8EF771E0 /* PronunciationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414F73E403549919FA9E220 /* PronunciationServiceTests.swift */; };
 		C7A39C45C18B47DD94C61CF0 /* NameFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13577637C5B841F3B5D834B7 /* NameFilterTests.swift */; };
 		A9F1B2C3D4E5F60718293A4B /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C2D3E4F5061728394A5B6C /* SwipeView.swift */; };
+		D2E3F4051628394A5B6C7D8E /* ThankYouProView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F4051728394A5B6C7D8E9F /* ThankYouProView.swift */; };
 	/* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +169,7 @@
 		2414F73E403549919FA9E220 /* PronunciationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationServiceTests.swift; sourceTree = "<group>"; };
 		13577637C5B841F3B5D834B7 /* NameFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameFilterTests.swift; sourceTree = "<group>"; };
 		B0C2D3E4F5061728394A5B6C /* SwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
+		E3F4051728394A5B6C7D8E9F /* ThankYouProView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThankYouProView.swift; sourceTree = "<group>"; };
 	/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -384,6 +386,7 @@
 			isa = PBXGroup;
 			children = (
 				7EEAAC03F204D1F3A363B95D /* PaywallView.swift */,
+				E3F4051728394A5B6C7D8E9F /* ThankYouProView.swift */,
 			);
 			path = Paywall;
 			sourceTree = "<group>";
@@ -620,6 +623,7 @@
 				3F27239008104544909DD227 /* NavigationRouter.swift in Sources */,
 				EADDE6021583497DAD4CF46E /* PDFExporter.swift in Sources */,
 				A9F1B2C3D4E5F60718293A4B /* SwipeView.swift in Sources */,
+				D2E3F4051628394A5B6C7D8E /* ThankYouProView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -40,6 +40,9 @@ final class PurchaseManager: @unchecked Sendable {
         products.first(where: { $0.id == "prenomme.pro.lifetime" })
     }
 
+    // Shown when StoreKit fails to return the product (no network, no scheme config, etc.)
+    static let fallbackPriceDisplay: String = "8,99 €"
+
     init() {
         updatesTask = Task { [weak self] in
             await self?.listenForTransactionUpdates()

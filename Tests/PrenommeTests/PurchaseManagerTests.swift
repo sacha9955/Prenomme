@@ -16,6 +16,13 @@ final class PurchaseManagerTests: XCTestCase {
         XCTAssertNil(PurchaseManager.shared.purchaseError)
     }
 
+    func testFallbackPrice_WhenProductNil() {
+        XCTAssertNil(PurchaseManager.shared.proProduct,
+                     "proProduct should be nil in test environment (no StoreKit config)")
+        XCTAssertFalse(PurchaseManager.fallbackPriceDisplay.isEmpty)
+        XCTAssertEqual(PurchaseManager.fallbackPriceDisplay, "8,99 €")
+    }
+
     #if DEBUG
     func testDebugForceProDefaultsToFalse() {
         // Ensure App Group key is cleared before asserting

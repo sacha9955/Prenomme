@@ -6,6 +6,7 @@ struct HomeView: View {
     @State private var nameOfDay: FirstName? = nil
     @State private var suggestions: [SuggestionService.Suggestion] = []
     @State private var showPaywall = false
+    @State private var showThankYouPro = false
     @State private var favoriteNames: [FirstName] = []
     @State private var trendingGender: Gender? = nil
 
@@ -19,7 +20,9 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    if !purchase.isPro {
+                    if purchase.isPro {
+                        proBadge
+                    } else {
                         proUpsellBanner
                     }
                     if let nameOfDay {
@@ -42,6 +45,9 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
+            }
+            .sheet(isPresented: $showThankYouPro) {
+                ThankYouProView()
             }
             .task {
                 await loadData()
@@ -100,24 +106,58 @@ struct HomeView: View {
     private var proUpsellBanner: some View {
         Button { showPaywall = true } label: {
             HStack(spacing: 12) {
-                Image(systemName: "star.fill")
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                Image(systemName: "crown.fill")
+                    .font(.callout)
+                    .foregroundStyle(.white)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Découvrir Prénomme Pro")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.primary)
-                    Text("Favoris illimités, swipes illimités et plus encore")
+                    Text("Passez Pro")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(.white)
+                    Text("Favoris illimités · Swipes illimités · Étymologie")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.85))
                 }
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Text(PurchaseManager.fallbackPriceDisplay)
+                    .font(.footnote.weight(.bold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(.white.opacity(0.25))
+                    .clipShape(Capsule())
             }
-            .padding(14)
-            .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
+            .background(
+                LinearGradient(
+                    colors: [Color(red: 0.61, green: 0.69, blue: 0.53),
+                             Color(red: 0.79, green: 0.48, blue: 0.39)],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .shadow(color: Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.30),
+                    radius: 10, y: 4)
+            .padding(.horizontal)
+            .padding(.top, 8)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var proBadge: some View {
+        Button { showThankYouPro = true } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                Text("Prénomme Pro ✨")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.10))
+            .clipShape(Capsule())
             .padding(.horizontal)
             .padding(.top, 8)
         }

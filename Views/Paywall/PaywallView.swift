@@ -114,38 +114,11 @@ struct PaywallView: View {
 
     // MARK: — Purchase section
 
+    private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
+
     private var purchaseSection: some View {
         VStack(spacing: 14) {
-            if purchase.isLoading {
-                ProgressView()
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 58)
-            } else if let product = purchase.proProduct {
-                Button {
-                    Task { await purchase.purchase(product) }
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "star.fill")
-                            .font(.callout)
-                        Text("Débloquer Pro — \(product.displayPrice)")
-                            .font(.headline)
-                    }
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 58)
-                    .background(
-                        LinearGradient(
-                            colors: [Color(red: 0.79, green: 0.48, blue: 0.39),
-                                     Color(red: 0.72, green: 0.43, blue: 0.35)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        in: RoundedRectangle(cornerRadius: 16)
-                    )
-                    .shadow(color: Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.35),
-                            radius: 10, y: 4)
-                }
-            } else if purchase.isLoadingProducts {
+            if purchase.isLoadingProducts {
                 HStack(spacing: 10) {
                     ProgressView()
                     Text("Chargement du prix…")
@@ -153,21 +126,12 @@ struct PaywallView: View {
                         .foregroundStyle(.secondary)
                 }
                 .frame(height: 58)
+            } else if purchase.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 58)
             } else {
-                VStack(spacing: 10) {
-                    Text(purchase.loadError ?? "Prix indisponible.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                    Button {
-                        purchase.retryLoadProducts()
-                    } label: {
-                        Text("Réessayer")
-                            .font(.subheadline.bold())
-                            .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
-                    }
-                }
-                .frame(minHeight: 58)
+                buyButton
             }
 
             if let errorMsg = purchase.purchaseError {
@@ -178,6 +142,50 @@ struct PaywallView: View {
             }
         }
         .padding(.horizontal, 20)
+    }
+
+    @ViewBuilder
+    private var buyButton: some View {
+        if let product = purchase.proProduct {
+            Button {
+                Task { await purchase.purchase(product) }
+            } label: {
+                buyButtonLabel(price: product.displayPrice)
+            }
+        } else {
+            // StoreKit unavailable — show fallback price, tap retries loading then purchases
+            VStack(spacing: 8) {
+                Button {
+                    purchase.retryLoadProducts()
+                } label: {
+                    buyButtonLabel(price: PurchaseManager.fallbackPriceDisplay)
+                        .opacity(0.65)
+                }
+                Text("Prix indicatif — connexion requise pour confirmer")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+    }
+
+    private func buyButtonLabel(price: String) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "star.fill").font(.callout)
+            Text("Débloquer Pro — \(price)").font(.headline)
+        }
+        .foregroundStyle(.white)
+        .frame(maxWidth: .infinity)
+        .frame(height: 58)
+        .background(
+            LinearGradient(
+                colors: [accentColor, Color(red: 0.72, green: 0.43, blue: 0.35)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            in: RoundedRectangle(cornerRadius: 16)
+        )
+        .shadow(color: accentColor.opacity(0.35), radius: 10, y: 4)
     }
 
     private var restoreButton: some View {
@@ -233,15 +241,19 @@ private struct Feature: Identifiable {
     static let all: [Feature] = [
         Feature(id: 1, icon: "heart",
                 title: "Favoris",
-                free: .text("15 max"),
+                free: .text("10 max"),
                 pro: .text("Illimité")),
         Feature(id: 2, icon: "arrow.left.arrow.right",
                 title: "Swipes / jour",
-                free: .text("30"),
+                free: .text("20"),
                 pro: .text("Illimité")),
         Feature(id: 3, icon: "globe",
                 title: "Origine & signification",
                 free: .yes,
+                pro: .yes),
+        Feature(id: 3, icon: "book.closed",
+                title: "Étymologie complète",
+                free: .no,
                 pro: .yes),
         Feature(id: 4, icon: "waveform",
                 title: "Prononciation audio",
