@@ -44,7 +44,7 @@ final class OriginService {
         OriginMeta(name: "Japonais",    colors: [Color(hex: "F0A0A0"), Color(hex: "D06060")], description: "Harmonie et nature japonaises"),
         OriginMeta(name: "Perse",       colors: [Color(hex: "C4A8D4"), Color(hex: "9A74B8")], description: "Grandeur de la Perse ancienne"),
         OriginMeta(name: "Sanskrit",    colors: [Color(hex: "D4C080"), Color(hex: "B09040")], description: "Sagesse védique de l'Inde"),
-        OriginMeta(name: "Celtique",    colors: [Color(hex: "70B870"), Color(hex: "3D8A3D")], description: "Mystère des druides celtes"),
+        // Celtique: aucun prénom en base (retiré du palette)
         OriginMeta(name: "Irlandais",   colors: [Color(hex: "68BB68"), Color(hex: "3A883A")], description: "Île d'Émeraude et ses légendes"),
         OriginMeta(name: "Gallois",     colors: [Color(hex: "7EB07E"), Color(hex: "4E884E")], description: "Prénoms du Pays de Galles"),
         OriginMeta(name: "Espagnol",    colors: [Color(hex: "D48888"), Color(hex: "B85050")], description: "Passion et soleil ibériques"),
@@ -58,8 +58,9 @@ final class OriginService {
         OriginMeta(name: "Swahili",     colors: [Color(hex: "D0C058"), Color(hex: "A89820")], description: "Côtes et savanes d'Afrique de l'Est"),
         OriginMeta(name: "Yoruba",      colors: [Color(hex: "E8A850"), Color(hex: "C07820")], description: "Richesse culturelle yoruba"),
         OriginMeta(name: "Igbo",        colors: [Color(hex: "D8B870"), Color(hex: "B08830")], description: "Traditions igbo du Nigeria"),
-        OriginMeta(name: "Akan",        colors: [Color(hex: "D0A060"), Color(hex: "A86828")], description: "Peuples Akan d'Afrique de l'Ouest"),
+        // Akan: aucun prénom en base (retiré du palette)
         OriginMeta(name: "Araméen",     colors: [Color(hex: "C8B898"), Color(hex: "A09060")], description: "Langue sémitique ancienne"),
+        OriginMeta(name: "Autre",       colors: [Color(hex: "BBBBBB"), Color(hex: "999999")], description: "Prénoms d'origines diverses"),
     ]
 }
 
