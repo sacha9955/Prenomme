@@ -6,6 +6,7 @@ struct OriginMeta: Identifiable, Hashable {
     let colors: [Color]
     let description: String
     var count: Int = 0
+    var isHidden: Bool = false
 
     static func == (lhs: OriginMeta, rhs: OriginMeta) -> Bool { lhs.name == rhs.name }
     func hash(into hasher: inout Hasher) { hasher.combine(name) }
@@ -16,6 +17,8 @@ final class OriginService {
     static let shared = OriginService()
 
     private(set) var origins: [OriginMeta] = []
+
+    var publicOrigins: [OriginMeta] { origins.filter { !$0.isHidden } }
 
     private init() {
         load()
@@ -60,7 +63,7 @@ final class OriginService {
         OriginMeta(name: "Igbo",        colors: [Color(hex: "D8B870"), Color(hex: "B08830")], description: "Traditions igbo du Nigeria"),
         // Akan: aucun prénom en base (retiré du palette)
         OriginMeta(name: "Araméen",     colors: [Color(hex: "C8B898"), Color(hex: "A09060")], description: "Langue sémitique ancienne"),
-        OriginMeta(name: "Autre",       colors: [Color(hex: "BBBBBB"), Color(hex: "999999")], description: "Prénoms d'origines diverses"),
+        OriginMeta(name: "Autre",       colors: [Color(hex: "BBBBBB"), Color(hex: "999999")], description: "Prénoms d'origines diverses", isHidden: true),
     ]
 }
 

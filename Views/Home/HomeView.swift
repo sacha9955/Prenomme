@@ -162,10 +162,10 @@ struct HomeView: View {
 
     private var originsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            SectionTitle(title: "Parcourir par origine", subtitle: "\(originService.origins.count) origines")
+            SectionTitle(title: "Parcourir par origine", subtitle: "\(originService.publicOrigins.count) origines")
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(originService.origins) { origin in
+                    ForEach(originService.publicOrigins) { origin in
                         NavigationLink(value: origin) {
                             OriginCard(origin: origin)
                         }
