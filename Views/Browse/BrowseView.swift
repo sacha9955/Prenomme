@@ -4,9 +4,11 @@ struct BrowseView: View {
     @State private var filter = NameFilter()
     @State private var names: [FirstName] = []
     @State private var showFilter = false
+    @State private var showPaywall = false
     @State private var navigationPath: [FirstName] = []
 
     private let router = NavigationRouter.shared
+    private let purchase = PurchaseManager.shared
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -24,7 +26,11 @@ struct BrowseView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        showFilter = true
+                        if purchase.isPro {
+                            showFilter = true
+                        } else {
+                            showPaywall = true
+                        }
                     } label: {
                         Image(systemName: filter.isActive
                               ? "line.3.horizontal.decrease.circle.fill"
@@ -37,6 +43,9 @@ struct BrowseView: View {
             .sheet(isPresented: $showFilter) {
                 FilterSheet(filter: $filter)
                     .presentationDetents([.large])
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
             .task(id: filter) {
                 await loadNames()

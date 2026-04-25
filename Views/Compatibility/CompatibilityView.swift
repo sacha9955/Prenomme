@@ -8,6 +8,7 @@ struct CompatibilityView: View {
     @State private var showSuggestions = false
     @State private var showPaywall = false
     @State private var isLoadingSuggestions = false
+    @State private var candidateGender: Gender? = nil
 
     @Query(sort: \Favorite.addedAt, order: .reverse)
     private var favoriteRecords: [Favorite]
@@ -21,6 +22,9 @@ struct CompatibilityView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
+                    if !purchase.isPro {
+                        compatibilityProBanner
+                    }
                     lastNameField
                     if !lastName.trimmingCharacters(in: .whitespaces).isEmpty {
                         candidateSection
@@ -38,6 +42,34 @@ struct CompatibilityView: View {
             .sheet(isPresented: $showPaywall) { PaywallView() }
             .task { await loadFavorites() }
         }
+    }
+
+    // MARK: — Pro banner
+
+    private var compatibilityProBanner: some View {
+        Button { showPaywall = true } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "star.fill")
+                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Scores détaillés avec Pro")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("Allitération, rythme, élision et suggestions")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(14)
+            .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .padding(.horizontal)
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: — Last name input
@@ -59,25 +91,34 @@ struct CompatibilityView: View {
 
     // MARK: — Candidate list
 
+    private var filteredCandidates: [FirstName] {
+        guard let g = candidateGender else { return candidates }
+        return candidates.filter { $0.gender == g }
+    }
+
     private var candidateSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Prénoms à tester")
                     .font(.headline)
                 Spacer()
-                Text("\(candidates.count) prénom\(candidates.count > 1 ? "s" : "")")
+                Text("\(filteredCandidates.count) prénom\(filteredCandidates.count > 1 ? "s" : "")")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             .padding(.horizontal)
 
-            if candidates.isEmpty {
-                Text("Ajoutez des prénoms en favoris pour les tester ici.")
+            candidateGenderFilter
+
+            if filteredCandidates.isEmpty {
+                Text(candidates.isEmpty
+                     ? "Ajoutez des prénoms en favoris pour les tester ici."
+                     : "Aucun favori pour ce filtre.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             } else {
-                ForEach(candidates) { name in
+                ForEach(filteredCandidates) { name in
                     if let s = scores[name.id] {
                         ScoreCard(
                             name: name,
@@ -89,6 +130,42 @@ struct CompatibilityView: View {
                     }
                 }
             }
+        }
+    }
+
+    private var candidateGenderFilter: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                candidateChip(nil, label: "Tous")
+                ForEach(Gender.allCases, id: \.rawValue) { g in
+                    candidateChip(g, label: g.label)
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    private func candidateChip(_ gender: Gender?, label: String) -> some View {
+        Button {
+            candidateGender = gender
+        } label: {
+            Text(label)
+                .font(.caption.weight(.medium))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(candidateGender == gender ? candidateChipColor(gender) : Color(.systemGray5))
+                .foregroundStyle(candidateGender == gender ? .white : .primary)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func candidateChipColor(_ gender: Gender?) -> Color {
+        switch gender {
+        case .female: Color(red: 0.85, green: 0.35, blue: 0.50)
+        case .male:   Color(red: 0.30, green: 0.50, blue: 0.80)
+        case .unisex: Color(red: 0.35, green: 0.60, blue: 0.35)
+        case nil:     Color.accentColor
         }
     }
 

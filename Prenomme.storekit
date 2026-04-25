@@ -2,7 +2,7 @@
   "identifier" : "D9B3A1E4-5F72-4C8B-9D01-234E56789ABC",
   "nonConsumableIAP" : [
     {
-      "displayPrice" : "4.99",
+      "displayPrice" : "8.99",
       "familyShareable" : true,
       "internalID" : "prenomme_pro_lifetime_001",
       "localizations" : [

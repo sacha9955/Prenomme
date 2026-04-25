@@ -71,6 +71,7 @@
 		C4BD2D40146948BB9DCF3BB2 /* PurchaseManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483850DFE57643C99642C033 /* PurchaseManagerTests.swift */; };
 		31F9F114A200497D8EF771E0 /* PronunciationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2414F73E403549919FA9E220 /* PronunciationServiceTests.swift */; };
 		C7A39C45C18B47DD94C61CF0 /* NameFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13577637C5B841F3B5D834B7 /* NameFilterTests.swift */; };
+		A9F1B2C3D4E5F60718293A4B /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0C2D3E4F5061728394A5B6C /* SwipeView.swift */; };
 	/* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +167,7 @@
 		483850DFE57643C99642C033 /* PurchaseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManagerTests.swift; sourceTree = "<group>"; };
 		2414F73E403549919FA9E220 /* PronunciationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationServiceTests.swift; sourceTree = "<group>"; };
 		13577637C5B841F3B5D834B7 /* NameFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameFilterTests.swift; sourceTree = "<group>"; };
+		B0C2D3E4F5061728394A5B6C /* SwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
 	/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +212,7 @@
 				57163A170417088D6F8A0E68 /* Onboarding */,
 				F0CC810F3F85791DC5694610 /* Paywall */,
 				DD8674A953557C3B09859659 /* Settings */,
+				C1D3E4F50617283A4B5C6D7E /* Swipe */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -251,6 +254,14 @@
 				861DAD4953354B6138A30EBA /* OriginDetailView.swift */,
 			);
 			path = Browse;
+			sourceTree = "<group>";
+		};
+		C1D3E4F50617283A4B5C6D7E /* Swipe */ = {
+			isa = PBXGroup;
+			children = (
+				B0C2D3E4F5061728394A5B6C /* SwipeView.swift */,
+			);
+			path = Swipe;
 			sourceTree = "<group>";
 		};
 		377D726D42013C386582EC6A /* PrenommeUITests */ = {
@@ -608,6 +619,7 @@
 				D445EF670C038F58A7B42104 /* ComparatorView.swift in Sources */,
 				3F27239008104544909DD227 /* NavigationRouter.swift in Sources */,
 				EADDE6021583497DAD4CF46E /* PDFExporter.swift in Sources */,
+				A9F1B2C3D4E5F60718293A4B /* SwipeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

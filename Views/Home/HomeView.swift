@@ -7,6 +7,7 @@ struct HomeView: View {
     @State private var suggestions: [SuggestionService.Suggestion] = []
     @State private var showPaywall = false
     @State private var favoriteNames: [FirstName] = []
+    @State private var trendingGender: Gender? = nil
 
     @Query(sort: \Favorite.addedAt, order: .reverse)
     private var favorites: [Favorite]
@@ -18,6 +19,9 @@ struct HomeView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    if !purchase.isPro {
+                        proUpsellBanner
+                    }
                     if let nameOfDay {
                         nameOfDayCard(nameOfDay)
                     }
@@ -91,6 +95,35 @@ struct HomeView: View {
         .padding(.top, 8)
     }
 
+    // MARK: — Pro upsell banner
+
+    private var proUpsellBanner: some View {
+        Button { showPaywall = true } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "star.fill")
+                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Découvrir Prénomme Pro")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Text("Favoris illimités, swipes illimités et plus encore")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(14)
+            .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .padding(.horizontal)
+            .padding(.top, 8)
+        }
+        .buttonStyle(.plain)
+    }
+
     // MARK: — Suggestions
 
     private var suggestionsSection: some View {
@@ -141,12 +174,18 @@ struct HomeView: View {
 
     // MARK: — Trending
 
+    private var filteredTrending: [FirstName] {
+        guard let g = trendingGender else { return trending }
+        return trending.filter { $0.gender == g }
+    }
+
     private var trendingSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             SectionTitle(title: "Tendances", subtitle: "Les plus populaires en France")
+            genderFilterChips
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(trending) { name in
+                    ForEach(filteredTrending) { name in
                         NavigationLink(value: name) {
                             TrendingCard(name: name)
                         }
@@ -155,6 +194,42 @@ struct HomeView: View {
                 }
                 .padding(.horizontal)
             }
+        }
+    }
+
+    private var genderFilterChips: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                genderChip(nil, label: "Tous")
+                ForEach(Gender.allCases, id: \.rawValue) { g in
+                    genderChip(g, label: g.label)
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    private func genderChip(_ gender: Gender?, label: String) -> some View {
+        Button {
+            trendingGender = gender
+        } label: {
+            Text(label)
+                .font(.caption.weight(.medium))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(trendingGender == gender ? chipColor(gender) : Color(.systemGray5))
+                .foregroundStyle(trendingGender == gender ? .white : .primary)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func chipColor(_ gender: Gender?) -> Color {
+        switch gender {
+        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
+        case .male:   Color(red: 0.35, green: 0.55, blue: 0.85)
+        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        case nil:     Color.accentColor
         }
     }
 

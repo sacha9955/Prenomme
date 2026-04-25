@@ -8,6 +8,7 @@ struct SettingsView: View {
     @Environment(\.requestReview) private var requestReview
     @State private var purchase = PurchaseManager.shared
     @State private var restoreAlert: RestoreAlert?
+    @State private var showPaywall = false
 
     private var settings: UserSettings {
         if let existing = settingsList.first { return existing }
@@ -43,6 +44,9 @@ struct SettingsView: View {
             .alert(item: $restoreAlert) { alert in
                 Alert(title: Text(alert.title), message: Text(alert.message), dismissButton: .default(Text("OK")))
             }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
         }
     }
 
@@ -65,6 +69,12 @@ struct SettingsView: View {
             } else {
                 Label("Version gratuite", systemImage: "star")
                     .foregroundStyle(.secondary)
+                Button {
+                    showPaywall = true
+                } label: {
+                    Label("Passer à Pro", systemImage: "star.fill")
+                        .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                }
             }
             Button("Restaurer les achats") {
                 Task { await restorePurchases() }
