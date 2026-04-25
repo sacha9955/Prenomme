@@ -1,9 +1,18 @@
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     @State private var trending: [FirstName] = []
     @State private var nameOfDay: FirstName? = nil
+    @State private var suggestions: [SuggestionService.Suggestion] = []
+    @State private var showPaywall = false
+    @State private var favoriteNames: [FirstName] = []
+
+    @Query(sort: \Favorite.addedAt, order: .reverse)
+    private var favorites: [Favorite]
+
     private let originService = OriginService.shared
+    private let purchase = PurchaseManager.shared
 
     var body: some View {
         NavigationStack {
@@ -13,6 +22,9 @@ struct HomeView: View {
                         nameOfDayCard(nameOfDay)
                     }
                     trendingSection
+                    if !suggestions.isEmpty || purchase.isPro {
+                        suggestionsSection
+                    }
                     originsSection
                 }
                 .padding(.bottom, 32)
@@ -24,8 +36,14 @@ struct HomeView: View {
             .navigationDestination(for: OriginMeta.self) { origin in
                 OriginDetailView(origin: origin)
             }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
             .task {
                 await loadData()
+            }
+            .onChange(of: favorites) {
+                Task { await loadSuggestions() }
             }
         }
     }
@@ -73,6 +91,54 @@ struct HomeView: View {
         .padding(.top, 8)
     }
 
+    // MARK: — Suggestions
+
+    private var suggestionsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionTitle(title: "Suggestions pour vous",
+                         subtitle: "Basées sur vos favoris")
+            if !purchase.isPro {
+                proTeaser
+            } else if suggestions.isEmpty {
+                Text("Ajoutez des favoris pour recevoir des suggestions personnalisées.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(suggestions) { suggestion in
+                            NavigationLink(value: suggestion.name) {
+                                SuggestionCard(suggestion: suggestion)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
+        .proGated(!purchase.isPro)
+    }
+
+    private var proTeaser: some View {
+        Button { showPaywall = true } label: {
+            HStack {
+                Image(systemName: "wand.and.sparkles")
+                Text("Suggestions personnalisées — Pro")
+                    .font(.subheadline.weight(.medium))
+                Spacer()
+                Image(systemName: "chevron.right").font(.caption)
+            }
+            .padding(14)
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .foregroundStyle(.secondary)
+            .padding(.horizontal)
+        }
+        .buttonStyle(.plain)
+    }
+
     // MARK: — Trending
 
     private var trendingSection: some View {
@@ -117,6 +183,21 @@ struct HomeView: View {
         nameOfDay = try? NameDatabase.shared.nameForDate(Date())
         let allNames = (try? NameDatabase.shared.all()) ?? []
         trending = Array(allNames.prefix(10))
+        await loadSuggestions()
+    }
+
+    private func loadSuggestions() async {
+        guard purchase.isPro else { return }
+        var loaded: [FirstName] = []
+        for fav in favorites {
+            if let name = try? NameDatabase.shared.byId(fav.nameId) {
+                loaded.append(name)
+            }
+        }
+        favoriteNames = loaded
+        guard !loaded.isEmpty else { suggestions = []; return }
+        let allNames = (try? NameDatabase.shared.all()) ?? []
+        suggestions = SuggestionService.shared.suggest(from: allNames, favorites: loaded, count: 10)
     }
 }
 
@@ -198,5 +279,43 @@ private struct OriginCard: View {
         .frame(width: 140, height: 100)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: .black.opacity(0.08), radius: 8, y: 3)
+    }
+}
+
+private struct SuggestionCard: View {
+    let suggestion: SuggestionService.Suggestion
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ZStack {
+                Circle()
+                    .fill(genderColor.opacity(0.15))
+                    .frame(width: 52, height: 52)
+                Text(String(suggestion.name.name.prefix(1)))
+                    .font(.system(size: 26, weight: .semibold, design: .rounded))
+                    .foregroundStyle(genderColor)
+            }
+            Text(suggestion.name.name)
+                .font(.headline)
+            Text(suggestion.name.origin)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text("\(suggestion.matchPercent)% match")
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(genderColor.opacity(0.8))
+        }
+        .frame(width: 110)
+        .padding(14)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
+    }
+
+    private var genderColor: Color {
+        switch suggestion.name.gender {
+        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
+        case .male:   Color(red: 0.35, green: 0.55, blue: 0.85)
+        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        }
     }
 }
