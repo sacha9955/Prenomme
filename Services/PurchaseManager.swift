@@ -7,14 +7,38 @@ final class PurchaseManager: @unchecked Sendable {
 
     static let shared = PurchaseManager()
 
-    private(set) var isPro: Bool = false
+    private(set) var realIsPro: Bool = false
     private(set) var products: [Product] = []
     private(set) var isLoading: Bool = false
+    private(set) var isLoadingProducts: Bool = true
     private(set) var purchaseError: String?
+    private(set) var loadError: String?
 
     private let productIDs: Set<String> = ["prenomme.pro.lifetime"]
     private var updatesTask: Task<Void, Never>?
     private let sharedDefaults = UserDefaults(suiteName: "group.com.sacha9955.prenomme")
+
+    #if DEBUG
+    private(set) var debugForcePro: Bool = UserDefaults(suiteName: "group.com.sacha9955.prenomme")?.bool(forKey: "debug.forcePro") ?? false
+
+    func setDebugForcePro(_ value: Bool) {
+        debugForcePro = value
+        sharedDefaults?.set(value, forKey: "debug.forcePro")
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+    #endif
+
+    var isPro: Bool {
+        #if DEBUG
+        return realIsPro || debugForcePro
+        #else
+        return realIsPro
+        #endif
+    }
+
+    var proProduct: Product? {
+        products.first(where: { $0.id == "prenomme.pro.lifetime" })
+    }
 
     init() {
         updatesTask = Task { [weak self] in
@@ -66,18 +90,33 @@ final class PurchaseManager: @unchecked Sendable {
         }
     }
 
-    var proProduct: Product? {
-        products.first(where: { $0.id == "prenomme.pro.lifetime" })
+    func retryLoadProducts() {
+        Task { await loadProducts() }
     }
 
     // MARK: — Private
 
     private func loadProducts() async {
-        do {
-            products = try await Product.products(for: productIDs)
-        } catch {
-            purchaseError = error.localizedDescription
+        isLoadingProducts = true
+        loadError = nil
+        defer { isLoadingProducts = false }
+
+        let retryDelays: [UInt64] = [2_000_000_000, 5_000_000_000]
+        for (attempt, delay) in ([UInt64(0)] + retryDelays).enumerated() {
+            if attempt > 0 {
+                try? await Task.sleep(nanoseconds: delay)
+            }
+            do {
+                let result = try await Product.products(for: productIDs)
+                if !result.isEmpty {
+                    products = result
+                    return
+                }
+            } catch {
+                // retry on next iteration
+            }
         }
+        loadError = "Prix indisponible. Vérifiez votre connexion et réessayez."
     }
 
     private func refreshEntitlements() async {
@@ -88,8 +127,8 @@ final class PurchaseManager: @unchecked Sendable {
             }
         }
         let newIsPro = entitled.contains("prenomme.pro.lifetime")
-        let changed = newIsPro != isPro
-        isPro = newIsPro
+        let changed = newIsPro != realIsPro
+        realIsPro = newIsPro
         sharedDefaults?.set(newIsPro, forKey: "isPro")
         if changed { WidgetCenter.shared.reloadAllTimelines() }
     }

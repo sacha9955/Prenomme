@@ -145,11 +145,29 @@ struct PaywallView: View {
                     .shadow(color: Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.35),
                             radius: 10, y: 4)
                 }
+            } else if purchase.isLoadingProducts {
+                HStack(spacing: 10) {
+                    ProgressView()
+                    Text("Chargement du prix…")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(height: 58)
             } else {
-                Text("Chargement du prix…")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .frame(height: 58)
+                VStack(spacing: 10) {
+                    Text(purchase.loadError ?? "Prix indisponible.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                    Button {
+                        purchase.retryLoadProducts()
+                    } label: {
+                        Text("Réessayer")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    }
+                }
+                .frame(minHeight: 58)
             }
 
             if let errorMsg = purchase.purchaseError {

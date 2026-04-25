@@ -24,6 +24,13 @@ struct SettingsView: View {
                 Section("Version") {
                     LabeledContent("App", value: "1.0.0")
                 }
+                #if DEBUG
+                Section("Debug") {
+                    NavigationLink("Debug Settings") {
+                        DebugSettingsView()
+                    }
+                }
+                #endif
             }
             .navigationTitle("Réglages")
         }

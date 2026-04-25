@@ -45,6 +45,7 @@
 		B09640A017B4907878B96FF1 /* BrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57303B7400D1E5C7601D068 /* BrowseView.swift */; };
 		B45CC868DBD1672F50C96A4C /* PrenommeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC193B9DAB4E906597BED1CB /* PrenommeApp.swift */; };
 		B78C13B3518BB04991B71C84 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB8F99BAE22912EB8B74C47 /* SettingsView.swift */; };
+		A3F7B2C1D4E5F6A7B8C9D0E1 /* DebugSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F7B2C1D4E5F6A7B8C9D0E2 /* DebugSettingsView.swift */; };
 		C45CFAA2B2136CA07488DC72 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E5D776B3E855C4C31B24071 /* FavoritesView.swift */; };
 		CE507BE01EF45B0B0EE61345 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 8422E61DD11B3DCB5A74D1D1 /* GRDB */; };
 		CE579FF7CDE437966F7835E3 /* PrenommeWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1F7BCDE894F99252FBD80966 /* PrenommeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -112,6 +113,7 @@
 		027CE0378EAFC16D11EF41E2 /* SwipeCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeCounter.swift; sourceTree = "<group>"; };
 		0717F258276C8BF59354A271 /* NameOfDayWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameOfDayWidget.swift; sourceTree = "<group>"; };
 		0CB8F99BAE22912EB8B74C47 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A3F7B2C1D4E5F6A7B8C9D0E2 /* DebugSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettingsView.swift; sourceTree = "<group>"; };
 		19B254EF0E1E7B61323BB53A /* FavoriteServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteServiceTests.swift; sourceTree = "<group>"; };
 		1C6426C8CF5855010FB3922F /* FirstName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstName.swift; sourceTree = "<group>"; };
 		1F7BCDE894F99252FBD80966 /* PrenommeWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = PrenommeWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -344,6 +346,7 @@
 			isa = PBXGroup;
 			children = (
 				0CB8F99BAE22912EB8B74C47 /* SettingsView.swift */,
+				A3F7B2C1D4E5F6A7B8C9D0E2 /* DebugSettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -588,6 +591,7 @@
 				9FE49AC063228DE3EF1E130D /* PurchaseManager.swift in Sources */,
 				2D4845A94117D096667DF4D5 /* SchemaVersions.swift in Sources */,
 				B78C13B3518BB04991B71C84 /* SettingsView.swift in Sources */,
+				A3F7B2C1D4E5F6A7B8C9D0E1 /* DebugSettingsView.swift in Sources */,
 				662A41AB84422B28B28DC421 /* SwipeCounter.swift in Sources */,
 				A112BC34D9F0E2C57481FE01 /* PhoneticAnalyzer.swift in Sources */,
 				B223CD45EA016D3685920F02 /* SuggestionService.swift in Sources */,
