@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-04-25 — Jour 5 : Analyse phonétique & Suggestions
+
+### Added
+- **PhoneticAnalyzer** (`Services/PhoneticAnalyzer.swift`) — 5 métriques phonétiques françaises : `syllableCount` (groupes vocaliques + règle du e-muet précédé d'une consonne), `alliterationScore` (consonnes d'attaque, distinction cluster simple vs. multiple), `rhythmScore` (table syllabique 2+2/2+3/…), `elisionRisk` (voyelle finale + h aspiré), `hardConsonantClash` (consonnes prononcées à la jonction) ; `CompatibilityScore` struct avec formule pondérée et verdict 4 niveaux
+- **CompatibilityView** (`Views/Compatibility/CompatibilityView.swift`) — 5ème onglet "Compatibilité" (Pro-gaté) : saisie du nom de famille, score global avec jauge colorée, 4 métriques détaillées
+- **ComparatorView** (`Views/Favorites/ComparatorView.swift`) — feuille de comparaison côte à côte jusqu'à 4 favoris (Pro-gaté depuis FavoritesView) : genre, origine, signification, syllabes, rangs FR/US, score phonétique ; sélection visuelle d'un prénom gagnant
+- **SuggestionService** (`Services/SuggestionService.swift`) — moteur de suggestions basé sur les favoris : profil de goûts (top 3 origines, médiane syllabes, genre dominant), scoring par similarité (origine 40 %, syllabes 30 %, genre 20 %, popularité 10 %)
+- **HomeView** enrichi — section "Suggestions pour vous" (Pro-gaté) avec bande horizontale de 10 prénoms + pourcentage de correspondance
+- **FavoritesView** enrichi — bouton "Comparer" dans la barre de navigation ouvre ComparatorView (Pro-gaté)
+
+### Tests (81 passés, 0 échecs)
+- `PhoneticAnalyzerTests` — 33 cas : syllables (6), allitération (6), rythme (5), risque d'élision (5), choc de consonnes (4), score global (3), surnoms (4)
+- `SuggestionServiceTests` — 17 cas : buildProfile (4), similarityScore (6), suggest (7)
+
+### Fixed
+- `syllableCount` : le e-muet final n'est déduit que s'il est précédé d'une consonne — "Marie" → 2 syllabes (correction), "Pierre" → 1 syllabe (inchangé)
+- `alliterationScore` : un cluster consonantique complet identique (ex. "Str-/Str-") renvoie 1.0 ; une simple lettre partagée renvoie 0.85
+
 ## [0.3.0] — 2026-04-24 — Jour 3 : Navigation, Détail & Origines
 
 ### Added
