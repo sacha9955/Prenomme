@@ -82,6 +82,17 @@ Nolwenn,Breton,Sainte qui émigra en Bretagne au VIe siècle
 Maëlys,Breton,Princesse au destin lumineux
 ```
 
+## cleanup_simulator.sh
+
+Removes all installed builds of the app from every booted simulator.
+Run this before a fresh install to test the first-launch experience.
+
+```bash
+bash Scripts/cleanup_simulator.sh
+```
+
+Requires at least one simulator to be booted (`xcrun simctl boot <UDID>` or via Xcode).
+
 ## Full pipeline
 
 ```bash
