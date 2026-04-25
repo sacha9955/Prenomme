@@ -38,4 +38,14 @@ final class OriginServiceTests: XCTestCase {
             XCTAssertEqual(origin.count, expected, "\(origin.name) count should match database")
         }
     }
+
+    func testPublicOriginsExcludesAutre() {
+        let publicNames = OriginService.shared.publicOrigins.map(\.name)
+        XCTAssertFalse(publicNames.contains("Autre"), "publicOrigins should not expose 'Autre'")
+    }
+
+    func testAllOriginsIncludesAutre() {
+        let allNames = OriginService.shared.origins.map(\.name)
+        XCTAssertTrue(allNames.contains("Autre"), "origins (full list) should include 'Autre'")
+    }
 }

@@ -50,4 +50,33 @@ final class NameDatabaseTests: XCTestCase {
         try requirePopulatedDB()
         XCTAssertFalse(NameDatabase.shared.allOrigins.isEmpty)
     }
+
+    func testFilteredByGenderAndOrigin() throws {
+        try requirePopulatedDB()
+        var filter = NameFilter()
+        filter.gender = .female
+        filter.origins = ["Hébreu"]
+        let results = try NameDatabase.shared.filtered(filter)
+        XCTAssertTrue(results.allSatisfy { $0.gender == .female && $0.origin == "Hébreu" })
+    }
+
+    func testFilteredMultipleOrigins() throws {
+        try requirePopulatedDB()
+        var filter = NameFilter()
+        filter.origins = ["Latin", "Grec"]
+        let results = try NameDatabase.shared.filtered(filter)
+        XCTAssertTrue(results.allSatisfy { $0.origin == "Latin" || $0.origin == "Grec" })
+    }
+
+    func testSearchEmptyStringReturnsNames() throws {
+        try requirePopulatedDB()
+        let results = try NameDatabase.shared.search("")
+        XCTAssertFalse(results.isEmpty)
+    }
+
+    func testByIdNonexistentReturnsNil() throws {
+        try requirePopulatedDB()
+        let result = try NameDatabase.shared.byId(Int.max)
+        XCTAssertNil(result)
+    }
 }
