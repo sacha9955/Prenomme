@@ -36,6 +36,7 @@ struct PrenommeApp: App {
     }
 
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding = false
+    @AppStorage("iCloudToastDismissed") private var iCloudToastDismissed = false
 
     var body: some Scene {
         WindowGroup {
@@ -49,10 +50,11 @@ struct PrenommeApp: App {
             }
             .modelContainer(container)
                 .onOpenURL { url in handleDeepLink(url) }
-                .task { await checkICloudToast() }
+                .task { checkICloudToast() }
                 .overlay(alignment: .top) {
                     if showICloudToast {
                         ICloudUnavailableToast {
+                            iCloudToastDismissed = true
                             withAnimation { showICloudToast = false }
                         }
                         .transition(.move(edge: .top).combined(with: .opacity))
@@ -83,17 +85,13 @@ struct PrenommeApp: App {
     }
 
     @MainActor
-    private func checkICloudToast() async {
-        guard FileManager.default.ubiquityIdentityToken == nil else { return }
-        let context = container.mainContext
-        let descriptor = FetchDescriptor<UserSettings>()
-        guard let settings = try? context.fetch(descriptor).first else {
-            showICloudToast = true
+    private func checkICloudToast() {
+        let iCloudAvailable = FileManager.default.ubiquityIdentityToken != nil
+        if iCloudAvailable {
+            iCloudToastDismissed = false
             return
         }
-        if !settings.iCloudUnavailableToastShown {
-            settings.iCloudUnavailableToastShown = true
-            try? context.save()
+        if !iCloudToastDismissed {
             showICloudToast = true
         }
     }
