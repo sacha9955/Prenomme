@@ -168,7 +168,7 @@ struct NameDetailView: View {
             }
             .padding(.horizontal)
             .padding(.bottom, 20)
-            .proGated(!purchase.isPro)
+            .proGated(!purchase.isPro, mode: .blur, title: "Étymologie Pro")
         }
         .padding(.top, 8)
     }
@@ -179,7 +179,7 @@ struct NameDetailView: View {
         VStack(alignment: .leading, spacing: 0) {
             SectionHeader(title: "Prénoms similaires")
             SimilarNamesContent(name: name)
-                .proGated(!purchase.isPro)
+                .proGated(!purchase.isPro, mode: .blur, title: "Prénoms similaires Pro")
                 .padding(.horizontal)
                 .padding(.bottom, 32)
         }

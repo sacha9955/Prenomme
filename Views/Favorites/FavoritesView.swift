@@ -51,7 +51,8 @@ struct FavoritesView: View {
                         } label: {
                             Label("Comparer", systemImage: "rectangle.split.3x1")
                         }
-                        .proGated(!purchase.isPro)
+                        .proGated(!purchase.isPro, mode: .teaser, title: "Comparer — Pro",
+                                  teaser: "Comparez vos favoris côte à côte.")
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
@@ -146,7 +147,8 @@ struct FavoritesView: View {
                 Label("Exporter en PDF", systemImage: "square.and.arrow.up")
                     .foregroundStyle(purchase.isPro ? .primary : .secondary)
             }
-            .proGated(!purchase.isPro)
+            .proGated(!purchase.isPro, mode: .teaser, title: "Export PDF — Pro",
+                      teaser: "Exportez votre liste de favoris en PDF.")
         }
     }
 

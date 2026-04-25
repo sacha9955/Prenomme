@@ -191,7 +191,8 @@ struct CompatibilityView: View {
             .padding(.horizontal)
         }
         .disabled(isLoadingSuggestions)
-        .proGated(!purchase.isPro)
+        .proGated(!purchase.isPro, mode: .teaser, title: "Compatibilité Pro",
+                  teaser: "Analysez la compatibilité phonétique et le sens des prénoms.")
     }
 
     // MARK: — Data

@@ -191,7 +191,7 @@ struct HomeView: View {
                 }
             }
         }
-        .proGated(!purchase.isPro)
+        .proGated(!purchase.isPro, mode: .blur, title: "Suggestions Pro")
     }
 
     private var proTeaser: some View {
