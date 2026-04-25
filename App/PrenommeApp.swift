@@ -8,22 +8,14 @@ struct PrenommeApp: App {
     @State private var showICloudToast = false
 
     init() {
-        let iCloudAvailable = FileManager.default.ubiquityIdentityToken != nil
         let schema = Schema(PrenommeMigrationPlan.schemas.flatMap { $0.models })
-        let config: ModelConfiguration
-
-        if iCloudAvailable {
-            config = ModelConfiguration(
-                schema: schema,
-                cloudKitDatabase: .automatic
-            )
-        } else {
-            config = ModelConfiguration(
-                schema: schema,
-                cloudKitDatabase: .none
-            )
-        }
-
+        // Use .automatic — SwiftData handles CloudKit availability internally.
+        // Never call ubiquityIdentityToken here: it makes a blocking XPC call
+        // to the iCloud service on the main thread, triggering a watchdog kill.
+        let config = ModelConfiguration(
+            schema: schema,
+            cloudKitDatabase: .automatic
+        )
         do {
             container = try ModelContainer(
                 for: schema,
@@ -84,15 +76,16 @@ struct PrenommeApp: App {
         }
     }
 
-    @MainActor
     private func checkICloudToast() {
-        let iCloudAvailable = FileManager.default.ubiquityIdentityToken != nil
-        if iCloudAvailable {
-            iCloudToastDismissed = false
-            return
-        }
-        if !iCloudToastDismissed {
-            showICloudToast = true
+        Task.detached(priority: .utility) {
+            let iCloudAvailable = FileManager.default.ubiquityIdentityToken != nil
+            await MainActor.run {
+                if iCloudAvailable {
+                    iCloudToastDismissed = false
+                } else if !iCloudToastDismissed {
+                    showICloudToast = true
+                }
+            }
         }
     }
 }
