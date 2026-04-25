@@ -68,6 +68,7 @@ struct ProNameProvider: AppIntentTimelineProvider {
             let filtered = pool.filter { ids.contains($0.origin) }
             if !filtered.isEmpty { pool = filtered }
         }
+        guard !pool.isEmpty else { return fallback }
         let day = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 1
         return pool[day % pool.count]
     }

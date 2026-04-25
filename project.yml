@@ -89,14 +89,3 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.tests
       GENERATE_INFOPLIST_FILE: YES
 
-  PrenommeUITests:
-    type: bundle.ui-testing
-    platform: iOS
-    deploymentTarget: "17.5"
-    sources:
-      - path: Tests/PrenommeUITests
-    dependencies:
-      - target: Prenomme
-    settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.uitests
-      GENERATE_INFOPLIST_FILE: YES

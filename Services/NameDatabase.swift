@@ -123,7 +123,8 @@ final class NameDatabase: @unchecked Sendable {
 
     func nameForDate(_ date: Date) throws -> FirstName? {
         try db.read { db in
-            let count = try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM names") ?? 1
+            let count = try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM names") ?? 0
+            guard count > 0 else { return nil }
             let daysSinceReference = Int(date.timeIntervalSinceReferenceDate / 86400)
             let index = ((daysSinceReference % count) + count) % count
             return try FirstName.fetchOne(db,

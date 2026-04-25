@@ -5,6 +5,7 @@ struct PaywallView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var purchase = PurchaseManager.shared
+    @State private var shouldPurchaseAfterLoad = false
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -21,6 +22,11 @@ struct PaywallView: View {
             closeButton
         }
         .ignoresSafeArea(edges: .top)
+        .onChange(of: purchase.proProduct) { _, product in
+            guard let product, shouldPurchaseAfterLoad else { return }
+            shouldPurchaseAfterLoad = false
+            Task { await purchase.purchase(product) }
+        }
     }
 
     // MARK: — Hero
@@ -153,9 +159,10 @@ struct PaywallView: View {
                 buyButtonLabel(price: product.displayPrice)
             }
         } else {
-            // StoreKit unavailable — show fallback price, tap retries loading then purchases
+            // StoreKit unavailable — show fallback price, tap retries loading then auto-purchases
             VStack(spacing: 8) {
                 Button {
+                    shouldPurchaseAfterLoad = true
                     purchase.retryLoadProducts()
                 } label: {
                     buyButtonLabel(price: PurchaseManager.fallbackPriceDisplay)

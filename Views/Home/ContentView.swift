@@ -21,9 +21,6 @@ struct ContentView: View {
             CompatibilityView()
                 .tabItem { Label("Compatibilité", systemImage: "waveform.path.ecg") }
                 .tag(4)
-            SettingsView()
-                .tabItem { Label("Réglages", systemImage: "gearshape") }
-                .tag(5)
         }
         .onChange(of: router.pendingNameId) { _, id in
             if id != nil { selectedTab = 1 }

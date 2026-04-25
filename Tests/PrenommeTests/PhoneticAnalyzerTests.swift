@@ -66,9 +66,9 @@ final class PhoneticAnalyzerTests: XCTestCase {
     }
 
     func testAlliterationVowelStart() {
-        // Names starting with vowels have no leading consonants → low score
+        // Names starting with vowels have no leading consonants → neutral 0.5 (not penalised)
         let score = analyzer.alliterationScore(firstName: "Arthur", lastName: "Eiffel")
-        XCTAssertLessThanOrEqual(score, 0.2)
+        XCTAssertEqual(score, 0.5, accuracy: 0.01)
     }
 
     // MARK: — rhythmScore

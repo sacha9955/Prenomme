@@ -56,7 +56,8 @@ struct PhoneticAnalyzer {
         let fLeading = leadingConsonants(f)
         let lLeading = leadingConsonants(l)
 
-        guard !fLeading.isEmpty, !lLeading.isEmpty else { return 0 }
+        // No leading consonants on either side = neutral (no alliteration is possible, not penalised)
+        guard !fLeading.isEmpty, !lLeading.isEmpty else { return 0.5 }
 
         // Multi-consonant cluster exact match scores higher than single-letter coincidence
         if fLeading == lLeading { return fLeading.count >= 2 ? 1.0 : 0.85 }

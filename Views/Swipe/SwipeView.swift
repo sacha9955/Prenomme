@@ -210,8 +210,14 @@ struct SwipeView: View {
     private func loadDeck() async {
         var filter = NameFilter()
         filter.gender = genderFilter
-        let names = (try? NameDatabase.shared.filtered(filter)) ?? []
-        deck = names.shuffled()
+        guard !Task.isCancelled else { return }
+        do {
+            let names = try NameDatabase.shared.filtered(filter)
+            guard !Task.isCancelled else { return }
+            deck = names.shuffled()
+        } catch {
+            // Keep existing deck on DB error
+        }
     }
 }
 
