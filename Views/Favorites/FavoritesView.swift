@@ -7,6 +7,7 @@ struct FavoritesView: View {
     @State private var namesById: [Int: FirstName] = [:]
     @State private var sortOrder: FavoriteSort = .dateAdded
     @State private var showPaywall = false
+    @State private var showComparator = false
 
     private let purchase = PurchaseManager.shared
     private var favoriteService: FavoriteService { FavoriteService(context: context) }
@@ -38,6 +39,18 @@ struct FavoritesView: View {
             }
             .toolbar {
                 if !favorites.isEmpty {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            if purchase.isPro {
+                                showComparator = true
+                            } else {
+                                showPaywall = true
+                            }
+                        } label: {
+                            Label("Comparer", systemImage: "rectangle.split.3x1")
+                        }
+                        .proGated(!purchase.isPro)
+                    }
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
                             Picker("Trier", selection: $sortOrder) {
@@ -49,20 +62,13 @@ struct FavoritesView: View {
                             Image(systemName: "arrow.up.arrow.down.circle")
                         }
                     }
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            showPaywall = true
-                        } label: {
-                            Text("\(favorites.count)/\(purchase.isPro ? "∞" : "15")")
-                                .font(.caption.weight(.semibold))
-                                .foregroundStyle(.secondary)
-                        }
-                        .disabled(purchase.isPro)
-                    }
                 }
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
+            }
+            .sheet(isPresented: $showComparator) {
+                ComparatorView(names: Array(sorted.compactMap { namesById[$0.nameId] }.prefix(4)))
             }
             .task {
                 await loadNames()
