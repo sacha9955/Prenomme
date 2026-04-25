@@ -7,4 +7,5 @@ final class NavigationRouter {
 
     var pendingNameId: Int?
     var showPaywall = false
+    var pendingTab: Int?
 }

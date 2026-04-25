@@ -25,6 +25,12 @@ struct ContentView: View {
         .onChange(of: router.pendingNameId) { _, id in
             if id != nil { selectedTab = 1 }
         }
+        .onChange(of: router.pendingTab) { _, tab in
+            if let tab {
+                selectedTab = tab
+                router.pendingTab = nil
+            }
+        }
         .sheet(isPresented: $router.showPaywall) {
             PaywallView()
         }

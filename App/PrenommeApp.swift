@@ -75,6 +75,8 @@ struct PrenommeApp: App {
             if let idStr = url.pathComponents.dropFirst().first, let id = Int(idStr) {
                 router.pendingNameId = id
             }
+        case "browse":
+            router.pendingTab = 1
         default:
             break
         }

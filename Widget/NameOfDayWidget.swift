@@ -8,6 +8,7 @@ struct NameEntry: TimelineEntry {
     let name: String
     let meaning: String
     let gender: String
+    let nameId: Int
 }
 
 // MARK: — Provider
@@ -16,7 +17,7 @@ struct NameOfDayProvider: TimelineProvider {
     private let sharedDefaults = UserDefaults(suiteName: "group.com.sacha9955.prenomme")
 
     func placeholder(in context: Context) -> NameEntry {
-        NameEntry(date: .now, name: "Emma", meaning: "entière, universelle", gender: "female")
+        NameEntry(date: .now, name: "Emma", meaning: "entière, universelle", gender: "female", nameId: 0)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (NameEntry) -> Void) {
@@ -31,13 +32,14 @@ struct NameOfDayProvider: TimelineProvider {
 
     private func entry(for date: Date) -> NameEntry {
         guard let firstName = try? NameDatabase.shared.nameForDate(date) else {
-            return NameEntry(date: date, name: "—", meaning: "", gender: "unisex")
+            return NameEntry(date: date, name: "—", meaning: "", gender: "unisex", nameId: 0)
         }
         return NameEntry(
             date: date,
             name: firstName.name,
             meaning: firstName.meaning,
-            gender: firstName.gender.rawValue
+            gender: firstName.gender.rawValue,
+            nameId: firstName.id
         )
     }
 }
@@ -77,7 +79,9 @@ struct NameOfDayWidgetView: View {
             ),
             for: .widget
         )
-        .widgetURL(URL(string: "prenomme://browse"))
+        .widgetURL(entry.nameId > 0
+            ? URL(string: "prenomme://name/\(entry.nameId)")
+            : URL(string: "prenomme://browse"))
     }
 }
 

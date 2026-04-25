@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.6.1] — 2026-04-25 — Hotfix post-validation Jour 6
+
+### Fixed
+- **PDF footer** — ajout de "Généré avec Prénomme · prenomme.app" aligné à droite (le numéro de page reste centré)
+- **NameOfDayWidget deep link** — `prenomme://browse` remplacé par `prenomme://name/{id}` ; `NameEntry` enrichi de `nameId: Int` ; tap widget → `NameDetailView` du prénom affiché
+- **NavigationRouter** — ajout de `pendingTab: Int?` pour le routage de `prenomme://browse` (fallback si `nameId == 0`)
+- **ContentView** — écoute de `router.pendingTab` pour sélection d'onglet depuis les liens profonds
+
 ## [0.6.0] — 2026-04-25 — Jour 6 : Widget Pro, Export PDF & Liens profonds
 
 ### Added

@@ -112,12 +112,18 @@ struct PDFExporter {
 
     private func drawFooter(page: Int, total: Int) {
         let y = pageSize.height - margin - footerH
-        let as_ = NSAttributedString(string: "\(page) / \(total)", attributes: [
+        let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 10),
             .foregroundColor: UIColor.tertiaryLabel,
-        ])
-        let size = as_.size()
-        as_.draw(at: CGPoint(x: pageSize.width / 2 - size.width / 2, y: y))
+        ]
+
+        let pageAS = NSAttributedString(string: "\(page) / \(total)", attributes: attrs)
+        let pageSize_ = pageAS.size()
+        pageAS.draw(at: CGPoint(x: pageSize.width / 2 - pageSize_.width / 2, y: y))
+
+        let creditAS = NSAttributedString(string: "Généré avec Prénomme · prenomme.app", attributes: attrs)
+        let creditSize = creditAS.size()
+        creditAS.draw(at: CGPoint(x: pageSize.width - margin - creditSize.width, y: y))
     }
 
     // MARK: — Intro block
