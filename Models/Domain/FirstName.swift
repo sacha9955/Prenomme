@@ -12,6 +12,7 @@ struct FirstName: Identifiable, Hashable, Sendable {
     let popularityRankUS: Int?
     let themes: [String]
     let phonetic: String?
+    let etymology: String?
 
     var isFemale: Bool { gender == .female }
     var isMale: Bool { gender == .male }

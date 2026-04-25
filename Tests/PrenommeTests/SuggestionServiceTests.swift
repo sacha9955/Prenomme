@@ -26,7 +26,8 @@ final class SuggestionServiceTests: XCTestCase {
             popularityRankFR: rankFR,
             popularityRankUS: nil,
             themes: [],
-            phonetic: nil
+            phonetic: nil,
+            etymology: nil
         )
     }
 

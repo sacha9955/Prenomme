@@ -18,6 +18,7 @@ extension FirstName: FetchableRecord {
         let themesJSON: String? = row["themes"]
         themes        = Self.parseThemes(themesJSON)
         phonetic      = row["phonetic"]
+        etymology     = row["etymology"]
     }
 
     private static func parseThemes(_ json: String?) -> [String] {
@@ -63,7 +64,8 @@ final class NameDatabase: @unchecked Sendable {
             popularity_rank_fr  INTEGER,
             popularity_rank_us  INTEGER,
             themes              TEXT,
-            phonetic            TEXT
+            phonetic            TEXT,
+            etymology           TEXT
         );
         """
 

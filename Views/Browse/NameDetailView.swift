@@ -18,6 +18,9 @@ struct NameDetailView: View {
                 header
                 Divider().padding(.horizontal)
                 infoSection
+                if name.etymology != nil {
+                    etymologySection
+                }
                 popularitySection
                 if name.phonetic != nil || !name.themes.isEmpty {
                     phoneticSection
@@ -112,6 +115,25 @@ struct NameDetailView: View {
             InfoRow(label: "Genre", value: name.gender.displayName)
         }
         .padding(.top, 20)
+    }
+
+    // MARK: — Etymology (Pro-gated)
+
+    @ViewBuilder
+    private var etymologySection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            SectionHeader(title: "Étymologie complète")
+            if let etymology = name.etymology {
+                Text(etymology)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal)
+                    .padding(.bottom, 20)
+            }
+        }
+        .padding(.top, 8)
+        .proGated(!purchase.isPro, mode: .teaser, title: "Étymologie complète — Pro",
+                  teaser: "Découvrez l'origine et le sens profond de ce prénom.")
     }
 
     private var syllablesLabel: String {

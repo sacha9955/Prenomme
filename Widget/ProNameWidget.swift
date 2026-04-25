@@ -51,7 +51,7 @@ struct ProNameProvider: AppIntentTimelineProvider {
             ?? FirstName(id: 0, name: "Emma", gender: .female, origin: "Latin",
                          originLocale: nil, meaning: "entière, universelle",
                          syllables: 2, popularityRankFR: 1, popularityRankUS: nil,
-                         themes: [], phonetic: nil)
+                         themes: [], phonetic: nil, etymology: nil)
     }
 
     private func pick(for configuration: NameWidgetConfiguration) -> FirstName {

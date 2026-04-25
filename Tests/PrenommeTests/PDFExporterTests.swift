@@ -11,7 +11,7 @@ final class PDFExporterTests: XCTestCase {
         FirstName(id: id, name: name, gender: gender, origin: "Latin", originLocale: nil,
                   meaning: "belle signification", syllables: 2,
                   popularityRankFR: rankFR, popularityRankUS: rankUS,
-                  themes: [], phonetic: nil)
+                  themes: [], phonetic: nil, etymology: nil)
     }
 
     private func sampleNames(_ count: Int) -> [FirstName] {
