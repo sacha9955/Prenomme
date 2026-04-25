@@ -419,6 +419,7 @@
 				1A841B0CDB4BC63A3BF45E2A /* Sources */,
 				9141AA9EB02E7C8DF4E687F6 /* Frameworks */,
 				1E764464600160E2F8EAE691 /* Embed Foundation Extensions */,
+				F1A2B3C4D5E6F7A8B9C0D1E2 /* Inject URL Scheme */,
 			);
 			buildRules = (
 			);
@@ -538,6 +539,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F1A2B3C4D5E6F7A8B9C0D1E2 /* Inject URL Scheme */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Inject URL Scheme";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/libexec/PlistBuddy -c 'Delete :CFBundleURLTypes' \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\" 2>/dev/null; /usr/libexec/PlistBuddy -c 'Add :CFBundleURLTypes array' \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"; /usr/libexec/PlistBuddy -c 'Add :CFBundleURLTypes:0 dict' \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"; /usr/libexec/PlistBuddy -c 'Add :CFBundleURLTypes:0:CFBundleURLName string com.sacha9955.prenomme' \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"; /usr/libexec/PlistBuddy -c 'Add :CFBundleURLTypes:0:CFBundleURLSchemes array' \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"; /usr/libexec/PlistBuddy -c 'Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string prenomme' \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1A841B0CDB4BC63A3BF45E2A /* Sources */ = {
