@@ -37,6 +37,7 @@ struct NameDetailView: View {
                 } label: {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
                         .foregroundStyle(isFavorite ? Color(red: 0.85, green: 0.45, blue: 0.55) : .primary)
+                        .symbolEffect(.bounce, value: isFavorite)
                 }
             }
         }
@@ -224,11 +225,13 @@ struct NameDetailView: View {
         let feedback = UIImpactFeedbackGenerator(style: .medium)
         feedback.impactOccurred()
         let result = favoriteService.toggle(nameId: name.id, isPro: purchase.isPro)
-        switch result {
-        case .added: isFavorite = true
-        case .removed: isFavorite = false
-        case .limitReached: showPaywall = true
-        case .alreadyAdded: break
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+            switch result {
+            case .added: isFavorite = true
+            case .removed: isFavorite = false
+            case .limitReached: showPaywall = true
+            case .alreadyAdded: break
+            }
         }
     }
 }

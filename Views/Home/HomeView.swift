@@ -170,6 +170,9 @@ struct HomeView: View {
                             OriginCard(origin: origin)
                         }
                         .buttonStyle(.plain)
+                        .simultaneousGesture(TapGesture().onEnded {
+                            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                        })
                     }
                 }
                 .padding(.horizontal)
