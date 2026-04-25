@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-04-25 — Jour 8 : Sweep produit avant TestFlight
+
+### Added
+- **ProGateModifier rewrite** — deux modes distincts : `.blur` (contenu flouté + overlay ultraThin + bouton "Découvrir Pro") et `.teaser` (carte de remplacement avec titre et texte d'accroche) ; `.sheet` géré au niveau du modifier ; API `proGated(_:mode:title:teaser:)` mise à jour
+- **Etymology column** — colonne `etymology TEXT` ajoutée à `names.sqlite` ; 628 lignes peuplées depuis le cache Wikidata ; section "Étymologie complète" affichée dans `NameDetailView` (Pro-gatée, mode `.teaser`)
+- **PaywallView** — price fallback sur "4,99 €" si StoreKit ne retourne pas de produit ; meilleure robustesse hors sandbox
+- **HomeView** — bannière dégradé "Passez Pro" + badge Pro sur la section suggestions pour les non-abonnés
+- **ThankYouProView** — écran de confirmation post-achat
+- **App Store Connect metadata** — `AppStoreConnect/metadata.md` avec descriptions FR/EN, keywords, IAP, plan captures d'écran, notes review
+- **cleanup_simulator.sh** — script `Scripts/cleanup_simulator.sh` pour désinstaller l'app de tous les simulateurs bootés avant un test install propre
+
+### Changed
+- **FavoriteService** — `freeLimit` 15 → 10
+- **SwipeCounter** — `freeLimit` 30 → 20
+- **SwipeView** — message alerte mis à jour ("20 swipes gratuits")
+- **BrowseView** — résultats plafonnés à 50 pour les utilisateurs gratuits
+- **ProGateModifier call sites** mis à jour dans `HomeView`, `CompatibilityView`, `NameDetailView` (×2), `FavoritesView` (×2)
+
+### Fixed
+- **PhoneticAnalyzer.alliterationScore** — les prénoms commençant par une voyelle (pas de consonne d'attaque) renvoient désormais `0` au lieu de `0.5`
+
+### Tests
+- 11 cas ajoutés dans `PhoneticAnalyzerTests` couvrant l'allitération voyelle-initiale, les clusters complets, les cas limites
+- `SuggestionServiceTests`, `PDFExporterTests`, `Widget/ProNameWidget` : helpers `makeName` mis à jour avec le nouveau champ `etymology`
+- Toutes les suites passent (UI + unit) : FavoriteServiceTests, NameDatabaseTests, NameFilterTests, OriginServiceTests, PDFExporterTests, PhoneticAnalyzerTests, PronunciationServiceTests, PurchaseManagerTests, SuggestionServiceTests, SwipeCounterTests, WidgetTests, PrenommeUITests
+
 ## [0.6.1] — 2026-04-25 — Hotfix post-validation Jour 6
 
 ### Fixed
