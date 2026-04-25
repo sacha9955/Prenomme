@@ -31,8 +31,7 @@ EXPECTED_INDEXES = {
 
 THRESHOLDS = {
     "min_rows":       15_000,
-    "origin_pct":     8,      # Wikidata P407 = usage-language not etymology;
-                              # enriched via description keywords + Unicode script detection
+    "origin_pct":     90,     # target after Wikidata + heuristic + Autre fallback
     "meaning_pct":    1,      # Wikidata descriptions for name items are mostly bare
                               # "prénom masculin/féminin" — only richer entries pass through
     "rank_fr_pct":    30,     # ~15k INSEE names out of 45k total (SSA-only have no FR rank)
