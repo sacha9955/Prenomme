@@ -1,5 +1,6 @@
 import StoreKit
 import Foundation
+import WidgetKit
 
 @Observable
 final class PurchaseManager: @unchecked Sendable {
@@ -13,6 +14,7 @@ final class PurchaseManager: @unchecked Sendable {
 
     private let productIDs: Set<String> = ["prenomme.pro.lifetime"]
     private var updatesTask: Task<Void, Never>?
+    private let sharedDefaults = UserDefaults(suiteName: "group.com.sacha9955.prenomme")
 
     init() {
         updatesTask = Task { [weak self] in
@@ -85,7 +87,11 @@ final class PurchaseManager: @unchecked Sendable {
                 entitled.insert(tx.productID)
             }
         }
-        isPro = entitled.contains("prenomme.pro.lifetime")
+        let newIsPro = entitled.contains("prenomme.pro.lifetime")
+        let changed = newIsPro != isPro
+        isPro = newIsPro
+        sharedDefaults?.set(newIsPro, forKey: "isPro")
+        if changed { WidgetCenter.shared.reloadAllTimelines() }
     }
 
     private func listenForTransactionUpdates() async {

@@ -4,9 +4,12 @@ struct BrowseView: View {
     @State private var filter = NameFilter()
     @State private var names: [FirstName] = []
     @State private var showFilter = false
+    @State private var navigationPath: [FirstName] = []
+
+    private let router = NavigationRouter.shared
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             List(names) { name in
                 NavigationLink(value: name) {
                     NameRow(name: name)
@@ -17,12 +20,17 @@ struct BrowseView: View {
                 NameDetailView(name: name)
             }
             .searchable(text: $filter.searchQuery, prompt: "Rechercher un prénom…")
+            .refreshable { await loadNames() }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showFilter = true
                     } label: {
-                        Image(systemName: filter.isActive ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                        Image(systemName: filter.isActive
+                              ? "line.3.horizontal.decrease.circle.fill"
+                              : "line.3.horizontal.decrease.circle")
+                            .symbolEffect(.bounce, value: filter.isActive)
+                            .contentTransition(.symbolEffect(.replace))
                     }
                 }
             }
@@ -32,6 +40,15 @@ struct BrowseView: View {
             }
             .task(id: filter) {
                 await loadNames()
+            }
+            .onChange(of: router.pendingNameId) { _, id in
+                guard let id else { return }
+                Task {
+                    if let name = try? NameDatabase.shared.byId(id) {
+                        navigationPath.append(name)
+                    }
+                    router.pendingNameId = nil
+                }
             }
         }
     }

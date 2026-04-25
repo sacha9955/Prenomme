@@ -48,6 +48,7 @@ struct PrenommeApp: App {
                 }
             }
             .modelContainer(container)
+                .onOpenURL { url in handleDeepLink(url) }
                 .task { await checkICloudToast() }
                 .overlay(alignment: .top) {
                     if showICloudToast {
@@ -61,6 +62,21 @@ struct PrenommeApp: App {
                 }
                 .animation(.spring(duration: 0.4), value: showICloudToast)
                 .animation(.easeInOut(duration: 0.35), value: hasSeenOnboarding)
+        }
+    }
+
+    private func handleDeepLink(_ url: URL) {
+        guard url.scheme == "prenomme" else { return }
+        let router = NavigationRouter.shared
+        switch url.host {
+        case "paywall":
+            router.showPaywall = true
+        case "name":
+            if let idStr = url.pathComponents.dropFirst().first, let id = Int(idStr) {
+                router.pendingNameId = id
+            }
+        default:
+            break
         }
     }
 

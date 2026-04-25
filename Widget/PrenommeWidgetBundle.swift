@@ -5,5 +5,6 @@ import SwiftUI
 struct PrenommeWidgetBundle: WidgetBundle {
     var body: some Widget {
         NameOfDayWidget()
+        ProNameWidget()
     }
 }

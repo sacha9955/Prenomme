@@ -49,18 +49,35 @@ struct NameOfDayWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Prénom du jour")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+            HStack {
+                Image(systemName: "sun.max.fill")
+                    .foregroundStyle(.orange)
+                    .font(.caption2)
+                Text("Prénom du jour")
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
             Text(entry.name)
                 .font(.title2.bold())
+                .minimumScaleFactor(0.75)
+                .lineLimit(1)
             Text(entry.meaning)
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .padding()
-        .containerBackground(.regularMaterial, for: .widget)
+        .containerBackground(
+            LinearGradient(
+                colors: [Color(red: 0.97, green: 0.95, blue: 0.92), Color(red: 0.93, green: 0.97, blue: 0.91)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            ),
+            for: .widget
+        )
+        .widgetURL(URL(string: "prenomme://browse"))
     }
 }
 
@@ -75,6 +92,6 @@ struct NameOfDayWidget: Widget {
         }
         .configurationDisplayName("Prénom du jour")
         .description("Découvrez un nouveau prénom chaque jour.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall])
     }
 }
