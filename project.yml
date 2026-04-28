@@ -28,8 +28,8 @@ targets:
       - path: Models
       - path: Views
       - path: Services
-    resources:
-      - path: Resources/Assets.xcassets
+      - path: Resources/PrivacyInfo.xcprivacy
+        buildPhase: resources
     postBuildScripts:
       - name: Copy names.sqlite into bundle
         script: |
@@ -54,7 +54,7 @@ targets:
       INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
       INFOPLIST_KEY_UILaunchScreen_Generation: YES
       INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
-      INFOPLIST_KEY_NSFaceIDUsageDescription: ""
+      INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
     dependencies:
       - package: GRDB
       - target: PrenommeWidget
@@ -68,6 +68,8 @@ targets:
       - path: Widget
       - path: Models
       - path: Services
+      - path: Resources/PrivacyInfo.xcprivacy
+        buildPhase: resources
     postBuildScripts:
       - name: Copy names.sqlite into widget bundle
         script: |
@@ -100,3 +102,28 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme.tests
       GENERATE_INFOPLIST_FILE: YES
 
+schemes:
+  Prenomme:
+    build:
+      targets:
+        Prenomme: all
+    run:
+      config: Debug
+      storeKitConfiguration: Resources/Prenomme.storekit
+
+  Prenomme Sandbox:
+    build:
+      targets:
+        Prenomme: all
+    run:
+      config: Debug
+
+  PrenommeTests:
+    build:
+      targets:
+        Prenomme: all
+        PrenommeTests: all
+    test:
+      config: Debug
+      targets:
+        - PrenommeTests

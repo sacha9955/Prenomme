@@ -13,37 +13,34 @@ struct SwipeView: View {
     private let purchase = PurchaseManager.shared
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                genderBar
-                    .padding(.vertical, 12)
-                if deck.isEmpty {
-                    Spacer()
-                    emptyState
-                    Spacer()
-                } else {
-                    Spacer()
-                    cardStack
-                        .padding(.horizontal, 20)
-                    Spacer()
-                    actionRow
-                        .padding(.bottom, 16)
-                    if !purchase.isPro {
-                        counterLabel
-                            .padding(.bottom, 8)
-                    }
+        VStack(spacing: 0) {
+            genderBar
+                .padding(.vertical, 12)
+            if deck.isEmpty {
+                Spacer()
+                emptyState
+                Spacer()
+            } else {
+                Spacer()
+                cardStack
+                    .padding(.horizontal, 20)
+                Spacer()
+                actionRow
+                    .padding(.bottom, 16)
+                if !purchase.isPro {
+                    counterLabel
+                        .padding(.bottom, 8)
                 }
             }
-            .navigationTitle("Swiper")
-            .sheet(isPresented: $showPaywall) { PaywallView() }
-            .alert("Limite quotidienne atteinte", isPresented: $showLimitAlert) {
-                Button("Découvrir Pro") { showPaywall = true }
-                Button("Plus tard", role: .cancel) {}
-            } message: {
-                Text("Vous avez utilisé vos 20 swipes gratuits aujourd'hui. Revenez demain ou passez à Pro pour des swipes illimités.")
-            }
-            .task(id: genderFilter) { await loadDeck() }
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .alert("Limite quotidienne atteinte", isPresented: $showLimitAlert) {
+            Button("Découvrir Pro") { showPaywall = true }
+            Button("Plus tard", role: .cancel) {}
+        } message: {
+            Text("Vous avez utilisé vos 20 swipes gratuits aujourd'hui. Revenez demain ou passez à Pro pour des swipes illimités.")
+        }
+        .task(id: genderFilter) { await loadDeck() }
     }
 
     // MARK: — Gender bar
@@ -217,6 +214,35 @@ struct SwipeView: View {
             deck = names.shuffled()
         } catch {
             // Keep existing deck on DB error
+        }
+    }
+}
+
+// MARK: — SwipeWithFavoritesView
+
+struct SwipeWithFavoritesView: View {
+    @State private var selectedSegment = 0
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if selectedSegment == 0 {
+                    SwipeView()
+                } else {
+                    FavoritesView()
+                }
+            }
+            .navigationTitle(selectedSegment == 0 ? "Swiper" : "Favoris")
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Picker("", selection: $selectedSegment) {
+                        Text("Swiper").tag(0)
+                        Text("Favoris").tag(1)
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(width: 200)
+                }
+            }
         }
     }
 }

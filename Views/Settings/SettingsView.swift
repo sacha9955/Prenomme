@@ -28,7 +28,6 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                familySection
                 purchaseSection
                 aboutSection
                 legalSection
@@ -51,15 +50,6 @@ struct SettingsView: View {
     }
 
     // MARK: — Sections
-
-    private var familySection: some View {
-        Section("Famille") {
-            TextField("Nom de famille", text: Binding(
-                get: { settings.familyName },
-                set: { settings.familyName = $0 }
-            ))
-        }
-    }
 
     private var purchaseSection: some View {
         Section("Achats") {

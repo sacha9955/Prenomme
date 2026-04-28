@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		06568D0312661F06AE65B087 /* ThankYouProView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA527E05486853A89F5A8F2C /* ThankYouProView.swift */; };
 		0A90DBBE3D341F14EDF77739 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BFDB0DF5E49300E28DBBD /* PurchaseManager.swift */; };
+		1731840AAF2A108AFEC0AC40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 744CD1048F05C3E0D4784768 /* Assets.xcassets */; };
 		1C274ECB2FEE8E88464A881B /* SwipeCounterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60075D222BEEC3EB755CB747 /* SwipeCounterTests.swift */; };
 		1F3F59E32BD9B8CBEDFD60A6 /* FilterSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51D0F25E374522F7551FF76A /* FilterSheet.swift */; };
 		219393863AAA493E27056CAA /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 040BDFA03286C28979C192D0 /* GRDB */; };
@@ -24,6 +25,7 @@
 		3C956A413B30F1F6FC579E54 /* NavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4514F16C998AEA9DFC1B728A /* NavigationRouter.swift */; };
 		3CD92FD865E233FAD3102B52 /* NameFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA537F1CBA69EA8EF98529 /* NameFilter.swift */; };
 		40AEA6FC0D01F045F9295054 /* NameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99482C293647EF56B852A7 /* NameDetailView.swift */; };
+		48F6ABD857529716742B0C17 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8BF3EF86FDC394D3B68969E1 /* PrivacyInfo.xcprivacy */; };
 		4C7051CD03B8672D704C0FB0 /* PhoneticAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D38BAF235DDC631945D6C1 /* PhoneticAnalyzer.swift */; };
 		5655B73B541EA8B26375C867 /* OriginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A222E056883B968C51230BFA /* OriginService.swift */; };
 		589915D3AE45C30417FC94C7 /* FavoriteServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B254EF0E1E7B61323BB53A /* FavoriteServiceTests.swift */; };
@@ -47,6 +49,7 @@
 		90062FCB2B540E5748C556F1 /* OriginServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF442E3A86061C3C71372EF /* OriginServiceTests.swift */; };
 		949F032B61CF546E48255CD9 /* ProGateModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D12FC5F4906F7FE3CA66EB /* ProGateModifier.swift */; };
 		9A4DF72A0BEEC26E1E66E80C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726E6BB6876DDF49AD45FBF5 /* HomeView.swift */; };
+		9A52A3027E9346B0261EBCA6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8BF3EF86FDC394D3B68969E1 /* PrivacyInfo.xcprivacy */; };
 		9FE49AC063228DE3EF1E130D /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03BFDB0DF5E49300E28DBBD /* PurchaseManager.swift */; };
 		A02C6DCC55D3D74291DE483F /* PrenommeWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0245480D4C0F8ED027E7ECC0 /* PrenommeWidgetBundle.swift */; };
 		A6460467A3701BE8491FBA41 /* SuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CA34C90B8FF22C76FD3861 /* SuggestionService.swift */; };
@@ -132,10 +135,12 @@
 		726E6BB6876DDF49AD45FBF5 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		729F290716E269ECDE496F03 /* Gender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gender.swift; sourceTree = "<group>"; };
 		736846147280A4A9F3C4F7AF /* PhoneticAnalyzerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneticAnalyzerTests.swift; sourceTree = "<group>"; };
+		744CD1048F05C3E0D4784768 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C0BD1924DF546E306F525E8 /* FavoriteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteService.swift; sourceTree = "<group>"; };
 		7EEAAC03F204D1F3A363B95D /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
 		81D38BAF235DDC631945D6C1 /* PhoneticAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneticAnalyzer.swift; sourceTree = "<group>"; };
 		861DAD4953354B6138A30EBA /* OriginDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginDetailView.swift; sourceTree = "<group>"; };
+		8BF3EF86FDC394D3B68969E1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		91A31E4491D9B2A5FA5D420F /* WidgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTests.swift; sourceTree = "<group>"; };
 		97CA34C90B8FF22C76FD3861 /* SuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionService.swift; sourceTree = "<group>"; };
 		9CF442E3A86061C3C71372EF /* OriginServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginServiceTests.swift; sourceTree = "<group>"; };
@@ -185,6 +190,14 @@
 				1F7BCDE894F99252FBD80966 /* PrenommeWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		080F1D318D448740D26A1530 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8BF3EF86FDC394D3B68969E1 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		1360B4C25450F545E3B78931 /* Views */ = {
@@ -324,6 +337,7 @@
 		A8B54AD05F6B2201B37ACFC9 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				744CD1048F05C3E0D4784768 /* Assets.xcassets */,
 				4514F16C998AEA9DFC1B728A /* NavigationRouter.swift */,
 				CC193B9DAB4E906597BED1CB /* PrenommeApp.swift */,
 			);
@@ -372,6 +386,7 @@
 				A8B54AD05F6B2201B37ACFC9 /* App */,
 				E895260A8366ACA0032A750D /* Models */,
 				22DAEDF334D3F0094144A684 /* PrenommeTests */,
+				080F1D318D448740D26A1530 /* Resources */,
 				4B8AA1F4268FEAC55656E22D /* Services */,
 				1360B4C25450F545E3B78931 /* Views */,
 				3E8815762C6B90E047224131 /* Widget */,
@@ -387,6 +402,7 @@
 			buildConfigurationList = AF64BEE3536792D0D22FF74B /* Build configuration list for PBXNativeTarget "PrenommeWidget" */;
 			buildPhases = (
 				62984314BAB2AC9AE8051B3A /* Sources */,
+				DE5FC9C38F8EA25102D7E183 /* Resources */,
 				BE893A1E99186BD038B4D98F /* Frameworks */,
 				D9B311F209612AB7F5230074 /* Copy names.sqlite into widget bundle */,
 			);
@@ -407,6 +423,7 @@
 			buildConfigurationList = B193D770E5E63D94E53FEF8F /* Build configuration list for PBXNativeTarget "Prenomme" */;
 			buildPhases = (
 				1A841B0CDB4BC63A3BF45E2A /* Sources */,
+				B81E9244B07E3A5A2B295638 /* Resources */,
 				9141AA9EB02E7C8DF4E687F6 /* Frameworks */,
 				1E764464600160E2F8EAE691 /* Embed Foundation Extensions */,
 				26DEDBC9786A65E6DE66415F /* Copy names.sqlite into bundle */,
@@ -485,6 +502,26 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B81E9244B07E3A5A2B295638 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1731840AAF2A108AFEC0AC40 /* Assets.xcassets in Resources */,
+				48F6ABD857529716742B0C17 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE5FC9C38F8EA25102D7E183 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9A52A3027E9346B0261EBCA6 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		26DEDBC9786A65E6DE66415F /* Copy names.sqlite into bundle */ = {
@@ -652,7 +689,7 @@
 				CODE_SIGN_ENTITLEMENTS = Prenomme.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
@@ -710,7 +747,7 @@
 				CODE_SIGN_ENTITLEMENTS = Prenomme.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;

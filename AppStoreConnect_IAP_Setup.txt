@@ -1,0 +1,53 @@
+PRENOMME — CONFIGURATION ACHAT INTEGRE (APP STORE CONNECT)
+============================================================
+
+URL : https://appstoreconnect.apple.com
+App : Prenomme (com.sacha9955.prenomme)
+Equipe : Y9U6L9TB4B
+
+
+ETAPE 1 — CREER LE PRODUIT IAP
+--------------------------------
+Menu : Fonctionnalites > Achats integres > (+) Creer
+
+  Type            : Achat unique (Non-Consommable)
+  Nom de reference: Prenomme Pro
+  ID produit      : prenomme.pro.lifetime
+
+
+LOCALISATION — Francais (fr_FR)
+  Nom affiche     : Prenomme Pro
+  Description     : Acces illimite a toutes les fonctionnalites Pro.
+
+
+PRIX
+  Prix de base    : 8,99 EUR (tier correspondant)
+  Partage familial: Non
+
+Statut requis : "Pret a soumettre" (pas besoin d'etre publie pour tester en sandbox)
+
+
+ETAPE 2 — CREER UN COMPTE SANDBOX TESTEUR
+-------------------------------------------
+Menu : Utilisateurs et acces > Testeurs Sandbox > (+) Ajouter
+
+  Utiliser un email qui n'est PAS un Apple ID existant
+  Exemple : sandbox@prenomme.test
+
+
+ETAPE 3 — TESTER DANS LE SIMULATEUR
+--------------------------------------
+1. Simulateur iOS > Reglages > App Store
+   -> Se connecter avec le compte sandbox cree ci-dessus
+
+2. Dans Xcode, selectionner le scheme : "Prenomme Sandbox"
+   (et non "Prenomme" qui utilise le fichier .storekit local)
+
+3. Lancer avec Cmd+R
+   -> La vraie popup d'achat Apple apparait
+
+
+RAPPEL SCHEMAS XCODE
+----------------------
+  "Prenomme"         -> fichier .storekit local, pas de popup Apple, pour dev offline
+  "Prenomme Sandbox" -> vrais serveurs Apple sandbox, popup officielle Apple

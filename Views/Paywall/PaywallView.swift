@@ -1,11 +1,26 @@
 import SwiftUI
 import StoreKit
+import UIKit
 
 struct PaywallView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var purchase = PurchaseManager.shared
+    @State private var selectedPlan: Plan = .yearly
     @State private var shouldPurchaseAfterLoad = false
+
+    private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
+    private let privacyURL  = URL(string: "https://sacha9955.github.io/prenomme-legal/privacy.html")!
+    private let termsURL    = URL(string: "https://sacha9955.github.io/prenomme-legal/terms.html")!
+
+    private func activeScene() -> UIWindowScene? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first(where: { $0.activationState == .foregroundActive })
+            ?? UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .first
+    }
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
@@ -14,6 +29,7 @@ struct PaywallView: View {
                 VStack(spacing: 0) {
                     heroSection
                     featureTable
+                    planPicker
                     purchaseSection
                     restoreButton
                     legalFooter
@@ -22,14 +38,12 @@ struct PaywallView: View {
             closeButton
         }
         .ignoresSafeArea(edges: .top)
-        .onChange(of: purchase.proProduct) { _, product in
-            guard let product, shouldPurchaseAfterLoad else { return }
-            shouldPurchaseAfterLoad = false
-            Task { await purchase.purchase(product) }
+        .onChange(of: purchase.isPro) { _, isPro in
+            if isPro { dismiss() }
         }
     }
 
-    // MARK: — Hero
+    // MARK: — Background & hero
 
     private var background: some View {
         LinearGradient(
@@ -50,8 +64,7 @@ struct PaywallView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [Color(red: 0.79, green: 0.48, blue: 0.39),
-                                     Color(red: 0.61, green: 0.69, blue: 0.53)],
+                            colors: [accentColor, Color(red: 0.61, green: 0.69, blue: 0.53)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -74,7 +87,7 @@ struct PaywallView: View {
                     .padding(.horizontal, 40)
             }
         }
-        .padding(.bottom, 32)
+        .padding(.bottom, 28)
     }
 
     // MARK: — Feature table
@@ -83,7 +96,7 @@ struct PaywallView: View {
         VStack(spacing: 0) {
             tableHeader
             ForEach(Feature.all) { feature in
-                FeatureRow(feature: feature)
+                FeatureRow(feature: feature, accentColor: accentColor)
                 if feature.id != Feature.all.last?.id {
                     Divider().padding(.leading, 48)
                 }
@@ -91,7 +104,7 @@ struct PaywallView: View {
         }
         .background(.white.opacity(0.7), in: RoundedRectangle(cornerRadius: 16))
         .padding(.horizontal, 20)
-        .padding(.bottom, 28)
+        .padding(.bottom, 22)
     }
 
     private var tableHeader: some View {
@@ -102,7 +115,7 @@ struct PaywallView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 10)
-        .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.08),
+        .background(accentColor.opacity(0.08),
                     in: UnevenRoundedRectangle(topLeadingRadius: 16, topTrailingRadius: 16))
     }
 
@@ -110,24 +123,75 @@ struct PaywallView: View {
         VStack(spacing: 3) {
             Image(systemName: icon)
                 .font(.caption.bold())
-                .foregroundStyle(accent ? Color(red: 0.79, green: 0.48, blue: 0.39) : .secondary)
+                .foregroundStyle(accent ? accentColor : .secondary)
             Text(text)
                 .font(.caption.bold())
-                .foregroundStyle(accent ? Color(red: 0.79, green: 0.48, blue: 0.39) : .secondary)
+                .foregroundStyle(accent ? accentColor : .secondary)
         }
         .frame(width: 60)
     }
 
-    // MARK: — Purchase section
+    // MARK: — Plan picker (3 cards)
 
-    private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
+    private var planPicker: some View {
+        VStack(spacing: 10) {
+            PlanCard(
+                plan: .yearly,
+                title: "Annuel",
+                subtitle: "Le meilleur rapport qualité-prix",
+                price: priceForPlan(.yearly),
+                detail: "Renouvellement annuel · résiliable à tout moment",
+                badge: "ÉCONOMISEZ 44%",
+                isSelected: selectedPlan == .yearly,
+                accentColor: accentColor,
+                action: { selectedPlan = .yearly }
+            )
+            PlanCard(
+                plan: .monthly,
+                title: "Mensuel",
+                subtitle: "Engagement souple",
+                price: priceForPlan(.monthly),
+                detail: "Renouvellement mensuel · résiliable à tout moment",
+                badge: nil,
+                isSelected: selectedPlan == .monthly,
+                accentColor: accentColor,
+                action: { selectedPlan = .monthly }
+            )
+            PlanCard(
+                plan: .lifetime,
+                title: "À vie",
+                subtitle: "Paiement unique, pas d'abonnement",
+                price: priceForPlan(.lifetime),
+                detail: "Une seule fois · accès permanent",
+                badge: "ZÉRO ABONNEMENT",
+                isSelected: selectedPlan == .lifetime,
+                accentColor: accentColor,
+                action: { selectedPlan = .lifetime }
+            )
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 20)
+    }
+
+    private func priceForPlan(_ plan: Plan) -> String {
+        switch plan {
+        case .yearly:
+            return purchase.yearlyProduct?.displayPrice.priceWithEuro ?? PurchaseManager.fallbackYearlyPrice + " /an"
+        case .monthly:
+            return purchase.monthlyProduct?.displayPrice.priceWithEuro ?? PurchaseManager.fallbackMonthlyPrice + " /mois"
+        case .lifetime:
+            return purchase.lifetimeProduct?.displayPrice.priceWithEuro ?? PurchaseManager.fallbackLifetimePrice
+        }
+    }
+
+    // MARK: — Purchase
 
     private var purchaseSection: some View {
         VStack(spacing: 14) {
             if purchase.isLoadingProducts {
                 HStack(spacing: 10) {
                     ProgressView()
-                    Text("Chargement du prix…")
+                    Text("Chargement…")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -152,47 +216,59 @@ struct PaywallView: View {
 
     @ViewBuilder
     private var buyButton: some View {
-        if let product = purchase.proProduct {
-            Button {
-                Task { await purchase.purchase(product) }
-            } label: {
-                buyButtonLabel(price: product.displayPrice)
-            }
-        } else {
-            // StoreKit unavailable — show fallback price, tap retries loading then auto-purchases
-            VStack(spacing: 8) {
-                Button {
-                    shouldPurchaseAfterLoad = true
-                    purchase.retryLoadProducts()
-                } label: {
-                    buyButtonLabel(price: PurchaseManager.fallbackPriceDisplay)
-                        .opacity(0.65)
-                }
-                Text("Prix indicatif — connexion requise pour confirmer")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
+        Button {
+            startPurchase()
+        } label: {
+            buyButtonLabel
         }
     }
 
-    private func buyButtonLabel(price: String) -> some View {
-        HStack(spacing: 8) {
-            Image(systemName: "star.fill").font(.callout)
-            Text("Débloquer Pro — \(price)").font(.headline)
+    private func startPurchase() {
+        let product: Product? = {
+            switch selectedPlan {
+            case .yearly:   return purchase.yearlyProduct
+            case .monthly:  return purchase.monthlyProduct
+            case .lifetime: return purchase.lifetimeProduct
+            }
+        }()
+        if let product {
+            Task { await purchase.purchase(product, confirmIn: activeScene()) }
+            return
+        }
+        // Fallback when products haven't loaded
+        #if DEBUG
+        purchase.setDebugForcePro(true)
+        #else
+        shouldPurchaseAfterLoad = true
+        purchase.retryLoadProducts()
+        #endif
+    }
+
+    private var buyButtonLabel: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "crown.fill").font(.body.bold())
+            Text(buyButtonText).font(.title3.bold())
         }
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity)
-        .frame(height: 58)
+        .frame(height: 64)
         .background(
             LinearGradient(
-                colors: [accentColor, Color(red: 0.72, green: 0.43, blue: 0.35)],
+                colors: [accentColor, Color(red: 0.65, green: 0.38, blue: 0.30)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             ),
-            in: RoundedRectangle(cornerRadius: 16)
+            in: RoundedRectangle(cornerRadius: 18)
         )
-        .shadow(color: accentColor.opacity(0.35), radius: 10, y: 4)
+        .shadow(color: accentColor.opacity(0.55), radius: 16, y: 6)
+    }
+
+    private var buyButtonText: String {
+        switch selectedPlan {
+        case .yearly:   return "Démarrer (\(priceForPlan(.yearly)))"
+        case .monthly:  return "Démarrer (\(priceForPlan(.monthly)))"
+        case .lifetime: return "Acheter (\(priceForPlan(.lifetime)))"
+        }
     }
 
     private var restoreButton: some View {
@@ -201,20 +277,49 @@ struct PaywallView: View {
         } label: {
             Text("Restaurer les achats")
                 .font(.subheadline)
-                .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                .foregroundStyle(accentColor)
         }
         .padding(.top, 10)
     }
 
+    // MARK: — Legal footer (auto-renewable disclosure required by Apple)
+
     private var legalFooter: some View {
-        Text("Paiement unique. Pas d'abonnement. Partageable avec la famille.")
-            .font(.caption2)
-            .foregroundStyle(.tertiary)
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 40)
-            .padding(.top, 8)
-            .padding(.bottom, 40)
+        VStack(alignment: .leading, spacing: 12) {
+            if selectedPlan != .lifetime {
+                Text(legalSubscriptionText)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+            } else {
+                Text("Paiement unique. Pas d'abonnement.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+            }
+            HStack(spacing: 4) {
+                Link("Politique de confidentialité", destination: privacyURL)
+                Text("·").foregroundStyle(.tertiary)
+                Link("Conditions d'utilisation", destination: termsURL)
+            }
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(accentColor)
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 16)
+        .padding(.bottom, 40)
     }
+
+    private var legalSubscriptionText: String {
+        """
+        Le paiement sera prélevé sur votre compte Apple ID à la confirmation de l'achat. \
+        L'abonnement se renouvelle automatiquement, sauf désactivation au moins 24 heures avant la fin de la période en cours. \
+        Le compte sera débité du renouvellement dans les 24 heures précédant la fin de la période en cours. \
+        Vous pouvez gérer ou résilier votre abonnement dans Réglages → Apple ID → Abonnements.
+        """
+    }
+
+    // MARK: — Close
 
     private var closeButton: some View {
         Button {
@@ -227,6 +332,68 @@ struct PaywallView: View {
         }
         .padding(.top, 56)
         .padding(.trailing, 20)
+    }
+}
+
+// MARK: — Plan model
+
+extension PaywallView {
+    enum Plan { case monthly, yearly, lifetime }
+}
+
+private struct PlanCard: View {
+    let plan: PaywallView.Plan
+    let title: String
+    let subtitle: String
+    let price: String
+    let detail: String
+    let badge: String?
+    let isSelected: Bool
+    let accentColor: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(title)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        Text(subtitle)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Text(price)
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(isSelected ? accentColor : .primary)
+                }
+                if let badge {
+                    Text(badge)
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(accentColor, in: Capsule())
+                }
+                Text(detail)
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(isSelected ? accentColor.opacity(0.12) : Color.white.opacity(0.7))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .strokeBorder(isSelected ? accentColor : Color.gray.opacity(0.18),
+                                  lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -258,7 +425,7 @@ private struct Feature: Identifiable {
                 title: "Origine & signification",
                 free: .yes,
                 pro: .yes),
-        Feature(id: 3, icon: "book.closed",
+        Feature(id: 11, icon: "book.closed",
                 title: "Étymologie complète",
                 free: .no,
                 pro: .yes),
@@ -293,16 +460,15 @@ private struct Feature: Identifiable {
     ]
 }
 
-// MARK: — Feature row
-
 private struct FeatureRow: View {
     let feature: Feature
+    let accentColor: Color
 
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: feature.icon)
                 .font(.callout)
-                .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                .foregroundStyle(accentColor)
                 .frame(width: 24)
             Text(feature.title)
                 .font(.subheadline)
@@ -322,14 +488,21 @@ private struct FeatureRow: View {
         switch value {
         case .yes:
             Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(isPro ? Color(red: 0.79, green: 0.48, blue: 0.39) : .secondary)
+                .foregroundStyle(isPro ? accentColor : .secondary)
         case .no:
             Image(systemName: "minus.circle")
                 .foregroundStyle(.quaternary)
         case .text(let s):
             Text(s)
                 .font(.caption.bold())
-                .foregroundStyle(isPro ? Color(red: 0.79, green: 0.48, blue: 0.39) : .secondary)
+                .foregroundStyle(isPro ? accentColor : .secondary)
         }
+    }
+}
+
+private extension String {
+    /// Adds the euro sign if missing (StoreKit returns "29,99" sans symbol in some sandbox cases).
+    var priceWithEuro: String {
+        contains("€") || contains("$") || contains("£") ? self : self + " €"
     }
 }

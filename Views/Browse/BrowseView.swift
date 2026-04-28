@@ -12,9 +12,17 @@ struct BrowseView: View {
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            List(names) { name in
-                NavigationLink(value: name) {
-                    NameRow(name: name)
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(names) { name in
+                        NavigationLink(value: name) {
+                            NameRow(name: name)
+                                .padding(.horizontal)
+                                .padding(.vertical, 6)
+                        }
+                        .buttonStyle(.plain)
+                        Divider().padding(.leading, 68)
+                    }
                 }
             }
             .navigationTitle("Explorer")

@@ -18,9 +18,7 @@ struct NameDetailView: View {
                 header
                 Divider().padding(.horizontal)
                 infoSection
-                if name.etymology != nil {
-                    etymologySection
-                }
+                etymologySection
                 popularitySection
                 VStack(spacing: 0) {
                     if name.phonetic != nil || !name.themes.isEmpty {
@@ -127,8 +125,8 @@ struct NameDetailView: View {
     private var etymologySection: some View {
         VStack(alignment: .leading, spacing: 0) {
             SectionHeader(title: "Étymologie complète")
-            if let etymology = name.etymology {
-                Text(etymology)
+            if let text = name.etymology {
+                Text(text)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)

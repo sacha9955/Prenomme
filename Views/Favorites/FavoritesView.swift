@@ -27,83 +27,80 @@ struct FavoritesView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if favorites.isEmpty {
-                    emptyState
-                } else {
-                    list
-                }
+        Group {
+            if favorites.isEmpty {
+                emptyState
+            } else {
+                list
             }
-            .navigationTitle("Favoris")
-            .navigationDestination(for: FirstName.self) { name in
-                NameDetailView(name: name)
-            }
-            .toolbar {
-                if !favorites.isEmpty {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            if purchase.isPro {
-                                showComparator = true
-                            } else {
-                                showPaywall = true
-                            }
-                        } label: {
-                            Label("Comparer", systemImage: "rectangle.split.3x1")
+        }
+        .navigationDestination(for: FirstName.self) { name in
+            NameDetailView(name: name)
+        }
+        .toolbar {
+            if !favorites.isEmpty {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        if purchase.isPro {
+                            showComparator = true
+                        } else {
+                            showPaywall = true
                         }
+                    } label: {
+                        Label("Comparer", systemImage: "rectangle.split.3x1")
                     }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Menu {
-                            Picker("Trier", selection: $sortOrder) {
-                                ForEach(FavoriteSort.allCases) { order in
-                                    Label(order.label, systemImage: order.icon).tag(order)
-                                }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker("Trier", selection: $sortOrder) {
+                            ForEach(FavoriteSort.allCases) { order in
+                                Label(order.label, systemImage: order.icon).tag(order)
                             }
-                        } label: {
-                            Image(systemName: "arrow.up.arrow.down.circle")
                         }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down.circle")
                     }
                 }
             }
-            .sheet(isPresented: $showPaywall) {
-                PaywallView()
-            }
-            .sheet(isPresented: $showComparator) {
-                ComparatorView(names: Array(sorted.compactMap { namesById[$0.nameId] }.prefix(4)))
-            }
-            .sheet(item: $pdfURL) { wrapped in
-                ShareLink(
-                    item: wrapped.url,
-                    preview: SharePreview(
-                        "Ma sélection de prénoms",
-                        image: Image(systemName: "doc.richtext")
-                    )
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
+        .sheet(isPresented: $showComparator) {
+            ComparatorView(names: Array(sorted.compactMap { namesById[$0.nameId] }.prefix(4)))
+        }
+        .sheet(item: $pdfURL) { wrapped in
+            ShareLink(
+                item: wrapped.url,
+                preview: SharePreview(
+                    "Ma sélection de prénoms",
+                    image: Image(systemName: "doc.richtext")
                 )
-                .presentationDetents([.medium])
-            }
-            .overlay {
-                if isGeneratingPDF {
-                    ZStack {
-                        Color.black.opacity(0.3).ignoresSafeArea()
-                        VStack(spacing: 12) {
-                            ProgressView()
-                                .tint(.white)
-                            Text("Génération du PDF…")
-                                .font(.subheadline)
-                                .foregroundStyle(.white)
-                        }
-                        .padding(24)
-                        .background(.ultraThinMaterial)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            )
+            .presentationDetents([.medium])
+        }
+        .overlay {
+            if isGeneratingPDF {
+                ZStack {
+                    Color.black.opacity(0.3).ignoresSafeArea()
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .tint(.white)
+                        Text("Génération du PDF…")
+                            .font(.subheadline)
+                            .foregroundStyle(.white)
                     }
+                    .padding(24)
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
             }
-            .task {
-                await loadNames()
-            }
-            .onChange(of: favorites) {
-                Task { await loadNames() }
-            }
+        }
+        .task {
+            await loadNames()
+        }
+        .onChange(of: favorites) {
+            Task { await loadNames() }
         }
     }
 
@@ -132,6 +129,8 @@ struct FavoritesView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: sorted.map(\.id))
     }
 
+    private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
+
     @ViewBuilder
     private var pdfExportRow: some View {
         Section {
@@ -142,8 +141,28 @@ struct FavoritesView: View {
                     showPaywall = true
                 }
             } label: {
-                Label("Exporter en PDF", systemImage: "square.and.arrow.up")
-                    .foregroundStyle(purchase.isPro ? .primary : .secondary)
+                if purchase.isPro {
+                    Label("Exporter en PDF", systemImage: "square.and.arrow.up")
+                } else {
+                    HStack(spacing: 12) {
+                        Image(systemName: "lock.fill")
+                            .font(.callout)
+                            .foregroundStyle(accentColor)
+                            .frame(width: 24)
+                        Text("Exporter en PDF")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Text("Pro")
+                            .font(.caption.bold())
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(accentColor, in: Capsule())
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
         }
     }

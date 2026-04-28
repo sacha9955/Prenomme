@@ -1,19 +1,12 @@
 import SwiftUI
-import SwiftData
 
 struct CompatibilityView: View {
     @State private var lastName = ""
     @State private var candidates: [FirstName] = []
     @State private var scores: [Int: CompatibilityScore] = [:]
-    @State private var showSuggestions = false
     @State private var showPaywall = false
-    @State private var isLoadingSuggestions = false
+    @State private var isLoading = false
     @State private var candidateGender: Gender? = nil
-
-    @Query(sort: \Favorite.addedAt, order: .reverse)
-    private var favoriteRecords: [Favorite]
-
-    @Environment(\.modelContext) private var context
 
     private let purchase = PurchaseManager.shared
     private let analyzer = PhoneticAnalyzer.shared
@@ -29,9 +22,6 @@ struct CompatibilityView: View {
                     if !lastName.trimmingCharacters(in: .whitespaces).isEmpty {
                         candidateSection
                     }
-                    if !candidates.isEmpty && !lastName.isEmpty {
-                        suggestButton
-                    }
                 }
                 .padding(.bottom, 32)
             }
@@ -40,7 +30,7 @@ struct CompatibilityView: View {
                 NameDetailView(name: name)
             }
             .sheet(isPresented: $showPaywall) { PaywallView() }
-            .task { await loadFavorites() }
+            .task(id: lastName) { await searchNames() }
         }
     }
 
@@ -84,7 +74,6 @@ struct CompatibilityView: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.words)
                 .padding(.horizontal)
-                .onChange(of: lastName) { recompute() }
         }
         .padding(.top, 16)
     }
@@ -99,21 +88,26 @@ struct CompatibilityView: View {
     private var candidateSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Prénoms à tester")
+                Text("Prénoms compatibles")
                     .font(.headline)
                 Spacer()
-                Text("\(filteredCandidates.count) prénom\(filteredCandidates.count > 1 ? "s" : "")")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if isLoading {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                } else {
+                    Text("\(filteredCandidates.count) prénom\(filteredCandidates.count > 1 ? "s" : "")")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
             .padding(.horizontal)
 
             candidateGenderFilter
 
-            if filteredCandidates.isEmpty {
+            if !isLoading && filteredCandidates.isEmpty {
                 Text(candidates.isEmpty
-                     ? "Ajoutez des prénoms en favoris pour les tester ici."
-                     : "Aucun favori pour ce filtre.")
+                     ? "Aucun prénom trouvé pour ce nom."
+                     : "Aucun résultat pour ce filtre.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
@@ -169,68 +163,40 @@ struct CompatibilityView: View {
         }
     }
 
-    // MARK: — Suggest button
-
-    private var suggestButton: some View {
-        Button {
-            if purchase.isPro {
-                Task { await loadSuggestions() }
-            } else {
-                showPaywall = true
-            }
-        } label: {
-            Label(
-                isLoadingSuggestions ? "Recherche…" : "Suggérer des prénoms compatibles",
-                systemImage: "wand.and.sparkles"
-            )
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(purchase.isPro ? Color.accentColor : Color(.systemGray5))
-            .foregroundStyle(purchase.isPro ? .white : .secondary)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-            .padding(.horizontal)
-        }
-        .disabled(isLoadingSuggestions)
-        .proGated(!purchase.isPro, mode: .teaser, title: "Compatibilité Pro",
-                  teaser: "Analysez la compatibilité phonétique et le sens des prénoms.")
-    }
-
     // MARK: — Data
 
-    private func loadFavorites() async {
-        var loaded: [FirstName] = []
-        for fav in favoriteRecords {
-            if let name = try? NameDatabase.shared.byId(fav.nameId) {
-                loaded.append(name)
-            }
-        }
-        candidates = loaded
-        recompute()
-    }
-
-    private func recompute() {
+    private func searchNames() async {
         let ln = lastName.trimmingCharacters(in: .whitespaces)
-        guard !ln.isEmpty else { scores = [:]; return }
-        var updated: [Int: CompatibilityScore] = [:]
-        for name in candidates {
-            updated[name.id] = analyzer.score(firstName: name.name, lastName: ln)
+        guard !ln.isEmpty else {
+            candidates = []
+            scores = [:]
+            return
         }
-        scores = updated
-    }
-
-    private func loadSuggestions() async {
-        isLoadingSuggestions = true
-        let ln = lastName.trimmingCharacters(in: .whitespaces)
-        let all = (try? NameDatabase.shared.all()) ?? []
-        let best = all
-            .map { ($0, analyzer.score(firstName: $0.name, lastName: ln)) }
-            .sorted { $0.1.global > $1.1.global }
-            .prefix(10)
-            .map(\.0)
-        let extra = best.filter { n in !candidates.contains { $0.id == n.id } }
-        candidates = Array((candidates + extra).prefix(20))
-        recompute()
-        isLoadingSuggestions = false
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        guard !Task.isCancelled else { return }
+        isLoading = true
+        let result = await Task.detached(priority: .userInitiated) {
+            let analyzer = PhoneticAnalyzer.shared
+            let all = (try? NameDatabase.shared.all()) ?? []
+            let scoredAll = all.map { ($0, analyzer.score(firstName: $0.name, lastName: ln)) }
+            let top20 = scoredAll.sorted { $0.1.global > $1.1.global }.prefix(20)
+            let top20Ids = Set(top20.map(\.0.id))
+            let topUnisex = scoredAll
+                .filter { $0.0.gender == .unisex && !top20Ids.contains($0.0.id) }
+                .sorted { $0.1.global > $1.1.global }
+                .prefix(5)
+            let combined = Array(top20) + Array(topUnisex)
+            var newScores: [Int: CompatibilityScore] = [:]
+            for (name, s) in combined { newScores[name.id] = s }
+            return (combined.map(\.0), newScores)
+        }.value
+        guard !Task.isCancelled else {
+            isLoading = false
+            return
+        }
+        candidates = result.0
+        scores = result.1
+        isLoading = false
     }
 }
 
@@ -316,6 +282,17 @@ private struct ScoreCard: View {
                 Text(score.hardClash ? "Choc" : "OK")
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(score.hardClash ? .orange : .green)
+            }
+            HStack {
+                Label("Rime finale", systemImage: "music.note")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Image(systemName: score.endingRhyme ? "exclamationmark.circle.fill" : "checkmark.circle.fill")
+                    .foregroundStyle(score.endingRhyme ? .orange : .green)
+                Text(score.endingRhyme ? "Rime" : "OK")
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(score.endingRhyme ? .orange : .green)
             }
         }
         .padding(14)

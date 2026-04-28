@@ -9,21 +9,31 @@ struct CompatibilityScore {
     let rhythm: Double
     let elisionRisk: Bool
     let hardClash: Bool
+    let endingRhyme: Bool
 
+    /// Junction quality at the word boundary — replaces three boolean "no-penalty" bonuses
+    /// so the score doesn't cluster high just because problems are absent.
+    private var junctionScore: Double {
+        if elisionRisk  { return 0.30 }
+        if hardClash    { return 0.45 }
+        if endingRhyme  { return 0.55 }
+        return 0.85
+    }
+
+    /// Alliteration is a multiplier that caps the maximum achievable score.
+    /// Raw score combines rhythm (flow) and junction (boundary quality).
     var global: Double {
-        let raw = alliteration * 0.25
-            + rhythm * 0.35
-            + (elisionRisk ? 0.0 : 0.20)
-            + (hardClash  ? 0.0 : 0.20)
-        return min(1, max(0, raw))
+        let raw = rhythm * 0.45 + junctionScore * 0.55
+        let harmonyMultiplier = 0.20 + alliteration * 0.80
+        return min(1, max(0, raw * harmonyMultiplier))
     }
 
     var verdict: String {
         switch global {
-        case 0.8...: "Excellent"
-        case 0.6...: "Bon"
-        case 0.4...: "Moyen"
-        default:     "À éviter"
+        case 0.70...: "Excellent"
+        case 0.50...: "Bon"
+        case 0.34...: "Moyen"
+        default:      "À éviter"
         }
     }
 }
@@ -43,56 +53,95 @@ struct PhoneticAnalyzer {
             alliteration: alliterationScore(firstName: firstName, lastName: lastName),
             rhythm:       rhythmScore(firstName: firstName, lastName: lastName),
             elisionRisk:  elisionRisk(firstName: firstName, lastName: lastName),
-            hardClash:    hardConsonantClash(firstName: firstName, lastName: lastName)
+            hardClash:    hardConsonantClash(firstName: firstName, lastName: lastName),
+            endingRhyme:  endingRhymeRisk(firstName: firstName, lastName: lastName)
         )
     }
 
-    /// Score 0..1: same leading consonant(s) = high score.
+    /// Score 0..1: phonetic harmony score.
+    /// Penalises same-first-letter (sounds repetitive in French), rewards
+    /// consonant-family diversity, and vowel-density balance between the two names.
     func alliterationScore(firstName: String, lastName: String) -> Double {
         let f = normalized(firstName)
         let l = normalized(lastName)
-        guard !f.isEmpty, !l.isEmpty else { return 0 }
+        guard !f.isEmpty, !l.isEmpty else { return 0.5 }
 
-        let fLeading = leadingConsonants(f)
-        let lLeading = leadingConsonants(l)
+        let fFirst = f.first!
+        let lFirst = l.first!
 
-        // No leading consonants on either side = neutral (no alliteration is possible, not penalised)
-        guard !fLeading.isEmpty, !lLeading.isEmpty else { return 0.5 }
+        // Same first letter is a hard disqualifier regardless of diversity/balance
+        if fFirst == lFirst { return 0.10 }
 
-        // Multi-consonant cluster exact match scores higher than single-letter coincidence
-        if fLeading == lLeading { return fLeading.count >= 2 ? 1.0 : 0.85 }
-
-        if fLeading.first == lLeading.first {
-            let secondMatch = fLeading.count >= 2 && lLeading.count >= 2
-                && fLeading.dropFirst().first == lLeading.dropFirst().first
-            return secondMatch ? 0.95 : 0.85
+        // 1. Starting-sound relationship (30%)
+        // Use pure vowels only — 'y' at the start of a French name is always a consonant (Yann, Yves).
+        let pure: Set<Character> = ["a", "e", "i", "o", "u"]
+        let startScore: Double
+        if pure.contains(fFirst) != pure.contains(lFirst) {
+            // Consonant/vowel contrast — cleanest phonetic distinction
+            startScore = 0.85
+        } else if pure.contains(fFirst) {
+            // Both start with vowels — still OK, different vowel sounds are fine
+            startScore = 0.65
+        } else {
+            // Both start with consonants
+            startScore = phoneticallySimilar(fFirst, lFirst) ? 0.50 : 0.78
         }
 
-        if phoneticallySimilar(fLeading.first!, lLeading.first!) { return 0.50 }
+        // 2. Consonant-family diversity (40%) — names that draw on different consonant
+        //    groups create a richer, more varied full-name sound.
+        let fFamilyIndices = consonantFamilyIndices(f)
+        let lFamilyIndices = consonantFamilyIndices(l)
+        let allFamilies = fFamilyIndices.union(lFamilyIndices)
+        let sharedFamilies = fFamilyIndices.intersection(lFamilyIndices)
+        let differentCount = allFamilies.count - sharedFamilies.count
+        let diversityScore = allFamilies.isEmpty ? 0.5 : min(1.0, Double(differentCount) / 6.0)
 
-        return 0.10
+        // 3. Vowel complement (30%) — rewards first names that introduce vowel sounds absent from the surname
+        let fVowelSet = Set(f.filter { pure.contains($0) })
+        let lVowelSet = Set(l.filter { pure.contains($0) })
+        let newVowelCount = fVowelSet.subtracting(lVowelSet).count
+        let vowelComplementScore: Double
+        switch newVowelCount {
+        case 2...: vowelComplementScore = 1.0
+        case 1:    vowelComplementScore = 0.75
+        default:   vowelComplementScore = 0.45
+        }
+
+        return startScore * 0.30 + diversityScore * 0.40 + vowelComplementScore * 0.30
     }
 
-    /// Score 0..1: syllable balance between first and last name.
+    /// Score 0..1: rhythmic flow between first and last name.
+    /// Uses syllable pairing, character length ratio, ending vowel harmony,
+    /// and combined-name length comfort.
     func rhythmScore(firstName: String, lastName: String) -> Double {
-        let f = syllableCount(firstName)
-        let l = syllableCount(lastName)
-        guard f > 0, l > 0 else { return 0 }
+        let f = normalized(firstName)
+        let l = normalized(lastName)
+        let fSyl = syllableCount(firstName)
+        let lSyl = syllableCount(lastName)
 
-        let table: [String: Double] = [
-            "2+2": 0.95, "2+3": 0.90, "3+2": 0.90,
-            "1+2": 0.75, "2+1": 0.75,
-            "3+3": 0.80, "1+3": 0.60, "3+1": 0.60,
-            "2+4": 0.65, "4+2": 0.65,
-            "1+4": 0.45, "4+1": 0.45,
-            "1+1": 0.50, "4+4": 0.55,
-            "1+5": 0.30, "5+1": 0.30,
-        ]
-        let key = "\(f)+\(l)"
-        if let v = table[key] { return v }
+        let syllableScore = syllableTableScore(fSyl, lSyl)
 
-        let ratio = Double(min(f, l)) / Double(max(f, l))
-        return max(0.1, ratio * 0.6)
+        // Character length ratio: differentiates names with same syllable count
+        let fLen = Double(f.count)
+        let lLen = Double(l.count)
+        let lengthScore = (fLen > 0 && lLen > 0)
+            ? min(fLen, lLen) / max(fLen, lLen)
+            : 0.5
+
+        // Last stressed vowel similarity: ending sound harmony
+        let endingScore = lastVowelScore(f, l)
+
+        // Total character comfort: 8-14 chars is easiest to say together
+        let total = fLen + lLen
+        let comfortScore: Double
+        switch total {
+        case 8...14: comfortScore = 1.0
+        case 7, 15:  comfortScore = 0.85
+        case 6, 16:  comfortScore = 0.70
+        default:     comfortScore = 0.50
+        }
+
+        return syllableScore * 0.40 + lengthScore * 0.25 + endingScore * 0.20 + comfortScore * 0.15
     }
 
     /// True when the first name ends in a vowel and the last name starts with a vowel or silent H,
@@ -101,7 +150,10 @@ struct PhoneticAnalyzer {
         let f = normalized(firstName)
         let l = normalized(lastName)
         guard let last = f.last, let first = l.first else { return false }
-        return vowels.contains(last) && (vowels.contains(first) || first == "h")
+        // firstName end: keep full vowel set — 'y' at the end sounds like 'i' (Romy, Ruby).
+        // lastName start: pure vowels only — 'y' at the start of a French name is a consonant (Yaël, Yves).
+        let pure: Set<Character> = ["a", "e", "i", "o", "u"]
+        return vowels.contains(last) && (pure.contains(first) || first == "h")
     }
 
     /// True when consecutive hard consonants at the junction sound harsh.
@@ -109,11 +161,19 @@ struct PhoneticAnalyzer {
         let f = normalized(firstName)
         let l = normalized(lastName)
         guard let last = f.last, let first = l.first else { return false }
-        // Many French final consonants are silent — only check pronounced ones
         let silentFinals: Set<Character> = ["t", "s", "d", "p", "x", "z", "e"]
         guard !silentFinals.contains(last) else { return false }
         let hard: Set<Character> = ["k", "c", "g", "r", "l", "n", "m", "b", "v", "f"]
         return hard.contains(last) && hard.contains(first)
+    }
+
+    /// True when the last two normalized characters of the first name match the last two of the last name,
+    /// creating an audible rhyme (e.g. "Louis Dubois" → "is"/"is", "Sophie Marie" → "ie"/"ie").
+    func endingRhymeRisk(firstName: String, lastName: String) -> Bool {
+        let f = normalized(firstName)
+        let l = normalized(lastName)
+        guard f.count >= 2, l.count >= 2 else { return false }
+        return f.suffix(2) == l.suffix(2)
     }
 
     /// Returns common nicknames / short forms for a given first name.
@@ -129,7 +189,6 @@ struct PhoneticAnalyzer {
         let s = normalized(word)
         guard !s.isEmpty else { return 0 }
 
-        // Count vowel groups (consecutive vowels = 1 syllable)
         var count = 0
         var inVowel = false
         for ch in s {
@@ -139,7 +198,6 @@ struct PhoneticAnalyzer {
                 inVowel = false
             }
         }
-        // Silent final 'e' only when preceded by a consonant (e.g. "Pierre" yes, "Marie" no)
         if s.last == "e" && count > 1,
            let beforeLast = s.dropLast().last, !vowels.contains(beforeLast) {
             count -= 1
@@ -170,13 +228,55 @@ struct PhoneticAnalyzer {
         return groups.contains { $0.contains(a) && $0.contains(b) }
     }
 
+    private let consonantFamilies: [[Character]] = [
+        ["b", "p"],
+        ["d", "t"],
+        ["g", "k", "c", "q"],
+        ["f", "v"],
+        ["s", "z", "j"],
+        ["m", "n"],
+        ["l", "r"],
+    ]
+
+    private func consonantFamilyIndices(_ s: String) -> Set<Int> {
+        Set(consonantFamilies.indices.filter { idx in
+            consonantFamilies[idx].contains(where: { s.contains($0) })
+        })
+    }
+
+    private func syllableTableScore(_ f: Int, _ l: Int) -> Double {
+        let table: [String: Double] = [
+            "2+2": 0.95, "2+3": 0.90, "3+2": 0.90,
+            "1+2": 0.75, "2+1": 0.75,
+            "3+3": 0.80, "1+3": 0.60, "3+1": 0.60,
+            "2+4": 0.65, "4+2": 0.65,
+            "1+4": 0.45, "4+1": 0.45,
+            "1+1": 0.50, "4+4": 0.55,
+            "1+5": 0.30, "5+1": 0.30,
+        ]
+        let key = "\(f)+\(l)"
+        if let v = table[key] { return v }
+        let ratio = Double(min(f, l)) / Double(max(f, l))
+        return max(0.1, ratio * 0.6)
+    }
+
+    private func lastVowelScore(_ f: String, _ l: String) -> Double {
+        // Use pure vowels only — 'y' at the end of surnames like -sky sounds like a
+        // suffix, not a meaningful vowel for ending-harmony matching.
+        let pure: Set<Character> = ["a", "e", "i", "o", "u"]
+        let fLast = f.reversed().first(where: { pure.contains($0) })
+        let lLast = l.reversed().first(where: { pure.contains($0) })
+        guard let fv = fLast, let lv = lLast else { return 0.5 }
+        if fv == lv { return 1.0 }
+        let families: [[Character]] = [["a"], ["e"], ["i"], ["o"], ["u"]]
+        return families.contains { $0.contains(fv) && $0.contains(lv) } ? 0.55 : 0.20
+    }
+
     private func fallbackNicknames(_ name: String) -> [String] {
         guard name.count > 4 else { return [] }
         var results: [String] = []
-        // Keep first 3-4 chars as short form
         let short = String(name.prefix(4)).capitalized
         if short != name { results.append(short) }
-        // Keep first 3 chars
         let shorter = String(name.prefix(3)).capitalized
         if shorter != name && shorter != short { results.append(shorter) }
         return results

@@ -12,14 +12,14 @@ struct ContentView: View {
             BrowseView()
                 .tabItem { Label("Explorer", systemImage: "magnifyingglass") }
                 .tag(1)
-            SwipeView()
+            SwipeWithFavoritesView()
                 .tabItem { Label("Swiper", systemImage: "arrow.left.arrow.right") }
                 .tag(2)
-            FavoritesView()
-                .tabItem { Label("Favoris", systemImage: "heart") }
-                .tag(3)
             CompatibilityView()
                 .tabItem { Label("Compatibilité", systemImage: "waveform.path.ecg") }
+                .tag(3)
+            SettingsView()
+                .tabItem { Label("Réglages", systemImage: "gearshape") }
                 .tag(4)
         }
         .onChange(of: router.pendingNameId) { _, id in

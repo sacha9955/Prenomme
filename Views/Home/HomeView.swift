@@ -7,7 +7,6 @@ struct HomeView: View {
     @State private var suggestions: [SuggestionService.Suggestion] = []
     @State private var showPaywall = false
     @State private var showThankYouPro = false
-    @State private var showSettings = false
     @State private var favoriteNames: [FirstName] = []
     @State private var trendingGender: Gender? = nil
 
@@ -38,16 +37,6 @@ struct HomeView: View {
                 .padding(.bottom, 32)
             }
             .navigationTitle("Prénomme")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { showSettings = true } label: {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsView()
-            }
             .navigationDestination(for: FirstName.self) { name in
                 NameDetailView(name: name)
             }
@@ -226,8 +215,8 @@ struct HomeView: View {
     // MARK: — Trending
 
     private var filteredTrending: [FirstName] {
-        guard let g = trendingGender else { return trending }
-        return trending.filter { $0.gender == g }
+        let pool = trendingGender == nil ? trending : trending.filter { $0.gender == trendingGender }
+        return Array(pool.prefix(10))
     }
 
     private var trendingSection: some View {
@@ -311,7 +300,7 @@ struct HomeView: View {
     private func loadData() async {
         nameOfDay = try? NameDatabase.shared.nameForDate(Date())
         let allNames = (try? NameDatabase.shared.all()) ?? []
-        trending = Array(allNames.prefix(10))
+        trending = Array(allNames.prefix(200))
         await loadSuggestions()
     }
 
