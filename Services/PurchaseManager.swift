@@ -142,12 +142,13 @@ final class PurchaseManager: @unchecked Sendable {
             }
         }
 
+        let finalProducts = fetched
         await MainActor.run {
             isLoadingProducts = false
-            if fetched.isEmpty {
+            if finalProducts.isEmpty {
                 loadError = "Prix indisponible. Vérifiez votre connexion et réessayez."
             } else {
-                products = fetched
+                products = finalProducts
             }
         }
     }

@@ -49,11 +49,8 @@ targets:
           - group.com.sacha9955.prenomme
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme
-      GENERATE_INFOPLIST_FILE: YES
-      INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
-      INFOPLIST_KEY_UILaunchScreen_Generation: YES
-      INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
-      INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO
+      INFOPLIST_FILE: App/Info.plist
+      GENERATE_INFOPLIST_FILE: NO
     dependencies:
       - package: GRDB
       - target: PrenommeWidget
