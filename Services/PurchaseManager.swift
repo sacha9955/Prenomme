@@ -126,7 +126,7 @@ final class PurchaseManager: @unchecked Sendable {
         }
 
         let retryDelays: [UInt64] = [2_000_000_000, 5_000_000_000]
-        var loaded = false
+        var fetched: [Product] = []
         for (attempt, delay) in ([UInt64(0)] + retryDelays).enumerated() {
             if attempt > 0 {
                 try? await Task.sleep(nanoseconds: delay)
@@ -134,8 +134,7 @@ final class PurchaseManager: @unchecked Sendable {
             do {
                 let result = try await Product.products(for: productIDs)
                 if !result.isEmpty {
-                    await MainActor.run { products = result }
-                    loaded = true
+                    fetched = result
                     break
                 }
             } catch {
@@ -145,8 +144,10 @@ final class PurchaseManager: @unchecked Sendable {
 
         await MainActor.run {
             isLoadingProducts = false
-            if !loaded {
+            if fetched.isEmpty {
                 loadError = "Prix indisponible. Vérifiez votre connexion et réessayez."
+            } else {
+                products = fetched
             }
         }
     }
