@@ -47,7 +47,6 @@ targets:
           - CloudKit
         com.apple.security.application-groups:
           - group.com.sacha9955.prenomme
-        com.apple.developer.cloudkit.environment: development
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.sacha9955.prenomme
       GENERATE_INFOPLIST_FILE: YES
