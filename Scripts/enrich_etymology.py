@@ -47,10 +47,8 @@ EUR_PER_USD        = 0.92
 # ── Prompts ───────────────────────────────────────────────────────────────────
 
 SYSTEM_PROMPT = (
-    "Tu es un expert en onomastique (étude des prénoms). "
-    "Tu génères des étymologies courtes et précises en français pour une application mobile iOS. "
-    "Chaque étymologie fait 2 à 3 phrases maximum. Elle décrit l'origine linguistique, "
-    "la racine étymologique, et le sens du prénom. Ton style est factuel et accessible."
+    "Onomasticien. Tu génères des étymologies UNE PHRASE en français (max 25 mots), "
+    "factuelles, mentionnant origine linguistique + sens. Aucun préambule."
 )
 
 
@@ -69,12 +67,8 @@ def _build_prompt(names_with_info: list[dict]) -> str:
 
     names_block = "\n".join(lines)
     return f"""\
-Pour chacun des prénoms suivants, génère une étymologie courte (2-3 phrases) en français.
+Étymologies (1 phrase, max 25 mots, FR). Format strict: "NOM: étymologie", une ligne par prénom, sans numéro ni préambule.
 
-Format de réponse STRICT : une ligne par prénom, format "NOM: étymologie"
-Ne saute pas de ligne entre les prénoms. Ne numérote pas.
-
-Prénoms :
 {names_block}"""
 
 
@@ -82,8 +76,8 @@ Prénoms :
 
 def estimate_cost(total_names: int, batch_size: int) -> dict:
     n_batches = (total_names + batch_size - 1) // batch_size
-    input_tokens_per  = 400 + batch_size * 15   # prompt fixe + infos noms
-    output_tokens_per = batch_size * 60          # ~60 tokens par étymologie
+    input_tokens_per  = 150 + batch_size * 12   # prompt compact + infos noms
+    output_tokens_per = batch_size * 30          # ~30 tokens par étymologie (1 phrase)
     total_input  = int(n_batches * input_tokens_per)
     total_output = int(n_batches * output_tokens_per)
     cost_usd = (total_input * PRICE_INPUT_PER_M + total_output * PRICE_OUTPUT_PER_M) / 1_000_000
@@ -143,10 +137,12 @@ def generate_batch_cli(
                 ["claude", "-p", "--model", "claude-haiku-4-5", prompt],
                 capture_output=True, text=True, timeout=300,
             )
-            if proc.returncode != 0:
-                last_error = f"exit {proc.returncode}: {proc.stderr[:200]}"
+            # Parse stdout even if exit != 0 — claude-mem SessionEnd hook can return exit 1
+            # while stdout still contains the model's full response.
+            raw = (proc.stdout or "").strip()
+            if not raw:
+                last_error = f"empty stdout, exit {proc.returncode}: {proc.stderr[:200]}"
                 continue
-            raw = proc.stdout.strip()
             result = _parse_response(raw, items)
             found = sum(1 for item in items if item["name"] in result)
             if found < len(items) // 2:
