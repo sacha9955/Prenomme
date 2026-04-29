@@ -97,7 +97,7 @@ struct ProNameWidgetView: View {
 
     private var smallView: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label("Pro", systemImage: "sparkles")
+            Label("Personnalisé", systemImage: "slider.horizontal.3")
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(sage)
             Text(entry.firstName.name)
@@ -131,7 +131,7 @@ struct ProNameWidgetView: View {
                     .foregroundStyle(genderColor)
             }
             VStack(alignment: .leading, spacing: 4) {
-                Label("Prénomme Pro", systemImage: "sparkles")
+                Label("Personnalisé", systemImage: "slider.horizontal.3")
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(sage)
                 Text(entry.firstName.name)
@@ -158,7 +158,7 @@ struct ProNameWidgetView: View {
 
     private var largeView: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label("Prénomme Pro", systemImage: "sparkles")
+            Label("Personnalisé", systemImage: "slider.horizontal.3")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(sage)
             ZStack {
@@ -217,8 +217,8 @@ struct ProNameWidget: Widget {
         ) { entry in
             ProNameWidgetView(entry: entry)
         }
-        .configurationDisplayName("Prénomme Pro")
-        .description("Un prénom personnalisé selon vos critères.")
+        .configurationDisplayName("Prénom personnalisé")
+        .description("Un prénom selon vos critères (genre, origine, affichage).")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
