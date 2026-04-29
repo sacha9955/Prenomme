@@ -81,14 +81,9 @@ struct ProNameWidgetView: View {
     @Environment(\.widgetFamily) var family
 
     var body: some View {
-        ZStack {
-            content
-            if !entry.isPro { proOverlay }
-        }
-        .containerBackground(.regularMaterial, for: .widget)
-        .widgetURL(entry.isPro
-            ? URL(string: "prenomme://name/\(entry.firstName.id)")
-            : URL(string: "prenomme://paywall"))
+        content
+            .containerBackground(.regularMaterial, for: .widget)
+            .widgetURL(URL(string: "prenomme://name/\(entry.firstName.id)"))
     }
 
     @ViewBuilder
@@ -196,21 +191,6 @@ struct ProNameWidgetView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .padding()
-    }
-
-    private var proOverlay: some View {
-        ZStack {
-            Color(red: 0.59, green: 0.69, blue: 0.49).opacity(0.82)
-            VStack(spacing: 8) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 28))
-                    .foregroundStyle(.white)
-                Text("Personnalisez avec\nPrénomme Pro")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .multilineTextAlignment(.center)
-            }
-        }
     }
 
     private var genderColor: Color {
