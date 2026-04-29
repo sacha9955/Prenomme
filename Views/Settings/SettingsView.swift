@@ -88,10 +88,10 @@ struct SettingsView: View {
 
     private var legalSection: some View {
         Section("Légal") {
-            Link(destination: URL(string: "https://sacha9955.github.io/prenomme-legal/privacy.html")!) {
+            Link(destination: URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html")!) {
                 Label("Politique de confidentialité", systemImage: "hand.raised")
             }
-            Link(destination: URL(string: "https://sacha9955.github.io/prenomme-legal/terms.html")!) {
+            Link(destination: URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html")!) {
                 Label("Conditions d'utilisation", systemImage: "doc.text")
             }
             Link(destination: URL(string: "mailto:sacha.ochmiansky@gmail.com?subject=Prénomme%20Support")!) {

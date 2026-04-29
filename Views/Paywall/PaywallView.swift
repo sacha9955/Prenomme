@@ -10,8 +10,8 @@ struct PaywallView: View {
     @State private var shouldPurchaseAfterLoad = false
 
     private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
-    private let privacyURL  = URL(string: "https://sacha9955.github.io/prenomme-legal/privacy.html")!
-    private let termsURL    = URL(string: "https://sacha9955.github.io/prenomme-legal/terms.html")!
+    private let privacyURL  = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html")!
+    private let termsURL    = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html")!
 
     private func activeScene() -> UIWindowScene? {
         UIApplication.shared.connectedScenes

@@ -15,7 +15,7 @@ Vérifie que tu as :
 - [x] App Group `group.com.sacha9955.prenomme` créé
 - [x] iCloud Container `iCloud.com.sacha9955.prenomme` créé
 - [ ] Repo `Prenomme-legal` activé sur GitHub Pages (Settings → Pages → main / root)
-  - Vérifie : <https://sacha9955.github.io/prenomme-legal/privacy.html> doit s'afficher
+  - Vérifie : <https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html> doit s'afficher
 - [ ] Méthode de paiement à jour dans App Store Connect → Agreements, Tax & Banking
 
 ---
@@ -124,7 +124,7 @@ Vérifie que tu as :
 |---|---|
 | Subtitle (FR) | `Trouvez le prénom parfait` |
 | Subtitle (EN) | `Find the perfect baby name` |
-| Privacy Policy URL | `https://sacha9955.github.io/prenomme-legal/privacy.html` |
+| Privacy Policy URL | `https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html` |
 | Privacy Choices URL | (laisser vide — pas applicable) |
 | Category Primary | **Lifestyle** |
 | Category Secondary | **Reference** |
@@ -202,7 +202,7 @@ Découvrez 45 000+ prénoms et leur étymologie. Suggestions intelligentes, anal
 
 ### 5.4 Support URL
 
-`https://sacha9955.github.io/prenomme-legal/`
+`https://raw.githack.com/sacha9955/Prenomme-legal/main/`
 
 ### 5.5 Marketing URL
 
@@ -293,8 +293,8 @@ To test:
 6. "Restaurer les achats" button is available on the paywall and in Settings.
 
 Subscription terms (auto-renewable) are displayed below the buy button.
-Privacy policy: https://sacha9955.github.io/prenomme-legal/privacy.html
-Terms of use:   https://sacha9955.github.io/prenomme-legal/terms.html
+Privacy policy: https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html
+Terms of use:   https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html
 
 The app does NOT collect any user data, has no account system,
 and does not communicate with third-party servers.
