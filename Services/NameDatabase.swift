@@ -123,12 +123,21 @@ final class NameDatabase: @unchecked Sendable {
 
     func nameForDate(_ date: Date) throws -> FirstName? {
         try db.read { db in
-            let count = try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM names") ?? 0
+            // Distinct names only (DB has gender/origin variants for the same name)
+            let count = try Int.fetchOne(db, sql: "SELECT COUNT(DISTINCT name) FROM names") ?? 0
             guard count > 0 else { return nil }
-            let daysSinceReference = Int(date.timeIntervalSinceReferenceDate / 86400)
-            let index = ((daysSinceReference % count) + count) % count
+            let day = Int(date.timeIntervalSinceReferenceDate / 86400)
+            // Pseudo-random but deterministic shuffle : day × large prime → spreads consecutive days
+            let prime = 100_193
+            let scrambled = (day &* prime) % count
+            let index = ((scrambled % count) + count) % count
             return try FirstName.fetchOne(db,
-                sql: "SELECT * FROM names LIMIT 1 OFFSET ?",
+                sql: """
+                    SELECT * FROM names
+                    GROUP BY name
+                    ORDER BY name
+                    LIMIT 1 OFFSET ?
+                    """,
                 arguments: [index])
         }
     }
