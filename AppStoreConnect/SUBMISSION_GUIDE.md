@@ -178,8 +178,12 @@ Inclus :
 • Suggestions intelligentes — basées sur vos favoris
 • Analyse phonétique avec votre nom de famille
 • Comparateur (jusqu'à 4 prénoms)
-• Export PDF, widget Pro personnalisable
+• Export PDF
 • Swipes illimités, favoris illimités, filtres avancés
+
+——— WIDGETS GRATUITS ———
+• Prénom du jour — Une surprise chaque matin
+• Prénom personnalisé — Configurable (genre, origine, affichage), 3 tailles
 
 ——— DONNÉES & CONFIDENTIALITÉ ———
 
@@ -197,7 +201,7 @@ prénom,bébé,grossesse,naissance,liste,choix,étymologie,signification,origine
 ### 5.3 Promotional Text (170 char max, modifiable sans review)
 
 ```
-Découvrez 45 000+ prénoms et leur étymologie. Suggestions intelligentes, analyse phonétique, widget Pro. Pour les futurs parents.
+Découvrez 45 000+ prénoms et leur étymologie. Suggestions intelligentes, analyse phonétique, widgets configurables. Pour les futurs parents.
 ```
 
 ### 5.4 Support URL
