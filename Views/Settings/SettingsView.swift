@@ -25,7 +25,7 @@ struct SettingsView: View {
 
     private let privacyURL = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html") ?? URL(fileURLWithPath: "")
     private let termsURL = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html") ?? URL(fileURLWithPath: "")
-    private let supportURL = URL(string: "mailto:sacha.ochmiansky@gmail.com?subject=Prénomme%20Support") ?? URL(fileURLWithPath: "")
+    private let supportURL = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/support.html") ?? URL(fileURLWithPath: "")
 
     private var settings: UserSettings {
         if let existing = settingsList.first { return existing }

@@ -281,12 +281,14 @@ No
 | Field              | Value                                                                       |
 |--------------------|-----------------------------------------------------------------------------|
 | Privacy Policy URL | `https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html`        |
+| Support URL        | `https://raw.githack.com/sacha9955/Prenomme-legal/main/support.html`        |
 | Marketing URL      | (laisser vide ou ajouter quand disponible)                                  |
-| Support URL        | `mailto:sacha.ochmiansky@gmail.com?subject=Prénomme%20Support`              |
 
 > ⚠️ Tous les liens doivent retourner HTTP 200 au moment de la review (testé : ✅ 200 le 2026-05-02).
+>
+> ⛔ NE PAS utiliser `babycompanion-legal` (repo d'une autre app — n'a aucun rapport avec Prénomme).
 
-### Subscription EULA
+### Subscription EULA (Auto-Renewable Subscriptions section)
 - Cocher : **Apple Standard EULA** (https://www.apple.com/legal/internet-services/itunes/dev/stdeula/)
 - Pas de EULA custom nécessaire.
 
