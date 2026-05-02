@@ -129,7 +129,7 @@ struct FavoritesView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: sorted.map(\.id))
     }
 
-    private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
+    private let accentColor = Color.brand
 
     @ViewBuilder
     private var pdfExportRow: some View {

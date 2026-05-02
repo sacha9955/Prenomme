@@ -117,6 +117,13 @@ final class PurchaseManager: @unchecked Sendable {
         Task { await loadProducts() }
     }
 
+    /// Appelé par la UI quand l'utilisateur clique sur "Acheter" mais que le `Product` n'est pas chargé.
+    /// Évite le spinner infini en remontant un message clair (StoreKit / ASC mal configurés).
+    @MainActor
+    func reportMissingProduct(for productID: String) {
+        purchaseError = "Cet abonnement (\(productID)) est temporairement indisponible. Vérifiez votre connexion et réessayez dans quelques instants."
+    }
+
     // MARK: — Private
 
     private func loadProducts() async {

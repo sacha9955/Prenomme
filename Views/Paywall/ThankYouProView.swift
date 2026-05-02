@@ -10,8 +10,8 @@ struct ThankYouProView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [Color(red: 0.79, green: 0.48, blue: 0.39),
-                                     Color(red: 0.61, green: 0.69, blue: 0.53)],
+                            colors: [Color.brand,
+                                     Color.brandSage],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -46,7 +46,7 @@ struct ThankYouProView: View {
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 52)
-                    .background(Color(red: 0.79, green: 0.48, blue: 0.39),
+                    .background(Color.brand,
                                 in: RoundedRectangle(cornerRadius: 14))
             }
             .padding(.horizontal, 32)
@@ -58,14 +58,14 @@ struct ThankYouProView: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.callout)
-                .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                .foregroundStyle(Color.brand)
                 .frame(width: 20)
             Text(label)
                 .font(.subheadline)
             Spacer()
             Image(systemName: "checkmark")
                 .font(.caption.bold())
-                .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                .foregroundStyle(Color.brand)
         }
     }
 }

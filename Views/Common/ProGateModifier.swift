@@ -41,7 +41,7 @@ struct ProGateModifier: ViewModifier {
             VStack(spacing: 10) {
                 Image(systemName: "lock.fill")
                     .font(.title2)
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    .foregroundStyle(Color.brand)
                 Text(title)
                     .font(.subheadline.weight(.semibold))
                     .multilineTextAlignment(.center)
@@ -53,7 +53,7 @@ struct ProGateModifier: ViewModifier {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 7)
-                        .background(Color(red: 0.79, green: 0.48, blue: 0.39), in: Capsule())
+                        .background(Color.brand, in: Capsule())
                 }
             }
             .padding(16)
@@ -69,7 +69,7 @@ struct ProGateModifier: ViewModifier {
             HStack(spacing: 14) {
                 Image(systemName: "lock.fill")
                     .font(.callout)
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    .foregroundStyle(Color.brand)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
                         .font(.subheadline.weight(.semibold))
@@ -89,8 +89,8 @@ struct ProGateModifier: ViewModifier {
                     .padding(.vertical, 4)
                     .background(
                         LinearGradient(
-                            colors: [Color(red: 0.79, green: 0.48, blue: 0.39),
-                                     Color(red: 0.72, green: 0.43, blue: 0.35)],
+                            colors: [Color.brand,
+                                     Color.brandDark],
                             startPoint: .leading,
                             endPoint: .trailing
                         ),
@@ -98,7 +98,7 @@ struct ProGateModifier: ViewModifier {
                     )
             }
             .padding(14)
-            .background(Color(.systemGray6))
+            .background(Color.appSurface)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
@@ -130,8 +130,8 @@ struct ProBadge: View {
                 Capsule()
                     .fill(
                         LinearGradient(
-                            colors: [Color(red: 0.79, green: 0.48, blue: 0.39),
-                                     Color(red: 0.72, green: 0.43, blue: 0.35)],
+                            colors: [Color.brand,
+                                     Color.brandDark],
                             startPoint: .leading,
                             endPoint: .trailing
                         )

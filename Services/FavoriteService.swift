@@ -14,7 +14,7 @@ struct FavoriteService {
         let descriptor = FetchDescriptor<Favorite>(
             predicate: #Predicate { $0.nameId == nameId }
         )
-        return (try? context.fetchCount(descriptor) ?? 0) ?? 0 > 0
+        return (try? context.fetchCount(descriptor)) ?? 0 > 0
     }
 
     func favoriteCount() -> Int {

@@ -74,9 +74,9 @@ struct SwipeView: View {
 
     private func chipColor(_ gender: Gender?) -> Color {
         switch gender {
-        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
-        case .male:   Color(red: 0.35, green: 0.55, blue: 0.85)
-        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         case nil:     Color.accentColor
         }
     }
@@ -87,20 +87,20 @@ struct SwipeView: View {
         ZStack {
             ForEach(Array(deck.prefix(3).enumerated().reversed()), id: \.element.id) { idx, name in
                 if idx == 0 {
-                    SwipeCardView(name: name, dragOffset: dragOffset)
+                    SwipeCardView(name: name, dragOffset: dragOffset, isPro: purchase.isPro)
                         .offset(x: dragOffset.width, y: dragOffset.height * 0.2)
                         .rotationEffect(.degrees(Double(dragOffset.width) / 22))
                         .gesture(dragGesture)
                         .zIndex(Double(100 - idx))
                 } else {
-                    SwipeCardView(name: name, dragOffset: .zero)
+                    SwipeCardView(name: name, dragOffset: .zero, isPro: purchase.isPro)
                         .scaleEffect(1.0 - CGFloat(idx) * 0.04)
                         .offset(y: CGFloat(idx) * 10)
                         .zIndex(Double(100 - idx))
                 }
             }
         }
-        .frame(height: 420)
+        .frame(height: 460)
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: dragOffset)
     }
 
@@ -129,7 +129,7 @@ struct SwipeView: View {
             actionButton(systemImage: "xmark", color: .red) {
                 performSwipe(right: false)
             }
-            actionButton(systemImage: "heart.fill", color: Color(red: 0.85, green: 0.40, blue: 0.55)) {
+            actionButton(systemImage: "heart.fill", color: Color.genderFemale) {
                 performSwipe(right: true)
             }
         }
@@ -139,11 +139,16 @@ struct SwipeView: View {
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.title.bold())
-                .foregroundStyle(color)
-                .frame(width: 68, height: 68)
-                .background(color.opacity(0.12))
-                .clipShape(Circle())
-                .shadow(color: color.opacity(0.20), radius: 8, y: 3)
+                .foregroundStyle(.white)
+                .frame(width: 72, height: 72)
+                .background(
+                    Circle()
+                        .fill(color)
+                        .shadow(color: color.opacity(0.45), radius: 14, y: 4)
+                )
+                .overlay(
+                    Circle().strokeBorder(.white.opacity(0.18), lineWidth: 1)
+                )
         }
         .buttonStyle(.plain)
     }
@@ -199,8 +204,15 @@ struct SwipeView: View {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
-            if !deck.isEmpty { deck.removeFirst() }
-            dragOffset = .zero
+            // Retire la carte ET reset l'offset SANS animation, sinon le modifier
+            // `.animation(value: dragOffset)` ligne 104 fait revenir la nouvelle carte
+            // depuis (600,60) vers .zero en spring → flicker "revient puis passe vite".
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                if !deck.isEmpty { deck.removeFirst() }
+                dragOffset = .zero
+            }
         }
     }
 
@@ -252,15 +264,16 @@ struct SwipeWithFavoritesView: View {
 private struct SwipeCardView: View {
     let name: FirstName
     let dragOffset: CGSize
+    let isPro: Bool
 
     private var likeOpacity: Double { min(1, max(0, Double(dragOffset.width) / 70)) }
     private var nopeOpacity: Double { min(1, max(0, Double(-dragOffset.width) / 70)) }
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.10), radius: 16, y: 4)
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(Color.appSurfaceElevated)
+                .shadow(color: .black.opacity(0.30), radius: 18, y: 6)
 
             VStack(alignment: .leading, spacing: 0) {
                 heroHeader
@@ -270,90 +283,240 @@ private struct SwipeCardView: View {
             feedbackOverlay
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 420)
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .frame(height: 460)
+        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .strokeBorder(Color.appHairline, lineWidth: 0.5)
+        )
     }
 
     private var heroHeader: some View {
-        ZStack {
+        ZStack(alignment: .center) {
+            // Gradient adouci avec un point central plus chaud
             LinearGradient(
                 colors: genderGradient,
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            VStack(spacing: 6) {
-                Text(String(name.name.prefix(1)))
-                    .font(.system(size: 64, weight: .bold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.25))
+
+            // Initiale géante en watermark décoratif (déborde volontairement)
+            Text(String(name.name.prefix(1).uppercased()))
+                .font(.system(size: 280, weight: .black, design: .rounded))
+                .foregroundStyle(.white.opacity(0.14))
+                .offset(x: -60, y: 20)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+
+            // Bloc texte central
+            VStack(spacing: 10) {
+                Spacer()
                 Text(name.name)
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .font(.system(size: 46, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.30), radius: 6, y: 2)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+
+                if let rank = name.popularityRankFR {
+                    HStack(spacing: 5) {
+                        Image(systemName: "chart.line.uptrend.xyaxis")
+                            .font(.caption2.weight(.bold))
+                        Text("#\(rank) en France")
+                            .font(.caption.weight(.semibold))
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .background(.black.opacity(0.22), in: Capsule())
+                }
+                Spacer()
             }
+            .padding(.horizontal, 20)
         }
-        .frame(height: 210)
+        .frame(height: 260)
+        .clipped()
     }
 
     private var cardInfo: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 14) {
+            // Badges row
             HStack(spacing: 8) {
-                badge(name.origin, color: genderColor)
-                badge(name.gender.label, color: .secondary)
+                badge(name.origin, color: genderColor, systemImage: "globe")
+                badge(name.gender.label, color: .secondary, systemImage: nil)
                 Spacer()
-                if let rank = name.popularityRankFR {
-                    Text("#\(rank)")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
-                }
             }
-            Text(name.meaning)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .lineLimit(3)
+
+            // Stats compactes : Lettres / Syllabes / Rang — presque toujours remplies
+            statsRow
+
+            // Texte principal : meaning prioritaire, fallback sur etymology (99,99% rempli)
+            primaryTextBlock
+
+            // Themes (tags) si dispo
+            if !name.themes.isEmpty {
+                themesRow
+            }
+
+            Spacer(minLength: 0)
+
+            // Hints visuels swipe
+            HStack(spacing: 0) {
+                Label("Pas pour nous", systemImage: "arrow.left")
+                    .foregroundStyle(.red.opacity(0.75))
+                Spacer()
+                Label("Coup de cœur", systemImage: "arrow.right")
+                    .foregroundStyle(Color.genderFemale)
+                    .labelStyle(TrailingIconLabelStyle())
+            }
+            .font(.caption2.weight(.semibold))
         }
-        .padding(16)
+        .padding(20)
     }
 
-    private func badge(_ text: String, color: Color) -> some View {
-        Text(text)
-            .font(.caption.weight(.medium))
+    // Grille stats — Lettres / Syllabes / Rang FR
+    private var statsRow: some View {
+        HStack(spacing: 10) {
+            statTile(value: "\(name.name.count)", label: "Lettres")
+            statTile(value: "\(name.syllables)", label: name.syllables > 1 ? "Syllabes" : "Syllabe")
+            statTile(
+                value: name.popularityRankFR.map { "#\($0)" } ?? "—",
+                label: "Rang FR"
+            )
+        }
+    }
+
+    private func statTile(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(.headline, design: .rounded).weight(.bold))
+                .foregroundStyle(.primary)
+            Text(label.uppercased())
+                .font(.system(size: 9, weight: .semibold))
+                .tracking(0.5)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
+        .background(Color.appSurface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+
+    /// Texte principal de la fiche.
+    /// - Free : affiche `meaning` si rempli, sinon rien (étymologie réservée Pro).
+    /// - Pro  : affiche `meaning` si rempli, sinon fallback sur `etymology` (99,99% rempli).
+    @ViewBuilder
+    private var primaryTextBlock: some View {
+        let trimmedMeaning = name.meaning.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedEtymology = (name.etymology ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if !trimmedMeaning.isEmpty {
+            VStack(alignment: .leading, spacing: 4) {
+                sectionLabel("SIGNIFICATION")
+                Text(trimmedMeaning)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } else if isPro && !trimmedEtymology.isEmpty {
+            VStack(alignment: .leading, spacing: 4) {
+                sectionLabel("ÉTYMOLOGIE")
+                Text(trimmedEtymology)
+                    .font(.subheadline)
+                    .foregroundStyle(.primary)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } else if !isPro && !trimmedEtymology.isEmpty {
+            // Teaser Pro discret : on signale qu'une étymologie existe mais on la verrouille.
+            HStack(spacing: 6) {
+                Image(systemName: "lock.fill")
+                    .font(.caption2.weight(.bold))
+                Text("Étymologie complète avec Pro")
+                    .font(.caption.weight(.semibold))
+            }
+            .foregroundStyle(Color.brand)
             .padding(.horizontal, 10)
-            .padding(.vertical, 4)
-            .background(color.opacity(0.12))
-            .foregroundStyle(color)
-            .clipShape(Capsule())
+            .padding(.vertical, 6)
+            .background(Color.brand.opacity(0.12), in: Capsule())
+        }
+    }
+
+    private func sectionLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.caption2.weight(.bold))
+            .foregroundStyle(.tertiary)
+            .tracking(0.6)
+    }
+
+    private var themesRow: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                ForEach(name.themes.prefix(4), id: \.self) { theme in
+                    Text(theme)
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 4)
+                        .background(genderColor.opacity(0.12), in: Capsule())
+                        .foregroundStyle(genderColor)
+                }
+            }
+        }
+    }
+
+    private func badge(_ text: String, color: Color, systemImage: String?) -> some View {
+        HStack(spacing: 5) {
+            if let systemImage {
+                Image(systemName: systemImage).font(.caption2.weight(.bold))
+            }
+            Text(text).font(.caption.weight(.semibold))
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(color.opacity(0.15), in: Capsule())
+        .foregroundStyle(color)
     }
 
     private var feedbackOverlay: some View {
         HStack {
             Image(systemName: "heart.fill")
-                .font(.system(size: 40, weight: .bold))
+                .font(.system(size: 48, weight: .bold))
                 .foregroundStyle(.green)
                 .rotationEffect(.degrees(-18))
                 .opacity(likeOpacity)
-                .padding(18)
+                .padding(20)
             Spacer()
             Image(systemName: "xmark")
-                .font(.system(size: 40, weight: .bold))
+                .font(.system(size: 48, weight: .bold))
                 .foregroundStyle(.red)
                 .rotationEffect(.degrees(18))
                 .opacity(nopeOpacity)
-                .padding(18)
+                .padding(20)
         }
     }
 
     private var genderColor: Color {
         switch name.gender {
-        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
-        case .male:   Color(red: 0.35, green: 0.55, blue: 0.85)
-        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 
     private var genderGradient: [Color] {
         switch name.gender {
-        case .female: [Color(red: 0.82, green: 0.38, blue: 0.52), Color(red: 0.93, green: 0.62, blue: 0.68)]
-        case .male:   [Color(red: 0.28, green: 0.48, blue: 0.82), Color(red: 0.50, green: 0.68, blue: 0.88)]
-        case .unisex: [Color(red: 0.38, green: 0.62, blue: 0.40), Color(red: 0.60, green: 0.78, blue: 0.52)]
+        case .female: [Color.genderFemale, Color.genderFemale.opacity(0.65)]
+        case .male:   [Color.genderMale,   Color.genderMale.opacity(0.65)]
+        case .unisex: [Color.genderUnisex, Color.genderUnisex.opacity(0.65)]
+        }
+    }
+}
+
+// Petit helper pour afficher icône à droite du texte (pour le hint coup de cœur)
+private struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 4) {
+            configuration.title
+            configuration.icon
         }
     }
 }

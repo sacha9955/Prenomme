@@ -10,6 +10,23 @@ struct SettingsView: View {
     @State private var restoreAlert: RestoreAlert?
     @State private var showPaywall = false
 
+    // MARK: — Debug unlock (5 taps secrets sur "Version")
+    @AppStorage("debugUnlocked") private var debugUnlocked = false
+    @State private var versionTapCount = 0
+    @State private var versionTapResetWork: DispatchWorkItem?
+    @State private var showDebugCodePrompt = false
+    @State private var showWrongCodeAlert = false
+    @State private var debugCodeEntry = ""
+
+    /// Code secret pour débloquer la section Debug.
+    /// Centralisé ici plutôt que parsé en plusieurs endroits.
+    private static let debugUnlockCode = "2024bc"
+    private static let tapsRequiredToPromptCode = 5
+
+    private let privacyURL = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html") ?? URL(fileURLWithPath: "")
+    private let termsURL = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html") ?? URL(fileURLWithPath: "")
+    private let supportURL = URL(string: "mailto:sacha.ochmiansky@gmail.com?subject=Prénomme%20Support") ?? URL(fileURLWithPath: "")
+
     private var settings: UserSettings {
         if let existing = settingsList.first { return existing }
         let s = UserSettings()
@@ -32,9 +49,15 @@ struct SettingsView: View {
                 aboutSection
                 legalSection
                 #if DEBUG
-                Section("Debug") {
-                    NavigationLink("Debug Settings") {
-                        DebugSettingsView()
+                if debugUnlocked {
+                    Section("Debug") {
+                        NavigationLink("Debug Settings") {
+                            DebugSettingsView()
+                        }
+                        Button("Verrouiller Debug", role: .destructive) {
+                            debugUnlocked = false
+                            versionTapCount = 0
+                        }
                     }
                 }
                 #endif
@@ -42,6 +65,21 @@ struct SettingsView: View {
             .navigationTitle("Réglages")
             .alert(item: $restoreAlert) { alert in
                 Alert(title: Text(alert.title), message: Text(alert.message), dismissButton: .default(Text("OK")))
+            }
+            .alert("Code de déblocage", isPresented: $showDebugCodePrompt) {
+                SecureField("Code", text: $debugCodeEntry)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                Button("Valider") { validateDebugCode() }
+                Button("Annuler", role: .cancel) {
+                    debugCodeEntry = ""
+                    versionTapCount = 0
+                }
+            } message: {
+                Text("Entrez le code pour activer le menu Debug.")
+            }
+            .alert("Code incorrect", isPresented: $showWrongCodeAlert) {
+                Button("OK", role: .cancel) {}
             }
             .sheet(isPresented: $showPaywall) {
                 PaywallView()
@@ -63,7 +101,7 @@ struct SettingsView: View {
                     showPaywall = true
                 } label: {
                     Label("Passer à Pro", systemImage: "star.fill")
-                        .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                        .foregroundStyle(Color.brand)
                 }
             }
             Button("Restaurer les achats") {
@@ -75,7 +113,15 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         Section("À propos") {
-            LabeledContent("Version", value: appVersion)
+            // Tap secret 5× sur la row "Version" → prompt code "2024bc" → débloque section Debug.
+            Button {
+                handleVersionTap()
+            } label: {
+                LabeledContent("Version", value: appVersion)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
             LabeledContent("Build", value: buildNumber)
             LabeledContent("Données", value: "INSEE · SSA · Wikidata")
             Button {
@@ -86,15 +132,47 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: — Debug unlock logic
+
+    private func handleVersionTap() {
+        #if DEBUG
+        guard !debugUnlocked else { return }   // déjà unlock, pas la peine de re-prompter
+
+        versionTapCount += 1
+
+        // Reset le compteur après 3s d'inactivité
+        versionTapResetWork?.cancel()
+        let work = DispatchWorkItem { versionTapCount = 0 }
+        versionTapResetWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: work)
+
+        if versionTapCount >= Self.tapsRequiredToPromptCode {
+            versionTapCount = 0
+            versionTapResetWork?.cancel()
+            debugCodeEntry = ""
+            showDebugCodePrompt = true
+        }
+        #endif
+    }
+
+    private func validateDebugCode() {
+        if debugCodeEntry == Self.debugUnlockCode {
+            debugUnlocked = true
+        } else {
+            showWrongCodeAlert = true
+        }
+        debugCodeEntry = ""
+    }
+
     private var legalSection: some View {
         Section("Légal") {
-            Link(destination: URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html")!) {
+            Link(destination: privacyURL) {
                 Label("Politique de confidentialité", systemImage: "hand.raised")
             }
-            Link(destination: URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html")!) {
+            Link(destination: termsURL) {
                 Label("Conditions d'utilisation", systemImage: "doc.text")
             }
-            Link(destination: URL(string: "mailto:sacha.ochmiansky@gmail.com?subject=Prénomme%20Support")!) {
+            Link(destination: supportURL) {
                 Label("Contact / Support", systemImage: "envelope")
             }
         }
@@ -109,21 +187,18 @@ struct SettingsView: View {
                 title: "Erreur",
                 message: error
             )
-        } else if purchase.isPro {
-            restoreAlert = RestoreAlert(
-                title: "Achats restaurés",
-                message: "Prénomme Pro est maintenant actif."
-            )
         } else {
             restoreAlert = RestoreAlert(
-                title: "Aucun achat trouvé",
-                message: "Aucun achat Pro associé à ce compte Apple."
+                title: "Succès",
+                message: "Vos achats ont été restaurés."
             )
         }
     }
 }
 
-private struct RestoreAlert: Identifiable {
+// MARK: — Helper
+
+struct RestoreAlert: Identifiable {
     let id = UUID()
     let title: String
     let message: String

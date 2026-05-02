@@ -40,7 +40,7 @@ struct CompatibilityView: View {
         Button { showPaywall = true } label: {
             HStack(spacing: 12) {
                 Image(systemName: "star.fill")
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    .foregroundStyle(Color.brand)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Scores détaillés avec Pro")
                         .font(.subheadline.weight(.semibold))
@@ -55,7 +55,7 @@ struct CompatibilityView: View {
                     .foregroundStyle(.secondary)
             }
             .padding(14)
-            .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.08))
+            .background(Color.brand.opacity(0.08))
             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             .padding(.horizontal)
         }
@@ -70,9 +70,14 @@ struct CompatibilityView: View {
                 .font(.headline)
                 .padding(.horizontal)
             TextField("ex. Martin, Dubois…", text: $lastName)
-                .textFieldStyle(.roundedBorder)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.words)
+                .padding(12)
+                .background(Color.appSurfaceElevated, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(Color.appHairline, lineWidth: 0.5)
+                )
                 .padding(.horizontal)
         }
         .padding(.top, 16)
@@ -156,9 +161,9 @@ struct CompatibilityView: View {
 
     private func candidateChipColor(_ gender: Gender?) -> Color {
         switch gender {
-        case .female: Color(red: 0.85, green: 0.35, blue: 0.50)
-        case .male:   Color(red: 0.30, green: 0.50, blue: 0.80)
-        case .unisex: Color(red: 0.35, green: 0.60, blue: 0.35)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         case nil:     Color.accentColor
         }
     }
@@ -218,7 +223,7 @@ private struct ScoreCard: View {
                 lockedBanner
             }
         }
-        .background(Color(.systemBackground))
+        .background(Color.appSurfaceElevated)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
     }
@@ -310,16 +315,16 @@ private struct ScoreCard: View {
             }
             .padding(12)
             .foregroundStyle(.secondary)
-            .background(Color(.systemGray6))
+            .background(Color.appSurface)
         }
         .buttonStyle(.plain)
     }
 
     private var genderColor: Color {
         switch name.gender {
-        case .female: Color(red: 0.85, green: 0.35, blue: 0.50)
-        case .male:   Color(red: 0.30, green: 0.50, blue: 0.80)
-        case .unisex: Color(red: 0.35, green: 0.60, blue: 0.35)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 

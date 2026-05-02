@@ -41,7 +41,7 @@ struct NameDetailView: View {
                     toggleFavorite()
                 } label: {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .foregroundStyle(isFavorite ? Color(red: 0.85, green: 0.45, blue: 0.55) : .primary)
+                        .foregroundStyle(isFavorite ? Color.genderFemale : .primary)
                         .symbolEffect(.bounce, value: isFavorite)
                 }
             }
@@ -98,7 +98,7 @@ struct NameDetailView: View {
             .font(.subheadline.weight(.medium))
             .padding(.horizontal, 20)
             .padding(.vertical, 10)
-            .background(Color(.systemGray6))
+            .background(Color.appSurface)
             .clipShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -183,7 +183,7 @@ struct NameDetailView: View {
                                     .font(.caption)
                                     .padding(.horizontal, 10)
                                     .padding(.vertical, 4)
-                                    .background(Color(.systemGray6))
+                                    .background(Color.appSurface)
                                     .clipShape(Capsule())
                             }
                         }
@@ -217,11 +217,11 @@ struct NameDetailView: View {
     private var genderGradient: LinearGradient {
         switch name.gender {
         case .female:
-            LinearGradient(colors: [Color(red: 0.95, green: 0.65, blue: 0.72), Color(red: 0.80, green: 0.40, blue: 0.52)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(colors: [Color.genderFemale.opacity(0.7), Color.genderFemale], startPoint: .topLeading, endPoint: .bottomTrailing)
         case .male:
-            LinearGradient(colors: [Color(red: 0.55, green: 0.75, blue: 0.95), Color(red: 0.30, green: 0.50, blue: 0.80)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(colors: [Color.genderMale.opacity(0.6), Color.genderMale], startPoint: .topLeading, endPoint: .bottomTrailing)
         case .unisex:
-            LinearGradient(colors: [Color(red: 0.75, green: 0.88, blue: 0.75), Color(red: 0.45, green: 0.68, blue: 0.45)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(colors: [Color.genderUnisex.opacity(0.6), Color.genderUnisex], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
 
@@ -237,9 +237,9 @@ struct NameDetailView: View {
 
     private var genderBadgeColor: Color {
         switch name.gender {
-        case .female: Color(red: 0.85, green: 0.35, blue: 0.50)
-        case .male: Color(red: 0.30, green: 0.50, blue: 0.80)
-        case .unisex: Color(red: 0.35, green: 0.60, blue: 0.35)
+        case .female: Color.genderFemale
+        case .male: Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 
@@ -293,14 +293,14 @@ private struct PopularityCard: View {
             if let rank {
                 Text("#\(rank)")
                     .font(.title2.weight(.bold))
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    .foregroundStyle(Color.brand)
             } else {
                 Text("—").font(.title2).foregroundStyle(.tertiary)
             }
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color.appSurface)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
@@ -317,7 +317,7 @@ private struct SimilarNamesContent: View {
                         .font(.subheadline)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(Color(.systemGray6))
+                        .background(Color.appSurface)
                         .clipShape(Capsule())
                 }
                 .buttonStyle(.plain)

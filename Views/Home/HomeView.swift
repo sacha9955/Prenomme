@@ -64,7 +64,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Prénom du jour", systemImage: "sun.max.fill")
                 .font(.caption.weight(.semibold))
-                .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                .foregroundStyle(Color.brand)
             NavigationLink(value: name) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
@@ -80,7 +80,7 @@ struct HomeView: View {
                         Circle()
                             .fill(
                                 LinearGradient(
-                                    colors: [Color(red: 0.92, green: 0.76, blue: 0.68), Color(red: 0.72, green: 0.82, blue: 0.72)],
+                                    colors: [Color.brandBeige, Color.brandSage],
                                     startPoint: .topLeading, endPoint: .bottomTrailing
                                 )
                             )
@@ -91,7 +91,7 @@ struct HomeView: View {
                     }
                 }
                 .padding(16)
-                .background(Color(.systemBackground))
+                .background(Color.appSurfaceElevated)
                 .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .shadow(color: .black.opacity(0.07), radius: 10, y: 3)
             }
@@ -130,14 +130,14 @@ struct HomeView: View {
             .padding(.vertical, 14)
             .background(
                 LinearGradient(
-                    colors: [Color(red: 0.61, green: 0.69, blue: 0.53),
-                             Color(red: 0.79, green: 0.48, blue: 0.39)],
+                    colors: [Color.brandSage,
+                             Color.brand],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
             )
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .shadow(color: Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.30),
+            .shadow(color: Color.brand.opacity(0.30),
                     radius: 10, y: 4)
             .padding(.horizontal)
             .padding(.top, 8)
@@ -149,14 +149,14 @@ struct HomeView: View {
         Button { showThankYouPro = true } label: {
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.seal.fill")
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    .foregroundStyle(Color.brand)
                 Text("Prénomme Pro ✨")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color(red: 0.79, green: 0.48, blue: 0.39))
+                    .foregroundStyle(Color.brand)
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 8)
-            .background(Color(red: 0.79, green: 0.48, blue: 0.39).opacity(0.10))
+            .background(Color.brand.opacity(0.10))
             .clipShape(Capsule())
             .padding(.horizontal)
             .padding(.top, 8)
@@ -204,7 +204,7 @@ struct HomeView: View {
                 Image(systemName: "chevron.right").font(.caption)
             }
             .padding(14)
-            .background(Color(.systemGray6))
+            .background(Color.appSurface)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             .foregroundStyle(.secondary)
             .padding(.horizontal)
@@ -266,9 +266,9 @@ struct HomeView: View {
 
     private func chipColor(_ gender: Gender?) -> Color {
         switch gender {
-        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
-        case .male:   Color(red: 0.35, green: 0.55, blue: 0.85)
-        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         case nil:     Color.accentColor
         }
     }
@@ -361,16 +361,16 @@ private struct TrendingCard: View {
         }
         .frame(width: 110)
         .padding(14)
-        .background(Color(.systemBackground))
+        .background(Color.appSurfaceElevated)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
     }
 
     private var genderColor: Color {
         switch name.gender {
-        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
-        case .male: Color(red: 0.35, green: 0.55, blue: 0.85)
-        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        case .female: Color.genderFemale
+        case .male: Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 }
@@ -424,16 +424,16 @@ private struct SuggestionCard: View {
         }
         .frame(width: 110)
         .padding(14)
-        .background(Color(.systemBackground))
+        .background(Color.appSurfaceElevated)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .shadow(color: .black.opacity(0.06), radius: 8, y: 2)
     }
 
     private var genderColor: Color {
         switch suggestion.name.gender {
-        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
-        case .male:   Color(red: 0.35, green: 0.55, blue: 0.85)
-        case .unisex: Color(red: 0.45, green: 0.68, blue: 0.45)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 }

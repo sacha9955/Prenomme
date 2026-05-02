@@ -1,43 +1,47 @@
 {
-  "identifier" : "8BEE079B-B207-459E-8D15-2E58A88E1E96",
-  "nonConsumableProducts" : [
+  "identifier" : "D9B3A1E4-5F72-4C8B-9D01-234E56789ABC",
+  "nonConsumableIAP" : [
     {
       "displayPrice" : "29.99",
-      "familyShareable" : false,
-      "internalID" : "2C05C898-34AB-46D2-89BF-2AA9EA496342",
+      "familyShareable" : true,
+      "internalID" : "prenomme_pro_lifetime_001",
       "localizations" : [
         {
-          "description" : "Accès à vie à toutes les fonctionnalités Pro. Paiement unique.",
+          "description" : "Accès illimité à toutes les fonctionnalités de Prénomme : favoris illimités, swipes illimités, widget Pro et plus encore.",
           "displayName" : "Prénomme Pro — À vie",
           "locale" : "fr_FR"
         },
         {
-          "description" : "Lifetime access to all Pro features. One-time payment.",
+          "description" : "Unlimited access to all Prénomme features: unlimited favorites, unlimited swipes, Pro widget and more.",
           "displayName" : "Prénomme Pro — Lifetime",
           "locale" : "en_US"
         }
       ],
       "productID" : "prenomme.pro.lifetime",
-      "referenceName" : "Prenomme Pro Lifetime",
+      "referenceName" : "Pro Lifetime",
       "type" : "NonConsumable"
     }
   ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitErrors" : []
+  },
   "subscriptionGroups" : [
     {
-      "id" : "21563729",
+      "id" : "21500001",
       "localizations" : [
         {
-          "description" : "Prénomme Pro",
+          "description" : "Prénomme Pro — accès complet récurrent",
           "displayName" : "Prénomme Pro",
           "locale" : "fr_FR"
         },
         {
-          "description" : "Prénomme Pro",
+          "description" : "Prénomme Pro — full access recurring",
           "displayName" : "Prénomme Pro",
           "locale" : "en_US"
         }
       ],
-      "name" : "Prenomme Pro",
+      "name" : "Prénomme Pro",
       "subscriptions" : [
         {
           "adHocOffers" : [],
@@ -45,24 +49,24 @@
           "displayPrice" : "2.99",
           "familyShareable" : false,
           "groupNumber" : 1,
-          "internalID" : "5F4A2C19-7D8E-4A3F-9B12-1234567890AB",
+          "internalID" : "prenomme_pro_monthly_001",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Accès illimité à toutes les fonctionnalités Pro. Renouvellement mensuel.",
+              "description" : "Accès Pro mensuel — résiliable à tout moment.",
               "displayName" : "Prénomme Pro — Mensuel",
               "locale" : "fr_FR"
             },
             {
-              "description" : "Unlimited access to all Pro features. Monthly renewal.",
+              "description" : "Pro monthly access — cancel anytime.",
               "displayName" : "Prénomme Pro — Monthly",
               "locale" : "en_US"
             }
           ],
           "productID" : "prenomme.pro.monthly",
           "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Prenomme Pro Monthly",
-          "subscriptionGroupID" : "21563729",
+          "referenceName" : "Pro Monthly",
+          "subscriptionGroupID" : "21500001",
           "type" : "RecurringSubscription"
         },
         {
@@ -71,34 +75,31 @@
           "displayPrice" : "19.99",
           "familyShareable" : false,
           "groupNumber" : 2,
-          "internalID" : "8B7F3D26-2C5B-4E9A-A1F6-9876543210CD",
+          "internalID" : "prenomme_pro_yearly_001",
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Accès illimité à toutes les fonctionnalités Pro. Renouvellement annuel — économisez 44% par rapport au mensuel.",
+              "description" : "Accès Pro annuel — meilleur tarif, économisez 44 %.",
               "displayName" : "Prénomme Pro — Annuel",
               "locale" : "fr_FR"
             },
             {
-              "description" : "Unlimited access to all Pro features. Annual renewal — save 44% vs monthly.",
-              "displayName" : "Prénomme Pro — Annual",
+              "description" : "Pro yearly access — best value, save 44%.",
+              "displayName" : "Prénomme Pro — Yearly",
               "locale" : "en_US"
             }
           ],
           "productID" : "prenomme.pro.yearly",
           "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Prenomme Pro Yearly",
-          "subscriptionGroupID" : "21563729",
+          "referenceName" : "Pro Yearly",
+          "subscriptionGroupID" : "21500001",
           "type" : "RecurringSubscription"
         }
       ]
     }
   ],
-  "settings" : {
-    "_developerTeamID" : "Y9U6L9TB4B",
-    "_storeKitErrors" : []
-  },
   "version" : {
-    "formatVersion" : "2.0"
+    "major" : 3,
+    "minor" : 0
   }
 }

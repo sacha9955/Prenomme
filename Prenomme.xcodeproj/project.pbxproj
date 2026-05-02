@@ -22,6 +22,7 @@
 		2CFB7A79B8B89595CB0D9CBA /* FavoriteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0BD1924DF546E306F525E8 /* FavoriteService.swift */; };
 		2D4845A94117D096667DF4D5 /* SchemaVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FABA1C490F6F634EADA3F8D /* SchemaVersions.swift */; };
 		30F5156EFB026A9BEAE6BE41 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73F0055368666A536DEFF21 /* OnboardingView.swift */; };
+		372AF469EF50492C5D4EF1FB /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED20AD603F68366D3944179E /* AppColors.swift */; };
 		3C956A413B30F1F6FC579E54 /* NavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4514F16C998AEA9DFC1B728A /* NavigationRouter.swift */; };
 		3CD92FD865E233FAD3102B52 /* NameFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AA537F1CBA69EA8EF98529 /* NameFilter.swift */; };
 		40AEA6FC0D01F045F9295054 /* NameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE99482C293647EF56B852A7 /* NameDetailView.swift */; };
@@ -160,6 +161,7 @@
 		D57303B7400D1E5C7601D068 /* BrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseView.swift; sourceTree = "<group>"; };
 		E03BFDB0DF5E49300E28DBBD /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
 		E0F6C43D85C7B27EBE68902D /* DebugSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugSettingsView.swift; sourceTree = "<group>"; };
+		ED20AD603F68366D3944179E /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
 		FE99482C293647EF56B852A7 /* NameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -201,12 +203,21 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		0CA6FCD59C7267D77C0BD600 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				ED20AD603F68366D3944179E /* AppColors.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
 		1360B4C25450F545E3B78931 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				2ADF531543580A9C81035B82 /* Browse */,
 				AD9298115A90B9642C0D80EF /* Common */,
 				37BDF33E9D429F6A56B52EF1 /* Compatibility */,
+				0CA6FCD59C7267D77C0BD600 /* DesignSystem */,
 				73B11F8327CF89F4A46A7BBF /* Favorites */,
 				A6662B25FEDC4883D88E7FC8 /* Home */,
 				57163A170417088D6F8A0E68 /* Onboarding */,
@@ -573,6 +584,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				372AF469EF50492C5D4EF1FB /* AppColors.swift in Sources */,
 				B09640A017B4907878B96FF1 /* BrowseView.swift in Sources */,
 				F8AEC986690DBA9CBFD8F092 /* ComparatorView.swift in Sources */,
 				78F9C5D318F21ED5D3206956 /* CompatibilityView.swift in Sources */,
@@ -792,7 +804,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Y9U6L9TB4B;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -869,7 +881,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = Y9U6L9TB4B;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

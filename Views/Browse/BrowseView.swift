@@ -13,17 +13,25 @@ struct BrowseView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ScrollView {
-                LazyVStack(spacing: 0) {
+                LazyVStack(spacing: 8) {
                     ForEach(names) { name in
                         NavigationLink(value: name) {
                             NameRow(name: name)
-                                .padding(.horizontal)
-                                .padding(.vertical, 6)
+                                .padding(14)
+                                .background(
+                                    Color.appSurfaceElevated,
+                                    in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        .strokeBorder(Color.appHairline, lineWidth: 0.5)
+                                )
                         }
                         .buttonStyle(.plain)
-                        Divider().padding(.leading, 68)
+                        .padding(.horizontal)
                     }
                 }
+                .padding(.vertical, 8)
             }
             .navigationTitle("Explorer")
             .navigationDestination(for: FirstName.self) { name in
@@ -105,19 +113,25 @@ struct NameRow: View {
             }
             Spacer()
             if let rank = name.popularityRankFR {
-                Text("#\(rank)")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
+                HStack(spacing: 3) {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .font(.system(size: 9, weight: .bold))
+                    Text("#\(rank)")
+                        .font(.caption.weight(.semibold))
+                }
+                .foregroundStyle(genderColor)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(genderColor.opacity(0.14), in: Capsule())
             }
         }
-        .padding(.vertical, 2)
     }
 
     private var genderColor: Color {
         switch name.gender {
-        case .female: Color(red: 0.85, green: 0.45, blue: 0.55)
-        case .male: Color(red: 0.35, green: 0.55, blue: 0.85)
-        case .unisex: Color(red: 0.55, green: 0.72, blue: 0.55)
+        case .female: Color.genderFemale
+        case .male: Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 }

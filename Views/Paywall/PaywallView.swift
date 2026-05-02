@@ -7,9 +7,18 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var purchase = PurchaseManager.shared
     @State private var selectedPlan: Plan = .yearly
-    @State private var shouldPurchaseAfterLoad = false
 
-    private let accentColor = Color(red: 0.79, green: 0.48, blue: 0.39)
+    private let accentColor = Color.brand
+
+    /// Plans réellement achetables (au moins lifetime tant que les autres ne sont pas chargés / configurés).
+    private var availablePlans: [Plan] {
+        var plans: [Plan] = []
+        if purchase.yearlyProduct  != nil { plans.append(.yearly) }
+        if purchase.monthlyProduct != nil { plans.append(.monthly) }
+        if purchase.lifetimeProduct != nil { plans.append(.lifetime) }
+        // Fallback : si rien chargé encore, on affiche au moins lifetime (le seul historiquement garanti).
+        return plans.isEmpty ? [.lifetime] : plans
+    }
     private let privacyURL  = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html")!
     private let termsURL    = URL(string: "https://raw.githack.com/sacha9955/Prenomme-legal/main/terms.html")!
 
@@ -41,16 +50,26 @@ struct PaywallView: View {
         .onChange(of: purchase.isPro) { _, isPro in
             if isPro { dismiss() }
         }
+        .onChange(of: purchase.products.map(\.id)) { _, _ in
+            ensureSelectedPlanAvailable()
+        }
+        .onAppear { ensureSelectedPlanAvailable() }
+    }
+
+    /// Assure que `selectedPlan` pointe sur un plan réellement disponible.
+    private func ensureSelectedPlanAvailable() {
+        let available = availablePlans
+        if !available.contains(selectedPlan), let first = available.first {
+            selectedPlan = first
+        }
     }
 
     // MARK: — Background & hero
 
     private var background: some View {
+        // Light: gradient beige doux. Dark: dégradé profond surface→elevated, conserve la chaleur.
         LinearGradient(
-            colors: [
-                Color(red: 0.99, green: 0.96, blue: 0.94),
-                Color(red: 0.97, green: 0.93, blue: 0.88)
-            ],
+            colors: [Color.appBackground, Color.appSurface],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -64,7 +83,7 @@ struct PaywallView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [accentColor, Color(red: 0.61, green: 0.69, blue: 0.53)],
+                            colors: [accentColor, Color.brandSage],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -102,7 +121,7 @@ struct PaywallView: View {
                 }
             }
         }
-        .background(.white.opacity(0.7), in: RoundedRectangle(cornerRadius: 16))
+        .background(Color.appSurface, in: RoundedRectangle(cornerRadius: 16))
         .padding(.horizontal, 20)
         .padding(.bottom, 22)
     }
@@ -135,42 +154,54 @@ struct PaywallView: View {
 
     private var planPicker: some View {
         VStack(spacing: 10) {
-            PlanCard(
-                plan: .yearly,
-                title: "Annuel",
-                subtitle: "Le meilleur rapport qualité-prix",
-                price: priceForPlan(.yearly),
-                detail: "Renouvellement annuel · résiliable à tout moment",
-                badge: "ÉCONOMISEZ 44%",
-                isSelected: selectedPlan == .yearly,
-                accentColor: accentColor,
-                action: { selectedPlan = .yearly }
-            )
-            PlanCard(
-                plan: .monthly,
-                title: "Mensuel",
-                subtitle: "Engagement souple",
-                price: priceForPlan(.monthly),
-                detail: "Renouvellement mensuel · résiliable à tout moment",
-                badge: nil,
-                isSelected: selectedPlan == .monthly,
-                accentColor: accentColor,
-                action: { selectedPlan = .monthly }
-            )
-            PlanCard(
-                plan: .lifetime,
-                title: "À vie",
-                subtitle: "Paiement unique, pas d'abonnement",
-                price: priceForPlan(.lifetime),
-                detail: "Une seule fois · accès permanent",
-                badge: "ZÉRO ABONNEMENT",
-                isSelected: selectedPlan == .lifetime,
-                accentColor: accentColor,
-                action: { selectedPlan = .lifetime }
-            )
+            ForEach([Plan.yearly, .monthly, .lifetime], id: \.self) { plan in
+                PlanCard(
+                    plan: plan,
+                    title: title(for: plan),
+                    subtitle: subtitle(for: plan),
+                    price: priceForPlan(plan),
+                    detail: detail(for: plan),
+                    badge: badge(for: plan),
+                    isSelected: selectedPlan == plan,
+                    accentColor: accentColor,
+                    action: { selectedPlan = plan }
+                )
+            }
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 20)
+    }
+
+    private func title(for plan: Plan) -> String {
+        switch plan {
+        case .yearly:   return "Annuel"
+        case .monthly:  return "Mensuel"
+        case .lifetime: return "À vie"
+        }
+    }
+
+    private func subtitle(for plan: Plan) -> String {
+        switch plan {
+        case .yearly:   return "Le meilleur rapport qualité-prix"
+        case .monthly:  return "Engagement souple"
+        case .lifetime: return "Paiement unique, pas d'abonnement"
+        }
+    }
+
+    private func detail(for plan: Plan) -> String {
+        switch plan {
+        case .yearly:   return "Renouvellement annuel · résiliable à tout moment"
+        case .monthly:  return "Renouvellement mensuel · résiliable à tout moment"
+        case .lifetime: return "Une seule fois · accès permanent"
+        }
+    }
+
+    private func badge(for plan: Plan) -> String? {
+        switch plan {
+        case .yearly:   return "ÉCONOMISEZ 44%"
+        case .monthly:  return nil
+        case .lifetime: return nil
+        }
     }
 
     private func priceForPlan(_ plan: Plan) -> String {
@@ -235,11 +266,13 @@ struct PaywallView: View {
             Task { await purchase.purchase(product, confirmIn: activeScene()) }
             return
         }
-        // Fallback when products haven't loaded
         #if DEBUG
+        // En DEBUG sans StoreKit (simulator sans .storekit), on bypass pour tester l'UX.
         purchase.setDebugForcePro(true)
         #else
-        shouldPurchaseAfterLoad = true
+        // En PROD : product manquant = config ASC incomplète. On affiche une erreur claire
+        // au lieu de spinner indéfiniment, et on relance le chargement en arrière-plan.
+        purchase.reportMissingProduct(for: selectedPlan.productID)
         purchase.retryLoadProducts()
         #endif
     }
@@ -254,7 +287,7 @@ struct PaywallView: View {
         .frame(height: 64)
         .background(
             LinearGradient(
-                colors: [accentColor, Color(red: 0.65, green: 0.38, blue: 0.30)],
+                colors: [accentColor, Color.brandDark],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             ),
@@ -338,7 +371,17 @@ struct PaywallView: View {
 // MARK: — Plan model
 
 extension PaywallView {
-    enum Plan { case monthly, yearly, lifetime }
+    enum Plan: Hashable {
+        case monthly, yearly, lifetime
+
+        var productID: String {
+            switch self {
+            case .monthly:  return PurchaseManager.monthlyID
+            case .yearly:   return PurchaseManager.yearlyID
+            case .lifetime: return PurchaseManager.lifetimeID
+            }
+        }
+    }
 }
 
 private struct PlanCard: View {
@@ -385,11 +428,11 @@ private struct PlanCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(isSelected ? accentColor.opacity(0.12) : Color.white.opacity(0.7))
+                    .fill(isSelected ? accentColor.opacity(0.12) : Color.appSurface)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 14)
-                    .strokeBorder(isSelected ? accentColor : Color.gray.opacity(0.18),
+                    .strokeBorder(isSelected ? accentColor : Color.appHairline,
                                   lineWidth: isSelected ? 2 : 1)
             )
         }

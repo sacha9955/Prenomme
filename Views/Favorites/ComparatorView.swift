@@ -43,9 +43,14 @@ struct ComparatorView: View {
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
             TextField("ex. Martin, Dubois…", text: $lastName)
-                .textFieldStyle(.roundedBorder)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.words)
+                .padding(12)
+                .background(Color.appSurfaceElevated, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(Color.appHairline, lineWidth: 0.5)
+                )
                 .padding(.horizontal)
         }
         .padding(.top, 16)
@@ -77,7 +82,7 @@ struct ComparatorView: View {
                     .foregroundStyle(.secondary)
                     .frame(width: 110, height: rowHeight(row), alignment: .leading)
                     .padding(.horizontal, 8)
-                    .background(row.isAlt ? Color(.systemGray6).opacity(0.5) : .clear)
+                    .background(row.isAlt ? Color.appSurface.opacity(0.5) : .clear)
             }
 
             // "Choisir" button spacer
@@ -101,7 +106,7 @@ struct ComparatorView: View {
                     .lineLimit(row == .meaning ? 3 : 2)
                     .frame(width: 120, height: rowHeight(row))
                     .padding(.horizontal, 4)
-                    .background(row.isAlt ? Color(.systemGray6).opacity(0.5) : .clear)
+                    .background(row.isAlt ? Color.appSurface.opacity(0.5) : .clear)
                     .foregroundStyle(rowColor(row, name: name, score: score))
             }
 
@@ -114,7 +119,7 @@ struct ComparatorView: View {
                         .font(.subheadline.weight(.semibold))
                 }
                 .frame(width: 120, height: 44)
-                .background(isSelected ? genderColor(name).opacity(0.15) : Color(.systemGray6))
+                .background(isSelected ? genderColor(name).opacity(0.15) : Color.appSurface)
                 .foregroundStyle(isSelected ? genderColor(name) : .secondary)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
@@ -232,9 +237,9 @@ struct ComparatorView: View {
 
     private func genderColor(_ name: FirstName) -> Color {
         switch name.gender {
-        case .female: Color(red: 0.85, green: 0.35, blue: 0.50)
-        case .male:   Color(red: 0.30, green: 0.50, blue: 0.80)
-        case .unisex: Color(red: 0.35, green: 0.60, blue: 0.35)
+        case .female: Color.genderFemale
+        case .male:   Color.genderMale
+        case .unisex: Color.genderUnisex
         }
     }
 }

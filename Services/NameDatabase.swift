@@ -203,4 +203,12 @@ final class NameDatabase: @unchecked Sendable {
             return result
         }) ?? [:]
     }
+
+    // MARK: — Total count helper for UI (Onboarding, etc.)
+    
+    var totalNamesCount: Int {
+        (try? db.read { db in
+            try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM names") ?? 0
+        }) ?? 0
+    }
 }
