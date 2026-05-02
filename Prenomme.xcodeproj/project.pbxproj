@@ -18,7 +18,6 @@
 		25CCC062AC3B2B8E2A43EFD9 /* NameWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924067F044E4A3880BAA174 /* NameWidgetIntent.swift */; };
 		2627CB61A27845B76508CDD4 /* SuggestionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329A0B7E6D14C8D4FC38F98F /* SuggestionServiceTests.swift */; };
 		2832FF7C407A214CFB4158B0 /* NameOfDayWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0717F258276C8BF59354A271 /* NameOfDayWidget.swift */; };
-		2B887F2D603E89763E3E6C4B /* PronunciationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CECF091BBB6718FC16C2E8 /* PronunciationServiceTests.swift */; };
 		2CFB7A79B8B89595CB0D9CBA /* FavoriteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0BD1924DF546E306F525E8 /* FavoriteService.swift */; };
 		2D4845A94117D096667DF4D5 /* SchemaVersions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FABA1C490F6F634EADA3F8D /* SchemaVersions.swift */; };
 		30F5156EFB026A9BEAE6BE41 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C73F0055368666A536DEFF21 /* OnboardingView.swift */; };
@@ -64,11 +63,9 @@
 		CE579FF7CDE437966F7835E3 /* PrenommeWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1F7BCDE894F99252FBD80966 /* PrenommeWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CEF918C89AB87DA5291BFCDB /* PDFExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA65B1E2C140DA58602B264 /* PDFExporter.swift */; };
 		D2A0B6DA403121A3AF78A745 /* NameDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF9440352FBED90E0EBCAF /* NameDatabase.swift */; };
-		D5F6CF8C115E6F407F3E229E /* PronunciationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182C7811E27539248DA3818 /* PronunciationService.swift */; };
 		D8FF97D9EDC56CD5A0BCE32B /* SuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97CA34C90B8FF22C76FD3861 /* SuggestionService.swift */; };
 		DECF18294ED9DF3FED861EEF /* FirstName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6426C8CF5855010FB3922F /* FirstName.swift */; };
 		DFCF9C3041D8F7BF2C070679 /* NameDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF9440352FBED90E0EBCAF /* NameDatabase.swift */; };
-		EEFAD5D37B797113FFE5864E /* PronunciationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2182C7811E27539248DA3818 /* PronunciationService.swift */; };
 		EFE46A45C67DEBB3C4F62BDA /* WidgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91A31E4491D9B2A5FA5D420F /* WidgetTests.swift */; };
 		F4E18C0A1CF1475C0A75F958 /* FirstName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6426C8CF5855010FB3922F /* FirstName.swift */; };
 		F8AEC986690DBA9CBFD8F092 /* ComparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CBEF95B634539A26F9FB0C /* ComparatorView.swift */; };
@@ -119,7 +116,6 @@
 		19E4EAFE44DA136DEF2B4EA7 /* SwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
 		1C6426C8CF5855010FB3922F /* FirstName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstName.swift; sourceTree = "<group>"; };
 		1F7BCDE894F99252FBD80966 /* PrenommeWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = PrenommeWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		2182C7811E27539248DA3818 /* PronunciationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationService.swift; sourceTree = "<group>"; };
 		26C82FFC7DBA3225257A12DC /* NameDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameDatabaseTests.swift; sourceTree = "<group>"; };
 		2E2538D459732A3E84A84C2B /* PrenommeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PrenommeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E5D776B3E855C4C31B24071 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
@@ -127,7 +123,6 @@
 		35449737A404CEE9072B06A7 /* PurchaseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManagerTests.swift; sourceTree = "<group>"; };
 		42D12FC5F4906F7FE3CA66EB /* ProGateModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProGateModifier.swift; sourceTree = "<group>"; };
 		4514F16C998AEA9DFC1B728A /* NavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouter.swift; sourceTree = "<group>"; };
-		48CECF091BBB6718FC16C2E8 /* PronunciationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PronunciationServiceTests.swift; sourceTree = "<group>"; };
 		4AC0FF5EB21795C256DAD505 /* Prenomme.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Prenomme.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CA65B1E2C140DA58602B264 /* PDFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExporter.swift; sourceTree = "<group>"; };
 		51D0F25E374522F7551FF76A /* FilterSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSheet.swift; sourceTree = "<group>"; };
@@ -246,7 +241,6 @@
 				9CF442E3A86061C3C71372EF /* OriginServiceTests.swift */,
 				CD12B70C1BB0B48D2A9B0739 /* PDFExporterTests.swift */,
 				736846147280A4A9F3C4F7AF /* PhoneticAnalyzerTests.swift */,
-				48CECF091BBB6718FC16C2E8 /* PronunciationServiceTests.swift */,
 				35449737A404CEE9072B06A7 /* PurchaseManagerTests.swift */,
 				329A0B7E6D14C8D4FC38F98F /* SuggestionServiceTests.swift */,
 				60075D222BEEC3EB755CB747 /* SwipeCounterTests.swift */,
@@ -296,7 +290,6 @@
 				A222E056883B968C51230BFA /* OriginService.swift */,
 				4CA65B1E2C140DA58602B264 /* PDFExporter.swift */,
 				81D38BAF235DDC631945D6C1 /* PhoneticAnalyzer.swift */,
-				2182C7811E27539248DA3818 /* PronunciationService.swift */,
 				E03BFDB0DF5E49300E28DBBD /* PurchaseManager.swift */,
 				97CA34C90B8FF22C76FD3861 /* SuggestionService.swift */,
 				027CE0378EAFC16D11EF41E2 /* SwipeCounter.swift */,
@@ -609,7 +602,6 @@
 				5DE7E361EFA3A54E2F139ED1 /* PhoneticAnalyzer.swift in Sources */,
 				B45CC868DBD1672F50C96A4C /* PrenommeApp.swift in Sources */,
 				949F032B61CF546E48255CD9 /* ProGateModifier.swift in Sources */,
-				EEFAD5D37B797113FFE5864E /* PronunciationService.swift in Sources */,
 				9FE49AC063228DE3EF1E130D /* PurchaseManager.swift in Sources */,
 				2D4845A94117D096667DF4D5 /* SchemaVersions.swift in Sources */,
 				B78C13B3518BB04991B71C84 /* SettingsView.swift in Sources */,
@@ -636,7 +628,6 @@
 				4C7051CD03B8672D704C0FB0 /* PhoneticAnalyzer.swift in Sources */,
 				A02C6DCC55D3D74291DE483F /* PrenommeWidgetBundle.swift in Sources */,
 				B8F7C2F442469929681D1076 /* ProNameWidget.swift in Sources */,
-				D5F6CF8C115E6F407F3E229E /* PronunciationService.swift in Sources */,
 				0A90DBBE3D341F14EDF77739 /* PurchaseManager.swift in Sources */,
 				5D1BE2F68811E6481ADEDA94 /* SchemaVersions.swift in Sources */,
 				A6460467A3701BE8491FBA41 /* SuggestionService.swift in Sources */,
@@ -654,7 +645,6 @@
 				90062FCB2B540E5748C556F1 /* OriginServiceTests.swift in Sources */,
 				FF3DA896D9A32942B18E2911 /* PDFExporterTests.swift in Sources */,
 				6E1A3E177D687C41F56F1CAE /* PhoneticAnalyzerTests.swift in Sources */,
-				2B887F2D603E89763E3E6C4B /* PronunciationServiceTests.swift in Sources */,
 				FE1F48F97C2D7B2F87BFC6E6 /* PurchaseManagerTests.swift in Sources */,
 				2627CB61A27845B76508CDD4 /* SuggestionServiceTests.swift in Sources */,
 				1C274ECB2FEE8E88464A881B /* SwipeCounterTests.swift in Sources */,
@@ -804,7 +794,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = Y9U6L9TB4B;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -881,7 +871,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = Y9U6L9TB4B;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

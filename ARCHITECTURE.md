@@ -15,7 +15,6 @@ App iOS native 100% offline. Deux couches de persistance strictement séparées 
 | Données user | SwiftData + CloudKit | Favoris, notes, settings — sync iCloud native |
 | IAP | StoreKit 2 | 1 seul IAP non-consommable `prenomme.pro.lifetime` |
 | Phonétique | NaturalLanguage | Analyse locale, zéro réseau |
-| TTS | AVSpeechSynthesizer | locale dynamique selon `origin_locale` du prénom |
 | Widgets | WidgetKit | Prénom du jour (basique gratuit + Pro personnalisable) |
 | Export | PDFKit | Shortlist PDF, fonctionnalité Pro |
 
@@ -41,7 +40,6 @@ Prenomme/
 ├── Services/
 │   ├── NameDatabase.swift         # Singleton GRDB wrapper — toutes les requêtes catalogue
 │   ├── PhoneticAnalyzer.swift     # NaturalLanguage : compatibilité, rythme, allitération
-│   ├── PronunciationService.swift # AVSpeechSynthesizer, locale depuis origin_locale, speed 0.45
 │   ├── PurchaseManager.swift      # @Observable StoreKit 2, entitlements au démarrage
 │   ├── PDFExporter.swift          # PDFKit, Pro seulement
 │   └── DailyNameProvider.swift    # Prénom du jour (seed déterministe par date)
@@ -213,22 +211,6 @@ CREATE INDEX idx_pop_us ON names(popularity_rank_us);
 - **Jour 3-4** : `scripts/import_names.py` consomme INSEE + SSA + Wikidata → génère `names.sqlite`
 - Sources autorisées : INSEE (Etalab ✅), SSA (domaine public ✅), Wikidata CC0 ✅
 - Source **interdite** : Behind the Name (licence non compatible)
-
----
-
-## PronunciationService
-
-```swift
-func speak(_ name: FirstName) {
-    let locale = name.originLocale ?? Locale.current.identifier
-    let voice = AVSpeechSynthesisVoice(language: locale)
-        ?? AVSpeechSynthesisVoice(language: Locale.current.identifier)
-    let utterance = AVSpeechUtterance(string: name.name)
-    utterance.voice = voice
-    utterance.rate = 0.45
-    synthesizer.speak(utterance)
-}
-```
 
 ---
 

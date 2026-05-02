@@ -60,8 +60,8 @@
 | Prix                    | 2,99 €/mois FR (Tier 3)                                          |
 | Display Name (FR)       | `Prénomme Pro — Mensuel`                                         |
 | Display Name (EN)       | `Prénomme Pro — Monthly`                                         |
-| Description (FR)        | Accès Pro mensuel — favoris illimités, swipes illimités, étymologie complète, prononciation audio, export PDF. Résiliable à tout moment. |
-| Description (EN)        | Pro monthly access — unlimited favorites, unlimited swipes, full etymology, audio pronunciation, PDF export. Cancel anytime. |
+| Description (FR)        | Accès Pro mensuel — favoris illimités, swipes illimités, étymologie complète, export PDF. Résiliable à tout moment. |
+| Description (EN)        | Pro monthly access — unlimited favorites, unlimited swipes, full etymology, PDF export. Cancel anytime. |
 | Group Number            | 1                                                                |
 
 ### `prenomme.pro.yearly` — Annuel (Auto-Renewable)
@@ -74,8 +74,8 @@
 | Prix                    | 19,99 €/an FR (Tier 20) — économise 44 % vs mensuel              |
 | Display Name (FR)       | `Prénomme Pro — Annuel`                                          |
 | Display Name (EN)       | `Prénomme Pro — Yearly`                                          |
-| Description (FR)        | Accès Pro annuel — meilleur tarif (économisez 44 % vs mensuel). Favoris illimités, swipes illimités, étymologie complète, prononciation audio, export PDF. Résiliable à tout moment. |
-| Description (EN)        | Pro yearly access — best value (save 44% vs monthly). Unlimited favorites, unlimited swipes, full etymology, audio pronunciation, PDF export. Cancel anytime. |
+| Description (FR)        | Accès Pro annuel — meilleur tarif (économisez 44 % vs mensuel). Favoris illimités, swipes illimités, étymologie complète, export PDF. Résiliable à tout moment. |
+| Description (EN)        | Pro yearly access — best value (save 44% vs monthly). Unlimited favorites, unlimited swipes, full etymology, PDF export. Cancel anytime. |
 | Group Number            | 2                                                                |
 
 ---

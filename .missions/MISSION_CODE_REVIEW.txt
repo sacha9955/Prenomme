@@ -1,0 +1,50 @@
+[MISSION → CODE_REVIEWER]
+Tâche: Audit code qualité global de l'app Prénomme (iOS Swift/SwiftUI)
+
+Contexte:
+- App iOS native "Prénomme" (Swift 5.10+, SwiftUI, iOS 17.5+, StoreKit 2)
+- Chemin projet: /Volumes/NVME_1TO/CLAUDE/Prenomme/
+- Architecture: MVC-ish avec Services (NameDatabase, PurchaseManager), Views, Models
+- Objectif: Audit qualité avant soumission App Store
+
+Tâche précise:
+1. Lire le code Swift/SwiftUI existant:
+   - App/PrenommeApp.swift (entry)
+   - App/NavigationRouter.swift
+   - Services/PurchaseManager.swift, NameDatabase.swift, NameFilter.swift
+   - Views/ (Browse, Compatibility, Favorites, Home, Settings, Swipe, Detail, Common, Onboarding, Paywall)
+   - Models/Domain/*
+
+2. Audit qualité recherchant:
+   - Force unwrap (!) — remplacer par guard/if let/nil coalescing sûr
+   - Null checks silencieux (try? sans catch) — logguer les erreurs
+   - Code mort / fonctions inutilisées
+   - Doublons logiques
+   - AppStorage/UserDefaults utilisés correctement (pas de mutation directe)
+   - Navigation/routing cohérent
+   - État persistant (CloudKit/SwiftData/GRDB) géré sans race conditions
+   - Gestion erreurs StoreKit 2 (purchase, restore, product loading)
+   - Textes affichés : pas de placeholder, pas de lorem ipsum, pas de FIXME/TODO
+   - Crashes potentiels (empty array access, type casts non-vérifiés)
+   - Warnings Xcode
+
+3. Rapport Markdown:
+   - Format: Problème trouvé | Fichier | Ligne | Sévérité (CRITICAL/HIGH/MEDIUM/LOW) | Suggestion
+   - Grouper par catégorie (force unwrap, nullability, state, nav, ui, etc.)
+
+4. IMPORTANT — Corrections automatiques SEULEMENT des problèmes SIMPLES & SÛRS:
+   - Typos simples
+   - Force unwrap `!` évidents avec fallback clair
+   - Catches silencieux → logger error
+   - Code mort confirmé → supprimer
+   - Backup avant modif non-triviale dans ~/.claude/backups/prenomme_review_YYYYMMDD_HHMMSS/
+
+5. Problèmes complexes/risqués → reporter SANS modifier (dev-ios fixera après)
+
+Livrables:
+- Rapport Markdown (AUDIT_CODE_QUALITY.md)
+- Code corrigé si modifs simples appliquées
+- Backups horodatés si modifs faites
+
+Dépendances: Aucune (parallèle à dev-ios + appstore)
+Priorité: HIGH

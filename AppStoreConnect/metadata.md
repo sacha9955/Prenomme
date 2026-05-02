@@ -66,7 +66,6 @@ Toutes les formules débloquent :
 • Analyse phonétique — Mesurez la compatibilité entre un prénom et votre nom de famille (allitération, rythme, élision…)
 • Comparateur — Comparez vos favoris côte à côte
 • Étymologie complète — Origine linguistique, sens littéral et contexte culturel pour chaque prénom
-• Prononciation audio — Écoutez la diction exacte (locale dynamique selon l'origine)
 • Export PDF — Partagez votre liste de favoris en un fichier élégant
 • Widget Pro personnalisable — Filtrez par genre et origine
 • Swipes et favoris illimités
@@ -148,7 +147,6 @@ All plans unlock:
 • Phonetic analysis — Check compatibility between a name and your surname (alliteration, rhythm, elision…)
 • Side-by-side comparison — Compare your favourites at a glance
 • Full etymology — Linguistic origin, literal meaning and cultural context for every name
-• Audio pronunciation — Hear the correct pronunciation (locale-aware)
 • PDF export — Share your shortlist as a beautifully formatted file
 • Customisable Pro widget — Filter by gender & origin
 • Unlimited swipes and favourites
@@ -204,29 +202,29 @@ Thanks for downloading Prénomme!
 
 **Pro À vie** :
 - Display name : `Prénomme Pro — À vie`
-- Description : `Accès illimité à toutes les fonctionnalités de Prénomme : favoris illimités, swipes illimités, étymologie, prononciation audio, export PDF, widget Pro. Paiement unique, à vie.`
+- Description : `Accès illimité à toutes les fonctionnalités de Prénomme : favoris illimités, swipes illimités, étymologie, export PDF, widget Pro. Paiement unique, à vie.`
 
 **Pro Mensuel** :
 - Display name : `Prénomme Pro — Mensuel`
-- Description : `Accès Pro mensuel — favoris illimités, swipes illimités, étymologie complète, prononciation audio, export PDF. Résiliable à tout moment.`
+- Description : `Accès Pro mensuel — favoris illimités, swipes illimités, étymologie complète, export PDF. Résiliable à tout moment.`
 
 **Pro Annuel** :
 - Display name : `Prénomme Pro — Annuel`
-- Description : `Accès Pro annuel — meilleur tarif (économisez 44 %). Favoris illimités, swipes illimités, étymologie complète, prononciation audio, export PDF. Résiliable à tout moment.`
+- Description : `Accès Pro annuel — meilleur tarif (économisez 44 %). Favoris illimités, swipes illimités, étymologie complète, export PDF. Résiliable à tout moment.`
 
 ### Display name & description (EN)
 
 **Pro Lifetime** :
 - Display name : `Prénomme Pro — Lifetime`
-- Description : `Unlimited access to all Prénomme features: unlimited favorites, unlimited swipes, etymology, audio pronunciation, PDF export, Pro widget. One-time payment.`
+- Description : `Unlimited access to all Prénomme features: unlimited favorites, unlimited swipes, etymology, PDF export, Pro widget. One-time payment.`
 
 **Pro Monthly** :
 - Display name : `Prénomme Pro — Monthly`
-- Description : `Pro monthly access — unlimited favorites, unlimited swipes, full etymology, audio pronunciation, PDF export. Cancel anytime.`
+- Description : `Pro monthly access — unlimited favorites, unlimited swipes, full etymology, PDF export. Cancel anytime.`
 
 **Pro Yearly** :
 - Display name : `Prénomme Pro — Yearly`
-- Description : `Pro yearly access — best value (save 44%). Unlimited favorites, unlimited swipes, full etymology, audio pronunciation, PDF export. Cancel anytime.`
+- Description : `Pro yearly access — best value (save 44%). Unlimited favorites, unlimited swipes, full etymology, PDF export. Cancel anytime.`
 
 ---
 

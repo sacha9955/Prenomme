@@ -96,7 +96,6 @@ private struct FeaturesScreen: View {
     private let features: [(String, String, String)] = [
         ("magnifyingglass", "Recherche intelligente", "Filtrez par genre, origine, initiale ou nombre de syllabes."),
         ("heart.fill", "Vos favoris", "Sauvegardez et comparez vos coups de cœur."),
-        ("speaker.wave.2.fill", "Prononciation audio", "Écoutez la diction exacte en un tap."),
         ("square.grid.2x2.fill", "Par origine", "Découvrez les prénoms hébreux, nordiques, japonais, etc."),
         ("sparkles", "Suggestions intelligentes", "Laissez-vous inspirer par des recommandations personnalisées."),
     ]
@@ -258,7 +257,6 @@ private struct PremiumTeaserCard: View {
     let onDismiss: () -> Void
 
     private let premiumFeatures = [
-        ("waveform", "Prononciation audio", "Écoutez la phonétique complète"),
         ("sparkles", "Suggestions intelligentes", "Trouvez vos prénoms préférés"),
         ("book.closed", "Étymologie complète", "Découvrez l'histoire de chaque prénom"),
         ("arrow.left.arrow.right", "Swipes illimités", "Explorez sans limite quotidienne"),

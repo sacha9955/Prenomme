@@ -34,7 +34,6 @@ struct ThankYouProView: View {
                 proFeatureRow("heart.fill", "Favoris illimités")
                 proFeatureRow("arrow.left.arrow.right", "Swipes illimités")
                 proFeatureRow("book.closed", "Étymologie complète")
-                proFeatureRow("waveform", "Prononciation audio")
                 proFeatureRow("sparkles", "Suggestions personnalisées")
                 proFeatureRow("doc.text", "Export PDF")
             }

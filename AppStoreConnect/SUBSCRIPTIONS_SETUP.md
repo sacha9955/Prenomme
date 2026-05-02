@@ -64,11 +64,11 @@ Dans le group **Prénomme Pro** → **+ Create Subscription**
 
 **FR :**
 - Subscription Display Name : `Prénomme Pro — Mensuel`
-- Description : `Accès Pro mensuel — favoris illimités, swipes illimités, étymologie complète, prononciation audio, export PDF. Résiliable à tout moment.`
+- Description : `Accès Pro mensuel — favoris illimités, swipes illimités, étymologie complète, export PDF. Résiliable à tout moment.`
 
 **EN :**
 - Subscription Display Name : `Prénomme Pro — Monthly`
-- Description : `Pro monthly access — unlimited favorites, unlimited swipes, full etymology, audio pronunciation, PDF export. Cancel anytime.`
+- Description : `Pro monthly access — unlimited favorites, unlimited swipes, full etymology, PDF export. Cancel anytime.`
 
 ### Review Information
 - Screenshot : capture du **PaywallView** (1290×2796 ou 1284×2778 iPhone 6.7")
@@ -102,11 +102,11 @@ Dans le même group **Prénomme Pro** → **+ Create Subscription**
 
 **FR :**
 - Subscription Display Name : `Prénomme Pro — Annuel`
-- Description : `Accès Pro annuel — meilleur tarif (économisez 44 % vs mensuel). Favoris illimités, swipes illimités, étymologie complète, prononciation audio, export PDF. Résiliable à tout moment.`
+- Description : `Accès Pro annuel — meilleur tarif (économisez 44 % vs mensuel). Favoris illimités, swipes illimités, étymologie complète, export PDF. Résiliable à tout moment.`
 
 **EN :**
 - Subscription Display Name : `Prénomme Pro — Yearly`
-- Description : `Pro yearly access — best value (save 44% vs monthly). Unlimited favorites, unlimited swipes, full etymology, audio pronunciation, PDF export. Cancel anytime.`
+- Description : `Pro yearly access — best value (save 44% vs monthly). Unlimited favorites, unlimited swipes, full etymology, PDF export. Cancel anytime.`
 
 ### Review Information
 - Screenshot : même capture que Monthly (PaywallView avec plan Annuel sélectionné)

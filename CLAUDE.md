@@ -8,7 +8,6 @@
 - **Données user** : SwiftData + CloudKit (Favorites, Notes, UserSettings, sync iCloud natif)
 - **IAP** : StoreKit 2 — produit unique non-consommable `prenomme.pro.lifetime`
 - **Phonétique** : NaturalLanguage framework (zéro réseau)
-- **TTS** : AVSpeechSynthesizer (locale dynamique selon `origin_locale`)
 - **Widgets** : WidgetKit (Prénom du jour gratuit + Pro personnalisable)
 - **Export PDF** : PDFKit (feature Pro)
 

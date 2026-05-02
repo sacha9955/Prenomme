@@ -98,11 +98,11 @@ Dans App Store Connect → **My Apps → + → New App**, remplis :
 
 **Localisation FR :**
 - Display Name : `Prénomme Pro — À vie`
-- Description : `Accès à vie à toutes les fonctionnalités Pro : suggestions intelligentes, étymologie complète, prononciation audio, swipes et favoris illimités, export PDF, widget Pro. Paiement unique.`
+- Description : `Accès à vie à toutes les fonctionnalités Pro : suggestions intelligentes, étymologie complète, swipes et favoris illimités, export PDF, widget Pro. Paiement unique.`
 
 **Localisation EN :**
 - Display Name : `Prénomme Pro — Lifetime`
-- Description : `Lifetime access to all Pro features: smart suggestions, full etymology, audio pronunciation, unlimited swipes and favourites, PDF export, Pro widget. One-time payment.`
+- Description : `Lifetime access to all Pro features: smart suggestions, full etymology, unlimited swipes and favourites, PDF export, Pro widget. One-time payment.`
 
 **Review screenshot** : capture du PaywallView (640×920 px ou plus, max 5 MB)
 
@@ -245,7 +245,6 @@ Browse over 45,000 French and international names, swipe your favourites and get
 • Smart suggestions — The app learns from your favourites and recommends names you'll love
 • Phonetic analysis — Check the compatibility between a name and your surname (alliteration, rhythm, elision)
 • Full etymology — Discover the history and deeper meaning behind every name
-• Audio pronunciation — Hear how each name sounds
 • PDF export — Share your shortlist as a beautifully formatted file
 • Customisable Pro widget — Filter by gender and origin
 • Unlimited swipes and favourites

@@ -29,7 +29,6 @@ Toutes les formules débloquent :
 - Analyse phonétique (compatibilité prénom/nom de famille)
 - Comparateur de favoris côte à côte
 - Étymologie complète (origine + sens + contexte)
-- Prononciation audio (locale dynamique)
 - Export PDF
 - Widget Pro personnalisable
 - Swipes et favoris illimités
@@ -48,7 +47,6 @@ Toutes les formules débloquent :
 | Persistance utilisateur | SwiftData + CloudKit (favoris, notes, settings) |
 | IAP | StoreKit 2 — 1 lifetime + 2 abonnements |
 | Phonétique | NaturalLanguage framework |
-| Prononciation | AVSpeechSynthesizer (locale dynamique) |
 | Widgets | WidgetKit |
 | Export | PDFKit |
 | Build | Xcode 16.3 + xcodegen |

@@ -1,0 +1,59 @@
+[MISSION → APPSTORE]
+Tâche: Prechecks App Store et configuration StoreKit 2
+
+Contexte:
+- App iOS native "Prénomme" prête pour soumission App Store
+- Chemin projet: /Volumes/NVME_1TO/CLAUDE/Prenomme/
+- Bundle ID: com.sacha9955.prenomme (presumed)
+- Team ID: Y9U6L9TB4B (presumed)
+- IAP product: prenomme.pro.lifetime
+
+Tâche précise:
+1. Vérifier configuration projet:
+   - Lire project.yml et Info.plist
+   - Bundle ID correct (com.sacha9955.prenomme) ✓
+   - Version + build number cohérents (cf. CHANGELOG ou git)
+   - Team ID correct (Y9U6L9TB4B) ✓
+   - Développement target minimum iOS 17.5+ ✓
+
+2. Assets & launch screen:
+   - Icône AppIcon présente dans Assets.xcassets, tous les formats (120x120, 180x180, etc.)
+   - Launch screen défini (LaunchScreen.storyboard ou SwiftUI)
+   - Cohérence visuelle appIcon ↔ brand guide
+
+3. Entitlements & permissions:
+   - Prenomme.entitlements vérifier: iCloud (CloudKit) activé, signing OK
+   - Info.plist: NSLocalizedDescription pour chaque permission demandée (NSCameraUsageDescription, etc.) — VÉRIFIER si présent
+   - ATT (AppTrackingTransparency) si analytics/tracking — SI PRÉSENT, NSUserTrackingUsageDescription requis
+   - PrivacyInfo.xcprivacy présent et à jour (data collection déclarée)
+
+4. IAP & Paywall:
+   - Prenomme.storekit: produit prenomme.pro.lifetime défini localement ✓
+   - PaywallView.swift: prix visible, message clairobre, pas de placeholder
+   - Bouton "Restaurer" présent et fonctionnel
+   - Textes légaux: Privacy + Terms liens vers URLs (cf. PaywallView.swift)
+   - Pas de contournement possible de paywall (proGate appliqué correctement)
+
+5. Code cleanliness:
+   - Pas de print() avec data sensible (clés API, tokens, UUIDs utilisateur)
+   - Pas de hardcoded API keys / secrets
+   - Pas de TODO/FIXME/PLACEHOLDER dans code visible à l'utilisateur
+   - Pas de debug logs affichés en production (#if DEBUG partout nécessaire)
+
+6. Rapport Markdown (APP_STORE_PRECHECKS.md):
+   - Tableau: Point de vérification | Statut (✓ OK / ⚠ À corriger / ✗ Bloquant) | Commentaire
+   - Catégories:
+     * Configuration projet (Bundle ID, version, team, iOS min)
+     * Assets (icon, launch screen)
+     * Entitlements & permissions
+     * IAP & paywall
+     * Code cleanliness
+   - Résumé: "Prêt pour soumission" ou liste des blocages
+
+Livrables:
+- Rapport Markdown (APP_STORE_PRECHECKS.md)
+- Corrections mineures appliquées si besoin (Info.plist adjustments, etc.)
+- Backups si modifs significatives
+
+Dépendances: Aucune (parallèle à code-reviewer + dev-ios)
+Priorité: HIGH

@@ -10,7 +10,6 @@ struct NameDetailView: View {
 
     private var favoriteService: FavoriteService { FavoriteService(context: context) }
     private let purchase = PurchaseManager.shared
-    private let tts = PronunciationService.shared
 
     var body: some View {
         ScrollView {
@@ -75,33 +74,10 @@ struct NameDetailView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-
-            speakButton
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 32)
         .padding(.horizontal)
-    }
-
-    private var speakButton: some View {
-        Button {
-            if tts.isSpeaking {
-                tts.stop()
-            } else {
-                tts.speak(name.name, locale: name.originLocale)
-            }
-        } label: {
-            Label(
-                tts.isSpeaking ? "Arrêter" : "Écouter",
-                systemImage: tts.isSpeaking ? "stop.circle.fill" : "speaker.wave.2.fill"
-            )
-            .font(.subheadline.weight(.medium))
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            .background(Color.appSurface)
-            .clipShape(Capsule())
-        }
-        .buttonStyle(.plain)
     }
 
     // MARK: — Info
