@@ -232,23 +232,99 @@ Thanks for downloading Prénomme!
 
 ### Review notes (à coller dans App Review Information → Notes)
 ```
-NO LOGIN REQUIRED. The app works fully offline without any account.
+DEAR REVIEWER,
 
-How to access In-App Purchases:
-1. Launch the app and complete the 3-screen onboarding (or tap "Skip" / "Plus tard" on the premium teaser)
-2. From any tab, tap any locked Pro feature (e.g. "Suggestions Pro" on Home, or "Étymologie complète" on a name detail) to open the paywall
-3. Or go to Réglages → Passer à Pro
-4. The paywall shows three plans: Yearly (default selected), Monthly, Lifetime
+Thank you for reviewing Prénomme. Below are the key points to test the app efficiently.
 
-In sandbox testing, all three plans should be selectable and purchasable.
+═══════════════════════════════════════════════════
+1. NO LOGIN REQUIRED
+═══════════════════════════════════════════════════
+The app works fully without any account. No sign-up, no Sign in with Apple needed.
+After the 3-screen onboarding, the app is ready to use.
 
-DATA: All names data (45,000+ entries) is bundled in the app binary (names.sqlite, ~15 MB). NO network call is required for the app to function. iCloud sync (optional) is only used for the user's own favorites/notes between their devices.
+═══════════════════════════════════════════════════
+2. HOW TO ACCESS THE PAYWALL (3 plans)
+═══════════════════════════════════════════════════
+The paywall shows 3 plans (Yearly preselected, Monthly, Lifetime). To open it:
+  • Tap any locked Pro feature on any tab (look for the "lock" icon)
+    - "Suggestions Pro" on Home tab
+    - "Étymologie complète" on any name detail
+    - "Scores détaillés Pro" on Compatibility tab
+  • Or go to Settings (Réglages) → "Passer à Pro"
+  • The "Plus tard" button on the onboarding premium teaser dismisses without buying
 
-PRIVACY: Zero personal data collected. No third-party SDKs, no analytics, no advertising. See https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html
+═══════════════════════════════════════════════════
+3. IN-APP PURCHASES (3 products)
+═══════════════════════════════════════════════════
+  • prenomme.pro.lifetime  — Non-Consumable, €29.99 (Family Sharing ENABLED)
+  • prenomme.pro.monthly   — Auto-Renewable Sub (P1M), €2.99/month
+  • prenomme.pro.yearly    — Auto-Renewable Sub (P1Y), €19.99/year
 
-EULA: Apple Standard EULA applies (no custom EULA required).
+The two subscriptions are in the same Subscription Group "Prénomme Pro"
+(Yearly = Level 1, Monthly = Level 2) so users can upgrade/downgrade between them.
 
-FAMILY SHARING: Enabled for the lifetime Non-Consumable IAP only (subscriptions are not family-shareable per Apple guidelines).
+The lifetime IAP is Non-Consumable and Family Sharable as recommended.
+Subscriptions are NOT family-shareable per Apple's guidelines.
+
+Restore Purchases is available in Settings → "Restaurer les achats".
+
+═══════════════════════════════════════════════════
+4. PRIVACY (clean record)
+═══════════════════════════════════════════════════
+  • Zero personal data collected
+  • No third-party SDKs (no Firebase, no analytics, no ads, no trackers)
+  • App Privacy Report shows "Data Not Collected"
+  • Privacy Policy: https://raw.githack.com/sacha9955/Prenomme-legal/main/privacy.html
+  • Support page: https://raw.githack.com/sacha9955/Prenomme-legal/main/support.html
+
+═══════════════════════════════════════════════════
+5. EULA & SUBSCRIPTION TERMS
+═══════════════════════════════════════════════════
+Apple Standard EULA applies (no custom EULA needed).
+Subscription terms are clearly displayed at the bottom of the paywall in French
+(auto-renewal, cancellation 24h before period end, manage in iOS Settings).
+
+═══════════════════════════════════════════════════
+6. NETWORK USAGE
+═══════════════════════════════════════════════════
+The app works 100% OFFLINE. The catalog of 45,274 names is bundled in the
+binary (Resources/names.sqlite, ~15 MB). The phonetic algorithm uses Apple's
+NaturalLanguage framework locally. No API calls. No backend.
+The only optional network use is iCloud sync of the user's own favorites
+between their own devices (via standard CloudKit, no third party).
+
+═══════════════════════════════════════════════════
+7. WIDGETS
+═══════════════════════════════════════════════════
+Two widget kinds (WidgetKit):
+  • "Prénom du jour" — FREE, single name updated daily
+  • "Pro Name Widget" — PAID, customizable (filter by gender + origin), 3 sizes
+Both use the same App Group container as the main app (group.com.sacha9955.prenomme).
+
+═══════════════════════════════════════════════════
+8. CONTENT — DATA SOURCES
+═══════════════════════════════════════════════════
+Names sourced from:
+  • INSEE Prénoms (France public data)
+  • SSA Baby Names (US public data)
+  • Wikidata CC0
+Etymologies enriched via Anthropic Claude API (offline pipeline, not used at runtime).
+
+═══════════════════════════════════════════════════
+9. SANDBOX TESTING
+═══════════════════════════════════════════════════
+A sandbox tester account works flawlessly. Both subscription products
+should appear with localized prices in the paywall after a few seconds.
+If a product is temporarily unavailable, the paywall now shows a clear error
+message instead of an infinite spinner (improvement over previous build).
+
+═══════════════════════════════════════════════════
+CONTACT
+═══════════════════════════════════════════════════
+Sacha Ochmiansky — sacha.ochmiansky@gmail.com
+Available 9am–7pm CEST for any question or to provide additional info.
+
+Thank you for your time and for reviewing Prénomme!
 ```
 
 ### Demo account
