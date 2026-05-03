@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import StoreKit
+import UIKit
 
 struct SettingsView: View {
     @Query private var settingsList: [UserSettings]
@@ -114,13 +115,13 @@ struct SettingsView: View {
     private var aboutSection: some View {
         Section("À propos") {
             // Tap secret 5× sur la row "Version" → prompt code "2024bc" → débloque section Debug.
-            Button {
-                handleVersionTap()
-            } label: {
-                LabeledContent("Version", value: appVersion)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            // onTapGesture direct (pas Button wrap) car Button + LabeledContent dans un Form
+            // ne propage pas le tap fiablement à toute la ligne sur iOS 17+.
+            LabeledContent("Version", value: appVersion)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    handleVersionTap()
+                }
 
             LabeledContent("Build", value: buildNumber)
             LabeledContent("Données", value: "INSEE · SSA · Wikidata")
@@ -140,11 +141,19 @@ struct SettingsView: View {
 
         versionTapCount += 1
 
-        // Reset le compteur après 3s d'inactivité
+        // Haptic feedback à chaque tap : confirme que le tap est bien capté.
+        // Sur le 5e tap, haptic plus fort pour signaler le déclenchement.
+        if versionTapCount >= Self.tapsRequiredToPromptCode {
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        } else {
+            UISelectionFeedbackGenerator().selectionChanged()
+        }
+
+        // Reset le compteur après 5s d'inactivité (plus tolérant que 3s).
         versionTapResetWork?.cancel()
         let work = DispatchWorkItem { versionTapCount = 0 }
         versionTapResetWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: work)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: work)
 
         if versionTapCount >= Self.tapsRequiredToPromptCode {
             versionTapCount = 0

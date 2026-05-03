@@ -203,7 +203,6 @@ Explorez plus de 45 000 prénoms français et internationaux, swipez vos coups d
 • Suggestions intelligentes — L'app analyse vos favoris et recommande des prénoms qui vous correspondent
 • Analyse phonétique — Mesurez la compatibilité entre un prénom et votre nom de famille (allitération, rythme, élision)
 • Étymologie complète — Découvrez l'histoire et le sens profond de chaque prénom
-• Prononciation audio — Écoutez la diction exacte de chaque prénom
 • Export PDF — Partagez votre liste de favoris dans un fichier élégant
 • Widget Pro personnalisable — Filtrez par genre et origine
 • Swipes et favoris illimités

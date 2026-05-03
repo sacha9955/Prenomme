@@ -1,53 +1,114 @@
-PRENOMME — CONFIGURATION ACHAT INTEGRE (APP STORE CONNECT)
-============================================================
+PRENOMME — CONFIGURATION ACHATS INTEGRES (APP STORE CONNECT)
+=============================================================
 
 URL : https://appstoreconnect.apple.com
 App : Prenomme (com.sacha9955.prenomme)
 Equipe : Y9U6L9TB4B
 
-
-ETAPE 1 — CREER LE PRODUIT IAP
---------------------------------
-Menu : Fonctionnalites > Achats integres > (+) Creer
-
-  Type            : Achat unique (Non-Consommable)
-  Nom de reference: Prenomme Pro
-  ID produit      : prenomme.pro.lifetime
+Source de verite detaillee : AppStoreConnect/PRODUCT_IDS.md
+Guide complet abonnements    : AppStoreConnect/SUBSCRIPTIONS_SETUP.md
 
 
-LOCALISATION — Francais (fr_FR)
-  Nom affiche     : Prenomme Pro
-  Description     : Acces illimite a toutes les fonctionnalites Pro.
+PRIX CIBLES (alignes app + storekit + ASC)
+-------------------------------------------
+  prenomme.pro.lifetime   29,99 EUR  (Non-Consommable, achat unique)
+  prenomme.pro.monthly     2,99 EUR  (Auto-Renewable, periode 1 mois)
+  prenomme.pro.yearly     19,99 EUR  (Auto-Renewable, periode 1 an)
 
 
-PRIX
-  Prix de base    : 8,99 EUR (tier correspondant)
-  Partage familial: Non
+ETAPE 1 — METTRE A JOUR LE PRIX LIFETIME
+------------------------------------------
+Menu : Fonctionnalites > Achats integres > prenomme.pro.lifetime
+  Pricing > Edit > Tier 30 (29,99 EUR FR) > Apply to all > Save
 
-Statut requis : "Pret a soumettre" (pas besoin d'etre publie pour tester en sandbox)
+  (Anciennement 8,99 EUR — a changer obligatoirement avant submit)
 
 
-ETAPE 2 — CREER UN COMPTE SANDBOX TESTEUR
+ETAPE 2 — CREER LE SUBSCRIPTION GROUP "Prenomme Pro"
+------------------------------------------------------
+Menu : Subscriptions > Create Subscription Group
+  Reference Name        : Prenomme Pro
+  Display Name (FR / EN): Prenomme Pro
+
+  > Les 2 abonnements DOIVENT etre dans le meme group
+    (Apple impose un group unique pour permettre upgrade/downgrade
+     mensuel <-> annuel sans double facturation).
+
+
+ETAPE 3 — CREER prenomme.pro.monthly
+--------------------------------------
+Dans le group "Prenomme Pro" > + Create Subscription
+  Reference Name : Pro Monthly
+  Product ID     : prenomme.pro.monthly
+  Duration       : 1 Month
+  Pricing        : France 2,99 EUR (Tier 3) > Apply to all
+  Display Name   : Prenomme Pro — Mensuel (FR) / Prenomme Pro — Monthly (EN)
+  Description FR : Acces Pro mensuel — favoris illimites, swipes illimites,
+                   etymologie complete, export PDF. Resiliable a tout moment.
+  Description EN : Pro monthly access — unlimited favorites, unlimited swipes,
+                   full etymology, PDF export. Cancel anytime.
+  Screenshot     : capture PaywallView (1290x2796 ou 1284x2778, iPhone 6.7")
+
+
+ETAPE 4 — CREER prenomme.pro.yearly
+-------------------------------------
+Dans le meme group > + Create Subscription
+  Reference Name : Pro Yearly
+  Product ID     : prenomme.pro.yearly
+  Duration       : 1 Year
+  Pricing        : France 19,99 EUR (Tier 20) > Apply to all
+  Display Name   : Prenomme Pro — Annuel (FR) / Prenomme Pro — Yearly (EN)
+  Description FR : Acces Pro annuel — meilleur tarif (economisez 44 %).
+                   Favoris illimites, swipes illimites, etymologie complete,
+                   export PDF. Resiliable a tout moment.
+  Description EN : Pro yearly access — best value (save 44 %).
+                   Unlimited favorites, unlimited swipes, full etymology,
+                   PDF export. Cancel anytime.
+  Screenshot     : capture PaywallView (1290x2796 ou 1284x2778, iPhone 6.7")
+
+  Subscription Levels (ordre dans le group) :
+    Level 1 (top) : prenomme.pro.yearly
+    Level 2       : prenomme.pro.monthly
+
+
+ETAPE 5 — STATUT
+------------------
+Pour TestFlight    : Status "Ready to Submit" suffit (pas besoin d'etre publie).
+Pour App Store     : les 3 produits doivent etre lies a la version submise
+                     (et chaque IAP doit avoir son screenshot review attache).
+
+
+ETAPE 6 — CREER UN COMPTE SANDBOX TESTEUR
 -------------------------------------------
 Menu : Utilisateurs et acces > Testeurs Sandbox > (+) Ajouter
-
   Utiliser un email qui n'est PAS un Apple ID existant
   Exemple : sandbox@prenomme.test
 
 
-ETAPE 3 — TESTER DANS LE SIMULATEUR
---------------------------------------
-1. Simulateur iOS > Reglages > App Store
-   -> Se connecter avec le compte sandbox cree ci-dessus
+ETAPE 7 — TESTER DANS LE SIMULATEUR / SUR DEVICE
+--------------------------------------------------
+1. Reglages iOS > App Store > se connecter avec le compte sandbox cree
 
 2. Dans Xcode, selectionner le scheme : "Prenomme Sandbox"
    (et non "Prenomme" qui utilise le fichier .storekit local)
 
 3. Lancer avec Cmd+R
-   -> La vraie popup d'achat Apple apparait
+   -> La vraie popup d'achat Apple sandbox apparait
 
 
 RAPPEL SCHEMAS XCODE
 ----------------------
-  "Prenomme"         -> fichier .storekit local, pas de popup Apple, pour dev offline
+  "Prenomme"         -> fichier .storekit local, pas de popup Apple, dev offline
   "Prenomme Sandbox" -> vrais serveurs Apple sandbox, popup officielle Apple
+
+
+CHECKLIST PRE-SUBMIT
+----------------------
+  [ ] Lifetime sur ASC = 29,99 EUR (et non plus 8,99 EUR)
+  [ ] Subscription group "Prenomme Pro" cree
+  [ ] prenomme.pro.monthly cree (2,99 EUR/mois) - status Ready
+  [ ] prenomme.pro.yearly cree (19,99 EUR/an)  - status Ready
+  [ ] Screenshot PaywallView attache aux 3 IAP
+  [ ] Paid Applications Agreement actif (Agreements/Tax/Banking)
+  [ ] Sandbox testeur teste : achat des 3 plans + restore OK
+  [ ] Les 3 IAP coches dans la version submise (App Store > Version > IAP)
